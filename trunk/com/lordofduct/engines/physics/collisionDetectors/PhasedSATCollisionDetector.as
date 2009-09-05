@@ -19,7 +19,8 @@ package com.lordofduct.engines.physics.collisionDetectors
 		
 		public function PhasedSATCollisionDetector()
 		{
-			SingletonEnforcer.assertSingle(PhasedSATCollisionDetector);
+			//SingletonEnforcer.assertSingle(PhasedSATCollisionDetector);
+			super(PhasedSATCollisionDetector);
 		}
 /**
  * Class Definition

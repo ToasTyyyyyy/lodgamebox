@@ -5,14 +5,13 @@ package com.lordofduct.engines.physics.collisionDetectors
 	import com.lordofduct.engines.physics.LoDPhysicsEngine;
 	import com.lordofduct.engines.physics.collisionMesh.ICollisionMesh;
 	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
-	import com.lordofduct.events.PhysicsEvent;
 	import com.lordofduct.geom.Interval;
 	import com.lordofduct.geom.Vector2;
 	import com.lordofduct.util.SingletonEnforcer;
 	
 	import flash.geom.Matrix;
 	
-	final public class SATCollisionDetector implements ICollisionDetector
+	public class SATCollisionDetector implements ICollisionDetector
 	{
 		private static var _inst:SATCollisionDetector;
 		
@@ -23,9 +22,10 @@ package com.lordofduct.engines.physics.collisionDetectors
 			return _inst;
 		}
 		
-		public function SATCollisionDetector()
+		public function SATCollisionDetector(clazz:Class=null)
 		{
-			SingletonEnforcer.assertSingle(SATCollisionDetector);
+			if(!clazz) clazz = SATCollisionDetector;
+			SingletonEnforcer.assertSingle(clazz);
 		}
 		
 /**

@@ -11,15 +11,14 @@ package com.lordofduct.engines.physics.collisionMesh
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 
-	public class SimpleConvexHullMesh implements ICollisionMesh
+	public class ConvexHullMesh implements ICollisionMesh
 	{
 		private var _alg:ICollisionDetector;
 		private var _geom:IGeometricShape;
 		private var _rect:Rectangle;
 		private var _tl:Number = 1;
-		private var _dirty:Boolean = true;
 		
-		public function SimpleConvexHullMesh(geom:IGeometricShape, alg:ICollisionDetector=null)
+		public function ConvexHullMesh(geom:IGeometricShape, alg:ICollisionDetector=null)
 		{
 			_alg = (alg) ? alg : SATCollisionDetector.instance;
 			this.geometry = geom;
@@ -45,6 +44,10 @@ package com.lordofduct.engines.physics.collisionMesh
 		 * The algorithm this mesh utilizes for detecting collision with other objects.
 		 */
 		public function get collisionDetector():ICollisionDetector { return _alg; }
+		public function set collisionDetector(value:ICollisionDetector):void
+		{
+			_alg = (value) ? value : SATCollisionDetector.instance;
+		}
 		
 		public function get tensorLength():Number
 		{

@@ -1,6 +1,5 @@
 package com.lordofduct.engines.physics.collisionMesh
 {
-	import com.lordofduct.engines.physics.CollisionResult;
 	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.geom.Interval;
 	import com.lordofduct.geom.Ray2D;
@@ -13,6 +12,7 @@ package com.lordofduct.engines.physics.collisionMesh
 	{
 		function get boundingRect():Rectangle
 		function get collisionDetector():ICollisionDetector
+		function set collisionDetector(value:ICollisionDetector):void
 		function get tensorLength():Number
 		
 		function getCenterOfMass(mat:Matrix=null):Vector2
