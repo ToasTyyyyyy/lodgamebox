@@ -11,12 +11,12 @@
  */
 package com.lordofduct.engines.physics.collisionMesh
 {
-	import com.lordofduct.engines.physics.CollisionResult;
 	import com.lordofduct.engines.physics.collisionDetectors.AABBCollisionDetector;
 	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.geom.Interval;
 	import com.lordofduct.geom.Ray2D;
 	import com.lordofduct.geom.Vector2;
+	import com.lordofduct.util.Assertions;
 	import com.lordofduct.util.LoDMath;
 	
 	import flash.geom.Matrix;
@@ -59,6 +59,10 @@ package com.lordofduct.engines.physics.collisionMesh
 		 * The algorithm this mesh utilizes for detecting collision with other objects.
 		 */
 		public function get collisionDetector():ICollisionDetector { return _alg; }
+		public function set collisionDetector(value:ICollisionDetector):void
+		{
+			_alg = (value) ? value : AABBCollisionDetector.instance;
+		}
 		
 		public function get tensorLength():Number
 		{

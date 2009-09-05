@@ -77,7 +77,7 @@ package com.lordofduct.util
 		 * @param clazz - The class of the instance you're after.
 		 * @param args - An array of Classes to cancel, so they cannot be instantiated again.
 		 * This is specifically for when you extend a singleton, you need to make sure you pass all of it's
-		 * super classes that you don't want instantiated ever... this isn't necessary if the extending class is unique.
+		 * super classes that you don't want instantiated ever...
 		 */
 		public static function gi(clazz:Class,...args:Array):*
 		{
