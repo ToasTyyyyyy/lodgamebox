@@ -209,7 +209,7 @@ package com.lordofduct.ui
 				{
 					var type:String = (_actionToActive[action]) ? UInputEvent.INPUT_HOLD : UInputEvent.INPUT_PRESS;
 					_actionToActive[action] = true;
-					this.dispatchEvent( new UInputEvent(type, false, false, code, alt, ctrl, shift ) );
+					this.dispatchEvent( new UInputEvent(type, false, false, action, alt, ctrl, shift ) );
 				}
 			}
 		}
