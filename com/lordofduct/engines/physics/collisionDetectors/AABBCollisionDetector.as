@@ -108,7 +108,6 @@ package com.lordofduct.engines.physics.collisionDetectors
 			
 			var penAxis:Vector2, normal:Vector2;
 			var depth:Number = (inter.width > inter.height) ? inter.height : inter.width;
-			var olaps:Array = [ new Interval( inter.top, inter.bottom, Vector2.UnitY ), new Interval( inter.left, inter.right, Vector2.UnitX ) ];
 			
 			if(inter.width > inter.height)
 			{
@@ -120,7 +119,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 			}
 			
 			normal = Vector2.normal(penAxis);
-			return new CollisionResult( penAxis, normal, depth, olaps );
+			return new CollisionResult( penAxis, normal, depth );
 		}
 	}
 }

@@ -17,9 +17,12 @@ package com.lordofduct.engines.physics
 		private var _bodies:Array = new Array();
 		private var _simulators:Array = new Array();
 		
-		public function PhysicsCollection(alg:ICollisionResolver=null)
+		public function PhysicsCollection(alg:ICollisionResolver=null, steps:Boolean=true, collides:Boolean=true, resolves:Boolean=true)
 		{
 			_alg = alg;
+			_stepsInternal = steps;
+			_colInternal = collides;
+			_resInternal = resolves;
 		}
 /**
  * Properties
@@ -105,9 +108,12 @@ package com.lordofduct.engines.physics
 			
 			includedForces = (includedForces) ? includedForces.concat(_simulators) : _simulators.slice();
 			
-			for each( var body:IPhysicalAttrib in _bodies )
+			var body:ISimulatableAttrib;
+			
+			for (var i:int = 0; i < _bodies.length; i++)
 			{
-				if(body is ISimulatableAttrib) (body as ISimulatableAttrib).kinematicIntegrator.step(dt, body as ISimulatableAttrib, includedForces);
+				body = _bodies[i] as ISimulatableAttrib;
+				if(body && body.isDynamicMass) (body as ISimulatableAttrib).kinematicIntegrator.step(dt, body as ISimulatableAttrib, includedForces);
 			}
 		}
 		
@@ -141,6 +147,27 @@ package com.lordofduct.engines.physics
 				} else if( value is IPhysicalAttrib )
 				{
 					LoDPhysicsEngine.instance.testCollisionOf( body, value as IPhysicalAttrib, resolve, resAlg );
+				}
+			}
+		}
+		
+		public function constrain(includedForces:Array=null):void
+		{
+			var forces:Array = _simulators.concat( includedForces );
+			var bodies:Array = this.getPhysicalBodyList();
+			var subForces:Array, sim:ISimulatableAttrib;
+			
+			for (var i:int = 0; i < bodies.length; i++)
+			{
+				sim = bodies[i] as ISimulatableAttrib;
+				
+				if(!sim) continue;
+				
+				subForces = forces.concat( sim.getForceSimulators() );
+				
+				for each( var force:IForceSimulator in subForces )
+				{
+					if(force) force.constrain(sim);
 				}
 			}
 		}

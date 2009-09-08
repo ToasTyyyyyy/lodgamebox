@@ -103,7 +103,8 @@ package com.lordofduct.display
 		}
 		override public function get invInertiaTensor():Number
 		{
-			return (_isDynMass && collisionMesh) ? 1 / this.inertiaTensor : 0;
+			var I:Number = this.inertiaTensor;
+			return (I != Number.POSITIVE_INFINITY) ? 1 / I : 0;
 		}
 		
 		public function get isDynamicMass():Boolean { return _isDynMass; }

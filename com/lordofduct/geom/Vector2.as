@@ -61,6 +61,7 @@ package com.lordofduct.geom
 		static public function get UnitX():Vector2 { return new Vector2(1,0); }
 		static public function get UnitY():Vector2 { return new Vector2(0,1); }
 		static public function get Zero():Vector2 { return new Vector2(0,0); }
+		static public function get NAN():Vector2 { return new Vector2(NaN, NaN); }
 		
 /**
  *ACCESSOR METHODS
@@ -256,14 +257,24 @@ package com.lordofduct.geom
 		
 		static public function distance(v1:*, v2:*):Number
 		{
-			var v:Vector2 = Vector2.subtract(v1, v2);
-			return v.length;
+			//depricated, memory costly
+			/* var v:Vector2 = Vector2.subtract(v1, v2);
+			return v.length; */
+			
+			var dx:Number = v2.x - v1.x;
+			var dy:Number = v2.y = v1.y;
+			return Math.sqrt( dx * dx + dy * dy );
 		}
 		
 		static public function distanceSquared(v1:*, v2:*):Number
 		{
-			var v:Vector2 = Vector2.subtract(v1, v2);
-			return v.lengthSquared;
+			//depricated, memory costly
+			/* var v:Vector2 = Vector2.subtract(v1, v2);
+			return v.lengthSquared; */
+			
+			var dx:Number = v2.x - v1.x;
+			var dy:Number = v2.y = v1.y;
+			return dx * dx + dy * dy;
 		}
 		
 		static public function simpleAngle( v:* ):Number

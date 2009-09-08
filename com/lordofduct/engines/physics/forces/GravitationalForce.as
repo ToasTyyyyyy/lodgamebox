@@ -31,5 +31,10 @@ package com.lordofduct.engines.physics.forces
 		{
 			body.forces.add(Vector2.multiply(_grav, body.mass));
 		}
+		
+		public function constrain( body:ISimulatableAttrib ):void
+		{
+			
+		}
 	}
 }

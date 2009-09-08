@@ -1,6 +1,5 @@
 package com.lordofduct.engines.physics.collisionMesh
 {
-	import com.lordofduct.engines.physics.CollisionResult;
 	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.engines.physics.collisionDetectors.SATCollisionDetector;
 	import com.lordofduct.geom.IGeometricShape;
@@ -69,8 +68,10 @@ package com.lordofduct.engines.physics.collisionMesh
 		{
 			_rect = (_geom) ? _geom.getBoundingRect() : new Rectangle();
 			
-			var l:Number = Math.max(_rect.width, _rect.height);
+			/* var l:Number = Math.max(_rect.width, _rect.height);
 			l /= 2;
+			_tl = l * l; */
+			var l:Number = _rect.size.length / 2;
 			_tl = l * l;
 		}
 		

@@ -39,8 +39,11 @@ package com.lordofduct.engines.physics.integrals
 			var vel:Vector2 = body.velocity;
 			vel.x += deriv.accX * dt;
 			vel.y += deriv.accY * dt;
+			if(isNaN(vel.x)) vel.x = 0;
+			if(isNaN(vel.y)) vel.y = 0;
 			body.velocity = vel;
 			body.angularVelocity += deriv.accA * dt;
+			if(isNaN(body.angularVelocity)) body.angularVelocity = 0;
 			
 			body.dispatchEvent( new PhysicsEvent( PhysicsEvent.BODY_MOVED ) );
 		}

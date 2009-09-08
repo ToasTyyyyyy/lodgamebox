@@ -28,5 +28,6 @@ package com.lordofduct.engines.physics
 		function step(dt:Number, includedForces:Array=null):void
 		function collide():void
 		function collideAgainst(value:*, resolve:Boolean=true, resAlg:ICollisionResolver=null):void
+		function constrain(includedForces:Array=null):void
 	}
 }

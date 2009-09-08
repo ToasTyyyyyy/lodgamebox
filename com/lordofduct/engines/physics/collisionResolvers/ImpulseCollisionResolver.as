@@ -79,6 +79,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 			var invM2:Number = body2.invMass;
 			var invI1:Number = body1.invInertiaTensor;
 			var invI2:Number = body2.invInertiaTensor;
+			var sim1:ISimulatableAttrib = body1 as ISimulatableAttrib
+			var sim2:ISimulatableAttrib = body2 as ISimulatableAttrib
 			
 				/***** contact resolution impulse *****/
 				
@@ -100,18 +102,18 @@ package com.lordofduct.engines.physics.collisionResolvers
 				
 				//find the velocity of each body at the point of contact
 				var velAtCon1:Vector2 = new Vector2();
-				if(body1 is ISimulatableAttrib && ISimulatableAttrib(body1).isDynamicMass)
+				if(sim1 && sim1.isDynamicMass)
 				{
 					velAtCon1.copy(contactPerp1);
-					velAtCon1.multiply(ISimulatableAttrib(body1).angularVelocity);
-					velAtCon1.add( ISimulatableAttrib(body1).velocity );
+					velAtCon1.multiply(sim1.angularVelocity);
+					velAtCon1.add( sim1.velocity );
 				}
 				var velAtCon2:Vector2 = new Vector2();
-				if(body2 is ISimulatableAttrib && ISimulatableAttrib(body2).isDynamicMass)
+				if(sim2 && sim2.isDynamicMass)
 				{
 					velAtCon2.copy(contactPerp2);
-					velAtCon2.multiply(ISimulatableAttrib(body2).angularVelocity);
-					velAtCon2.add(ISimulatableAttrib(body2).velocity);
+					velAtCon2.multiply(sim2.angularVelocity);
+					velAtCon2.add(sim2.velocity);
 				}
 				
 				//define the relative velocity at the point of contact
@@ -169,9 +171,6 @@ package com.lordofduct.engines.physics.collisionResolvers
 				//apply this along the normal's perpindicular vector for angular velocity change
 				dav2 += contactPerp2.dot( Vector2.multiply(normal, -impulse ) ) * invI2;
 				
-				var sim1:ISimulatableAttrib = body1 as ISimulatableAttrib
-				var sim2:ISimulatableAttrib = body2 as ISimulatableAttrib
-				
 				if(sim1 && sim1.isDynamicMass)
 				{
 					sim1.velocity.add( dlv1 );
@@ -181,7 +180,6 @@ package com.lordofduct.engines.physics.collisionResolvers
 				{
 					sim2.velocity.add( dlv2 );
 					sim2.angularVelocity += dav2;// LoDMath.slam( sim2.angularVelocity + dav2, 0);
-
 				}
 		}
 		

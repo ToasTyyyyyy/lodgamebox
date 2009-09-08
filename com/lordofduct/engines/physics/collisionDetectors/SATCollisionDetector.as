@@ -56,13 +56,13 @@ package com.lordofduct.engines.physics.collisionDetectors
 		 * not contain any IGeometricShape data, then an OBB of that CollisionMesh will be constructed and used instead. 
 		 */
 		public function testAbstractMesh( mesh1:ICollisionMesh, mesh2:ICollisionMesh, mat1:Matrix=null, mat2:Matrix=null ):CollisionResult
-		{
+		{	
 			if(!mesh1 || !mesh2) return null;
 			
-			var res:CollisionResult = AABBCollisionDetector.instance.testAbstractMesh(mesh1, mesh2, mat1, mat2);
-			if(!res) return null;
+			//var res:CollisionResult = AABBCollisionDetector.instance.testAbstractMesh(mesh1, mesh2, mat1, mat2);
+			//if(!res) return null;
 			
-			var g1inter:Interval, g2inter:Interval, overlap:Interval, axis:Vector2, c1:Vector2, c2:Vector2, olaps:Array;
+			var g1inter:Interval, g2inter:Interval, overlap:Interval, axis:Vector2, c1:Vector2, c2:Vector2;
 			//first let's throw out the idea that the central axis could be the separating axis
 			//this is our first quick draw... if two objects are no where near each other then 
 			//this axis most certainly doesn't overlap
@@ -77,7 +77,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 				g2inter = mesh2.projectOntoAxis(axis, mat2);
 				overlap = g1inter.intervalIntersection(g2inter);
 				axis;
-				return new CollisionResult(axis, Vector2.normal(axis), overlap.intervalLength, [overlap]);
+				return new CollisionResult(axis, Vector2.normal(axis), overlap.intervalLength);
 			}
 			
 			axis.normalize();
@@ -88,7 +88,6 @@ package com.lordofduct.engines.physics.collisionDetectors
 			var ile:int = axes.length;
 			//removeParallelAxes(axes);
 			
-			olaps = [];
 			var penAxis:Vector2 = new Vector2();
 			var dep:Number = Number.POSITIVE_INFINITY;
 			for(var i:int = 0; i < axes.length; i++)
@@ -106,14 +105,11 @@ package com.lordofduct.engines.physics.collisionDetectors
 					dep = overlap.intervalLength;
 					penAxis.copy(axis);
 				}
-				olaps.push(overlap);
 			}
-			
-			if(!olaps.length) return null;
 			
 			//COLLISION OCCURED, return data
 			var normal:Vector2 = Vector2.normal(penAxis);
-			return new CollisionResult(penAxis, normal, dep, olaps);
+			return new CollisionResult(penAxis, normal, dep);
 		}
 		
 		private function removeParallelAxes(arr:Array):void
