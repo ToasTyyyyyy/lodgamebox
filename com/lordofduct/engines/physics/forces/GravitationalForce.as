@@ -34,7 +34,7 @@ package com.lordofduct.engines.physics.forces
 		
 		public function constrain( body:ISimulatableAttrib ):void
 		{
-			
+			//do nothing
 		}
 	}
 }

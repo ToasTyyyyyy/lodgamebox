@@ -2,6 +2,7 @@ package com.lordofduct.engines.physics
 {
 	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
 	import com.lordofduct.engines.physics.forces.IForceSimulator;
+	import com.lordofduct.geom.Vector2;
 	import com.lordofduct.util.Assertions;
 	
 	public class PhysicsCollection implements IPhysicsCollection
@@ -11,8 +12,6 @@ package com.lordofduct.engines.physics
 		private var _colInternal:Boolean = false;
 		private var _stepsInternal:Boolean = false;
 		private var _resInternal:Boolean = false;
-		
-		private var _damping:Number = 1;
 		
 		private var _bodies:Array = new Array();
 		private var _simulators:Array = new Array();
@@ -41,9 +40,6 @@ package com.lordofduct.engines.physics
 		
 		public function get resolvesInternal():Boolean { return _resInternal; }
 		public function set resolvesInternal(value:Boolean):void { _resInternal = value; }
-		
-		public function get damping():Number { return _damping; }
-		public function set damping(value:Number):void { _damping = value; }
 		
 /**
  * Methods
@@ -102,7 +98,7 @@ package com.lordofduct.engines.physics
 			_simulators.length = 0;
 		}
 		
-		public function step(dt:Number, includedForces:Array=null):void
+		public function simulate(dt:Number, includedForces:Array=null):void
 		{
 			if(!_stepsInternal) return;
 			
@@ -123,12 +119,13 @@ package com.lordofduct.engines.physics
 			
 			var coll:Array = this.getPhysicalBodyList();
 			var phys:LoDPhysicsEngine = LoDPhysicsEngine.instance;
+			var other:IPhysicalAttrib, body:IPhysicalAttrib;
 			
 			while( coll.length )
 			{
-				var body:IPhysicalAttrib = coll.pop() as IPhysicalAttrib;
+				body = coll.pop() as IPhysicalAttrib;
 				
-				for each( var other:IPhysicalAttrib in coll )
+				for each( other in coll )
 				{
 					phys.testCollisionOf( body, other, _resInternal, _alg );
 				}

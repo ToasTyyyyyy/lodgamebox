@@ -160,7 +160,7 @@ package com.lordofduct.engines.physics
 		{
 			for each( var group:IPhysicsCollection in _groups )
 			{
-				group.step(dt);
+				group.simulate(dt);
 				group.collide();
 				group.constrain();
 			}

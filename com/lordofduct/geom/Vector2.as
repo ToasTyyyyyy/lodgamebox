@@ -454,6 +454,17 @@ package com.lordofduct.geom
 			return new Vector2(ix, iy);
 		}
 		
+		
+	/**
+	 * Weird
+	 */
+		static public function setProjectedLengthOver( v1:Vector2, v2:Vector2 ):Vector2
+		{
+			var result:Vector2 = Vector2.normalize(v1);
+			result.length = v1.length * v2.lengthSquared / (v1.x * v2.x + v1.y * v2.y);
+			return result;
+		}
+		
 /**
  *BASE METHODS
  *<p>the following is a series of methods for basic Vector cleanup</p>
@@ -482,7 +493,7 @@ package com.lordofduct.geom
 		static public function copy(obj:*):Vector2
 		{
 			if(obj is Point2D || obj is Point) return new Vector2(obj.x, obj.y);
-			else return null;
+			else return Vector2.NAN;
 		}
 		
 		/**

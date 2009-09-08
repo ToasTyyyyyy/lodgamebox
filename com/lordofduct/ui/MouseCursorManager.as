@@ -85,7 +85,11 @@ package com.lordofduct.ui
 			var cursor:MouseCursor;
 			if(idx is MouseCursor) cursor = idx as MouseCursor;
 			if(idx is String) cursor = this.getCursor(idx);
-			if(!cursor) this.showDefaultCursor();
+			if(!cursor)
+			{
+				this.showDefaultCursor();
+				return;
+			}
 			
 			//show this cursor in stage
 			this.hideCursor(_currCursor);
