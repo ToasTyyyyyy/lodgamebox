@@ -102,14 +102,14 @@ package com.lordofduct.engines.physics.collisionResolvers
 				
 				//find the velocity of each body at the point of contact
 				var velAtCon1:Vector2 = new Vector2();
-				if(sim1 && sim1.isDynamicMass)
+				if(sim1)
 				{
 					velAtCon1.copy(contactPerp1);
 					velAtCon1.multiply(sim1.angularVelocity);
 					velAtCon1.add( sim1.velocity );
 				}
 				var velAtCon2:Vector2 = new Vector2();
-				if(sim2 && sim2.isDynamicMass)
+				if(sim2)
 				{
 					velAtCon2.copy(contactPerp2);
 					velAtCon2.multiply(sim2.angularVelocity);
@@ -174,12 +174,12 @@ package com.lordofduct.engines.physics.collisionResolvers
 				if(sim1 && sim1.isDynamicMass)
 				{
 					sim1.velocity.add( dlv1 );
-					sim1.angularVelocity += dav1;// LoDMath.slam( sim1.angularVelocity + dav1, 0);
+					sim1.angularVelocity += dav1;
 				}
 				if(sim2 && sim2.isDynamicMass)
 				{
 					sim2.velocity.add( dlv2 );
-					sim2.angularVelocity += dav2;// LoDMath.slam( sim2.angularVelocity + dav2, 0);
+					sim2.angularVelocity += dav2;
 				}
 		}
 		
@@ -188,8 +188,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 			var axis:Vector2 = penAxis.clone();
 			axis.multiply(depth);
 			
-			var b1inv:Number = (body1 is ISimulatableAttrib && ISimulatableAttrib(body1).isDynamicMass) ? body1.invMass : 0;
-			var b2inv:Number = (body2 is ISimulatableAttrib && ISimulatableAttrib(body2).isDynamicMass) ? body2.invMass : 0;
+			var b1inv:Number = body1.invMass;
+			var b2inv:Number = body2.invMass;
 			var sumInvMass:Number = b1inv + b2inv;
 			if(!sumInvMass) return null;
 			

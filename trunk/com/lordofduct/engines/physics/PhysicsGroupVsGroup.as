@@ -12,8 +12,6 @@ package com.lordofduct.engines.physics
 		private var _stepsInternal:Boolean = false;
 		private var _resInternal:Boolean = false;
 		
-		private var _damping:Number = 1;
-		
 		private var _groups:Array = new Array();
 		private var _simulators:Array = new Array();
 		
@@ -41,9 +39,6 @@ package com.lordofduct.engines.physics
 		
 		public function get resolvesInternal():Boolean { return _resInternal; }
 		public function set resolvesInternal(value:Boolean):void { _resInternal = value; }
-		
-		public function get damping():Number { return _damping; }
-		public function set damping(value:Number):void { _damping = value; }
 		
 /**
  * Methods
@@ -102,7 +97,7 @@ package com.lordofduct.engines.physics
 			_simulators.length = 0;
 		}
 		
-		public function step(dt:Number, includedForces:Array=null):void
+		public function simulate(dt:Number, includedForces:Array=null):void
 		{
 			//TODO - figure out a logical approach to this to allow extra features
 		}

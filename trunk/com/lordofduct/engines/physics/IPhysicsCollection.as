@@ -17,17 +17,14 @@ package com.lordofduct.engines.physics
 		function get resolvesInternal():Boolean
 		function set resolvesInternal(value:Boolean):void
 		
-		function get damping():Number
-		function set damping(value:Number):void
-		
 		function getForceSimulators():Array
 		function addForceSimulator(force:IForceSimulator):void
 		function removeForceSimulator(force:IForceSimulator):void
 		function removeAllForceSimulators():void
 		
-		function step(dt:Number, includedForces:Array=null):void
 		function collide():void
 		function collideAgainst(value:*, resolve:Boolean=true, resAlg:ICollisionResolver=null):void
 		function constrain(includedForces:Array=null):void
+		function simulate(dt:Number, includedForces:Array=null):void
 	}
 }

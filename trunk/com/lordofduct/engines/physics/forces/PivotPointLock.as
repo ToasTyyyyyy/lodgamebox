@@ -9,7 +9,7 @@ package com.lordofduct.engines.physics.forces
 		private var _pos:Vector2;
 		private var _frict:Number;
 		
-		public function PivotPointLock(pos:*, frict:Number=0.9999)
+		public function PivotPointLock(pos:*, frict:Number=0)
 		{
 			_pos = Vector2.copy(pos);
 			_frict = LoDMath.clamp( frict, 1 );
@@ -24,17 +24,14 @@ package com.lordofduct.engines.physics.forces
 		public function simulate(body:ISimulatableAttrib):void
 		{
 			body.forces.add(Vector2.NAN);
-			body.angularVelocity *= (1 - _frict);
-			body.velocity.setTo();
-			
-			body.physicalTransform.x = _pos.x;
-			body.physicalTransform.y = _pos.y;
 		}
 		
 		public function constrain( body:ISimulatableAttrib ):void
 		{
 			body.physicalTransform.x = _pos.x;
 			body.physicalTransform.y = _pos.y;
+			body.velocity.setTo();
+			body.angularVelocity *= (1 - _frict);
 		}
 	}
 }
