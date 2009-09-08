@@ -57,7 +57,7 @@ package com.lordofduct.display
 		
 		private var _isRigBody:Boolean = false;
 		
-		private var _mass:Number = 1;
+		protected var _mass:Number = 1;
 		private var _invMass:Number = 1;
 		private var _inertiaTensor:Number = 1;
 		private var _invInertiaTensor:Number = 1;

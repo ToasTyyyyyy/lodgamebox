@@ -17,9 +17,12 @@ package com.lordofduct.engines.physics
 		private var _groups:Array = new Array();
 		private var _simulators:Array = new Array();
 		
-		public function PhysicsGroupVsGroup(alg:ICollisionResolver=null)
+		public function PhysicsGroupVsGroup(alg:ICollisionResolver=null, steps:Boolean=true, collides:Boolean=true, resolves:Boolean=true)
 		{
 			_alg = alg;
+			_stepsInternal = steps;
+			_colInternal = collides;
+			_resInternal = resolves;
 		}
 /**
  * Properties
@@ -101,14 +104,7 @@ package com.lordofduct.engines.physics
 		
 		public function step(dt:Number, includedForces:Array=null):void
 		{
-			if(!this.stepsInternal) return;
-			
-			includedForces = (includedForces) ? includedForces.concat(_simulators) : _simulators.slice();
-			
-			for each( var group:IPhysicsCollection in _groups )
-			{
-				group.step(dt, includedForces);
-			}
+			//TODO - figure out a logical approach to this to allow extra features
 		}
 		
 		public function collide():void
@@ -136,6 +132,11 @@ package com.lordofduct.engines.physics
 			{
 				group.collideAgainst(value, resolve, resAlg);
 			}
+		}
+		
+		public function constrain(includedForces:Array=null):void
+		{
+			//TODO - figure out a logical approach to this to allow extra features
 		}
 	}
 }

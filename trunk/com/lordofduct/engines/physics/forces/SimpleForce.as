@@ -31,4 +31,10 @@ package com.lordofduct.engines.physics.forces
 		{
 			body.forces.add(_force);
 		}
+		
+		public function constrain( body:ISimulatableAttrib ):void
+		{
+			
+		}
+	}
 }

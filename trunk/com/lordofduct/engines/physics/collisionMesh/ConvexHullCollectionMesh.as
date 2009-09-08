@@ -206,7 +206,8 @@ package com.lordofduct.engines.physics.collisionMesh
 			{
 				//if we are in some phase, then find contacts of that phase
 				
-				return _geom[_curPhase].findExtremitiesOver(axis,mat);
+				var arr:Array = _geom[_curPhase].findExtremitiesOver(axis,mat);
+				return arr;
 			}
 		}
 		

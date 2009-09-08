@@ -5,5 +5,6 @@ package com.lordofduct.engines.physics.forces
 	public interface IForceSimulator
 	{
 		function simulate( body:ISimulatableAttrib ):void
+		function constrain( body:ISimulatableAttrib ):void
 	}
 }

@@ -162,6 +162,7 @@ package com.lordofduct.engines.physics
 			{
 				group.step(dt);
 				group.collide();
+				group.constrain();
 			}
 		}
 		

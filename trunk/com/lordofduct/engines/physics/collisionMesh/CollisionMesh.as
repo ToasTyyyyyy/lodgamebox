@@ -82,7 +82,7 @@ package com.lordofduct.engines.physics.collisionMesh
 		public function invalidate():void
 		{
 			var l:Number = Math.max(_rect.width, _rect.height);
-			//l /= 2;
+			l /= 2;
 			_tl = l * l;
 		}
 		
