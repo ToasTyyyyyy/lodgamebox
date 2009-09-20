@@ -17,11 +17,11 @@ package com.lordofduct.ui
 		private var _cdelay:int;
 		private var _timer:Timer = new Timer(1000,1);
 		
-		public function KeyboardSequenceController(idx:String, disp:EventDispatcher=null, cleanDelay:int=1000)
+		public function KeyboardSequenceController(idx:String, disp:EventDispatcher=null, cDelay:int=1000)
 		{
 			super(idx, disp);
 			
-			this.cleanDelay = Math.max(0, cleanDelay);
+			this.cleanDelay = Math.max(0, cDelay);
 			this.addEventListener(UInputEvent.INPUT_PRESS, inputSequenceListener, false, 0, true );
 		}
 		
@@ -39,6 +39,7 @@ package com.lordofduct.ui
 			super.reset();
 			
 			_sequences = new Dictionary();
+			_curSequences = new Array();
 		}
 		
 		public function registerSequence( id:String, ...args ):void
@@ -165,11 +166,28 @@ package com.lordofduct.ui
 /**
  * IDisposable Interface
  */
+		override public function reengage(...args):void
+		{
+			var idx:String = args[0], disp:EventDispatcher = args[1], cDelay:int = args[2];
+			
+			super.reengage(idx, disp);
+			
+			_timer = new Timer(_cdelay, 1);
+			this.cleanDelay = Math.max(0, cDelay);
+			this.addEventListener(UInputEvent.INPUT_PRESS, inputSequenceListener, false, 0, true );
+		}
+		
 		override public function dispose():void
 		{
 			super.dispose();
 			
 			_sequences = null;
+			_curSequence = null;
+			_timer.reset();
+			_timer.removeEventListener(TimerEvent.TIMER_COMPLETE, clearSequences);
+			_timer = null;
+			
+			this.removeEventListener(UInputEvent.INPUT_PRESS, inputSequenceListener);
 		}
 	}
 }
