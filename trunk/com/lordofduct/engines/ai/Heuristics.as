@@ -15,7 +15,7 @@ package com.lordofduct.engines.ai
 			{
 				case Heuristics.DIST_EUCLIDIAN : return Heuristics.distEuclidian; break;
 				case Heuristics.DIST_MANHATTAN : return Heuristics.distManhattan; break;
-				default return Heuristics.distManhattan; break;
+				default : return Heuristics.distManhattan; break;
 			}
 		}
 		
@@ -25,7 +25,7 @@ package com.lordofduct.engines.ai
 			{
 				case Heuristics.distEuclidian : return Heuristics.DIST_EUCLIDIAN; break;
 				case Heuristics.distManhattan : return Heuristics.DIST_MANHATTAN; break;
-				default return "unknown"; break;
+				default : return "unknown"; break;
 			}
 		}
 		

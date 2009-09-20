@@ -23,15 +23,15 @@ package com.lordofduct.display
 			
 			if(bmd is BitmapData)
 			{
-				_bitmapData = bmd;
+				_bmd = bmd;
 			} else if (bmd is String)
 			{
 				this.loadBitmapFromUrl( bmd );
 			}
 		}
 		
-		public function get bitmapData():BitmapData { return _bitmapData; }
-		public function set bitmapData( value:BitmapData ):void { _bitmapData = value; }
+		public function get bitmapData():BitmapData { return _bmd; }
+		public function set bitmapData( value:BitmapData ):void { _bmd = value; }
 		
 		public function loadBitmapFromUrl( url:String ):void
 		{
@@ -63,8 +63,8 @@ package com.lordofduct.display
 			
 			if (this.bitmapData && this.gameScreen && this.stage )
 			{
-				var ul:Point = LoDDisplayObjUtils.instance.localToLocal( this.gameScreen.renderRect.topLeft, this.gameScreen, this );
-				var br:Point = LoDDisplayObjUtils.instance.localToLocal( this.gameScreen.renderRect.bottomRight, this.gameScreen, this );
+				var ul:Point = LoDDisplayObjUtils.localToLocal( this.gameScreen.renderRect.topLeft, this.gameScreen, this );
+				var br:Point = LoDDisplayObjUtils.localToLocal( this.gameScreen.renderRect.bottomRight, this.gameScreen, this );
 				var pnt:Point = new Point();
 				pnt.x = (ul.x < br.x) ? ul.x : br.x;
 				pnt.y = (ul.y < br.y) ? ul.y : br.y;

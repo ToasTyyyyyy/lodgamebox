@@ -4,14 +4,17 @@ package com.lordofduct.engines.animation
 	import com.lordofduct.events.TweenerEvent;
 	import com.lordofduct.util.LoDMath;
 	
+	import flash.events.EventDispatcher;
+	
 	public class SimpleTween extends EventDispatcher implements ITween
 	{
 		private var _targ:Object;
 		private var _prop:String;
-		private var _func:Function;
+		private var _funct:Function;
 		private var _begin:Number;
 		private var _finish:Number;
 		private var _dur:Number;
+		private var _delay:Number;
 		
 		private var _pos:Number;
 		private var _paused:Boolean = false;
@@ -22,7 +25,7 @@ package com.lordofduct.engines.animation
 			
 			_targ = targ;
 			_prop = prop;
-			_func = (func is Function) ? func : Linear.easeNone;
+			_funct = (func is Function) ? func : Linear.easeNone;
 			_begin = begin;
 			_finish = finish;
 			_dur = dur;
@@ -47,7 +50,7 @@ package com.lordofduct.engines.animation
 	/**
 	 * SimpleTween Interface
 	 */
-		public function get funct():Function { return _func; }
+		public function get funct():Function { return _funct; }
 		public function get startValue():Number { return _begin; }
 		public function get endValue():Number { return _finish; }
 /**
@@ -58,13 +61,13 @@ package com.lordofduct.engines.animation
 	 */
 		public function update(dt:Number):Boolean
 		{
-			if(_paused) return;
+			if(_paused) return false;
 			
 			var op:Number = _pos;
 			_pos = LoDMath.clamp( _pos + dt, _dur );
 			var t:Number = _pos - _delay;
 			
-			if( _pos < _delay ) return;
+			if( _pos < _delay ) return false;
 			else if ( op <= _delay && t > 0 )
 			{
 				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_START, t ) );

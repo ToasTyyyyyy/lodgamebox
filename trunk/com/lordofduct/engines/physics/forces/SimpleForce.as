@@ -7,9 +7,9 @@ package com.lordofduct.engines.physics.forces
 	{
 		private var _force:Vector2;
 		
-		public function SimpleForce( forceY:Number=0, forceX:Number=0 )
+		public function SimpleForce( forceX:Number=0, forceY:Number=0 )
 		{
-			_force = new Vector2(gravX, gravY);
+			_force = new Vector2(forceX, forceY);
 		}
 		
 /**

@@ -1,6 +1,8 @@
 package com.lordofduct.engines.physics.integrals
 {
 	import com.lordofduct.engines.physics.IPhysicalAttrib;
+	import com.lordofduct.engines.physics.ISimulatableAttrib;
+	import com.lordofduct.engines.physics.forces.IForceSimulator;
 	import com.lordofduct.util.SingletonEnforcer;
 
 	public class RK4KinematicIntegral implements IKinematicIntegral
@@ -21,18 +23,18 @@ package com.lordofduct.engines.physics.integrals
 /**
  * Class Definition
  */
-		public function step(dt:Number, body:IPhysicalAttrib, globalForces:Array=null):void
+		public function step(dt:Number, body:ISimulatableAttrib, globalForces:Array=null):void
 		{
 			var deriv:Derivative = this.getKinematicDerivativeOf(body, globalForces);
 			this.integrateKinematicBody(dt, body, deriv);
 		}
 		
-		public function integrateKinematicBody(dt:Number, body:IPhysicalAttrib, deriv:Derivative):void
+		public function integrateKinematicBody(dt:Number, body:ISimulatableAttrib, deriv:Derivative):void
 		{
 			
 		}
 		
-		public function getKinematicDerivativeOf(body:IPhysicalAttrib, globalForces:Array=null):Derivative
+		public function getKinematicDerivativeOf(body:ISimulatableAttrib, globalForces:Array=null):Derivative
 		{
 			var der:Derivative = new Derivative();
 			der.velA = body.angularVelocity;
@@ -42,7 +44,7 @@ package com.lordofduct.engines.physics.integrals
 			//must solve forces
 			globalForces = (globalForces) ? globalForces.concat(body.getForceSimulators()) : body.getForceSimulators();
 			
-			for each(var force:IForce in globalForces)
+			for each(var force:IForceSimulator in globalForces)
 			{
 				force.simulate(body);
 			}

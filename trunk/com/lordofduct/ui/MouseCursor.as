@@ -79,7 +79,7 @@ package com.lordofduct.ui
 			var idx:String = args[0], obj:DisplayObject = args[1];
 			var pnt:Point = args[2] as Point;
 			var easeFunct:Function = args[3] as Function;
-			var speed:uint = (isNaN(args[4]) ? 100 : args[4];
+			var speed:uint = (isNaN(args[4])) ? 100 : args[4];
 			
 			Assertions.notNil(idx,"com.lordofduct.ui::Cursor - id param must be non-null");
 			Assertions.notNil(obj, "com.lordofduct.ui::Cursor - obj param must be non-null");

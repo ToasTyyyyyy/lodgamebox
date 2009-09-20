@@ -16,16 +16,16 @@ package com.lordofduct.ui
 	
 	import flash.events.EventDispatcher;
 	import flash.events.FocusEvent;
-	import flash.events.KeyboardEvent;
+	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 
-	public class KeyboardController extends GameController
+	public class KeyboardComboController extends GameController
 	{
-		private var _dispatcher:EventDispatcher;
+		private var _dispatcher:IEventDispatcher;
 		
 		private var _currentDowns:Array;
-		private var _actionToCombo:Dictionary;
-		private var _actionToActive:Dictionary;
+		private var _idToCombo:Dictionary;
+		private var _idToActive:Dictionary;
 		
 		/**
 		 * construct KeyboardControls
@@ -34,13 +34,23 @@ package com.lordofduct.ui
 		 * on it. For global listening utilize the "stage" as the dispatcher. If something else is used and a key is pressed down or release 
 		 * when out of focus it is completely ignored.
 		 */
-		public function KeyboardController( idx:String, disp:EventDispatcher=null )
+		public function KeyboardComboController( idx:String, disp:EventDispatcher=null )
 		{
 			super(idx);
 			reset();
 			registerDispatcher(disp);
 		}
 		
+/**
+ * Properties
+ */
+		public function get dispatcher():IEventDispatcher
+		{
+			return _dispatcher;
+		}
+/**
+ * Public Interface
+ */
 		/**
 		 * register a new Dispatcher to listen for the key combinations
 		 * 
@@ -48,7 +58,7 @@ package com.lordofduct.ui
 		 * on it. For global listening utilize the "stage" as the dispatcher. If something else is used and a key is pressed down or release 
 		 * when out of focus it is completely ignored.
 		 */
-		public function registerDispatcher( disp:EventDispatcher=null ):void
+		public function registerDispatcher( disp:IEventDispatcher=null ):void
 		{
 			if(!disp) disp = KeyboardManager.instance;
 			
@@ -71,66 +81,66 @@ package com.lordofduct.ui
 		public function reset():void
 		{	
 			_currentDowns = new Array();
-			_actionToCombo = new Dictionary();
-			_actionToActive = new Dictionary();
+			_idToCombo = new Dictionary();
+			_idToActive = new Dictionary();
 		}
 		
 		/**
 		 * Register some key combination to be monitored.
 		 * 
-		 * @param action - the id or name of the combination. This value will be passed with the event to let you know what combination was activated
+		 * @param id - the id or name of the combination. This value will be passed with the event to let you know what combination was activated
 		 * @param ...args - a list of Keyboard keys that match the combination. All params must be a uint.
 		 * 
-		 * ex: instance.registerAction( "someAction", 64, 53 );//"someAction" dispatches when both keys 64 and 53 are down
+		 * ex: instance.registerCombo( "someCombo", 64, 53 );//"someCombo" dispatches when both keys 64 and 53 are down
 		 * 
 		 * The registered combination is sorted numerically ascending and then stored.
 		 */
-		public function registerAction( action:String, ...args ):void
+		public function registerCombo( id:String, ...args ):void
 		{
-			Assertions.notNilOrEmpty(args, "com.lordofduct.ui::KeyboardControls - some keyboard combination must be supplied as a series of params when registering actions" );
+			Assertions.notNilOrEmpty(args, "com.lordofduct.ui::KeyboardControls - some keyboard combination must be supplied as a series of params when registering combos" );
 			
 			var combo:Array = new Array();
 			while( args.length ) combo.push( uint(args.shift()) );
 			combo.sort(Array.NUMERIC);
 			
-			_actionToCombo[action] = combo;
-			_actionToActive[action] = false;
+			_idToCombo[id] = combo;
+			_idToActive[id] = false;
 		}
 		
 		/**
-		 * Stop listening for some registered action
+		 * Stop listening for some registered id
 		 */
-		public function removeAction( action:String ):void
+		public function removeCombo( id:String ):void
 		{
-			delete _actionToCombo[action];
-			delete _actionToActive[action];
+			delete _idToCombo[id];
+			delete _idToActive[id];
 		}
 		
 		/**
-		 * Check if some named action is registered
+		 * Check if some named combo is registered
 		 */
-		public function isRegistered( action:String ):Boolean
+		public function isRegistered( id:String ):Boolean
 		{
-			return Boolean( _actionToCombo[action] );
+			return Boolean( _idToCombo[id] );
 		}
 		
 		/**
-		 * Is action currently activated?
+		 * Is id currently activated?
 		 */
-		public function isActionActive( action:String ):Boolean
+		public function isComboActive( id:String ):Boolean
 		{
-			return _actionToActive[ action ];
+			return _idToActive[ id ];
 		}
 		
 		/**
-		 * Is action strictly activated. Returns true if and only if the supplied action's combination 
+		 * Is combo strictly activated. Returns true if and only if the supplied combo's combination 
 		 * is the ONLY keys currently pressed.
 		 */
-		public function isActionUnique( action:String ):Boolean
+		public function isComboUnique( id:String ):Boolean
 		{
-			if (!this.isActionActive(action)) return false;
+			if (!this.isComboActive(id)) return false;
 			
-			var combo:String = _actionToCombo[ action ].join("");
+			var combo:String = _idToCombo[ id ].join("");
 			var downs:String = _currentDowns.join("");
 			return combo == downs;
 		}
@@ -165,13 +175,13 @@ package com.lordofduct.ui
 		}
 		
 		/**
-		 * Returns an array of the key combination for a given action
+		 * Returns an array of the key combination for a given combo
 		 * 
 		 * the array is filled with numeric strings that are to be treated as uint
 		 */
-		public function getCombinationFor( action:String ):Array
+		public function getCombinationFor( id:String ):Array
 		{
-			return _actionToCombo[action].slice();
+			return (_idToCombo[id]) ? _idToCombo[id].slice() : null;
 		}
 		
 		/**
@@ -200,29 +210,29 @@ package com.lordofduct.ui
 			if(index >= 0) _currentDowns.splice(index,1);
 		}
 		
-		private function assertActions(alt:Boolean=false, ctrl:Boolean=false, shift:Boolean=false):void
+		private function assertCombos(alt:Boolean=false, ctrl:Boolean=false, shift:Boolean=false):void
 		{
-			for ( var action:String in _actionToCombo )
+			for ( var comboId:String in _idToCombo )
 			{
-				var combo:Array = _actionToCombo[action];
+				var combo:Array = _idToCombo[comboId];
 				if (isComboActive.apply(this, combo))
 				{
-					var type:String = (_actionToActive[action]) ? UInputEvent.INPUT_HOLD : UInputEvent.INPUT_PRESS;
-					_actionToActive[action] = true;
-					this.dispatchEvent( new UInputEvent(type, false, false, action, alt, ctrl, shift ) );
+					var type:String = (_idToActive[comboId]) ? UInputEvent.INPUT_HOLD : UInputEvent.INPUT_PRESS;
+					_idToActive[comboId] = true;
+					this.dispatchEvent( new UInputEvent(type, false, false, comboId, alt, ctrl, shift ) );
 				}
 			}
 		}
 		
-		private function desertActions(alt:Boolean=false, ctrl:Boolean=false, shift:Boolean=false):void
+		private function desertCombos(alt:Boolean=false, ctrl:Boolean=false, shift:Boolean=false):void
 		{
-			for ( var action:String in _actionToCombo )
+			for ( var comboId:String in _idToCombo )
 			{
-				var combo:Array = _actionToCombo[action];
-				if (_actionToActive[action] && !isComboActive.apply(this, combo))
+				var combo:Array = _idToCombo[comboId];
+				if (_idToActive[comboId] && !isComboActive.apply(this, combo))
 				{
-					_actionToActive[action] = false;
-					this.dispatchEvent( new UInputEvent( UInputEvent.INPUT_RELEASE, false, false, action, alt, ctrl, shift ) );
+					_idToActive[comboId] = false;
+					this.dispatchEvent( new UInputEvent( UInputEvent.INPUT_RELEASE, false, false, comboId, alt, ctrl, shift ) );
 				}
 			}
 		}
@@ -230,40 +240,40 @@ package com.lordofduct.ui
 	/**
 	 * Cleaner functions
 	 */
-		private function clearAllCurrents(alt:Boolean=false, ctrl:Boolean=false, shift:Boolean=false):void
+		protected function clearAllCurrents(alt:Boolean=false, ctrl:Boolean=false, shift:Boolean=false):void
 		{
 			_currentDowns.splice();
-			for (var action:String in _actionToActive)
+			for (var comboId:String in _idToActive)
 			{
-				_actionToActive[action] = false;
-				this.dispatchEvent( new UInputEvent( UInputEvent.INPUT_RELEASE, false, false, action, alt, ctrl, shift ) );
+				_idToActive[comboId] = false;
+				this.dispatchEvent( new UInputEvent( UInputEvent.INPUT_RELEASE, false, false, comboId, alt, ctrl, shift ) );
 			}
 		}
 /**
  * Event Listeners
  */
-		private function checkKeyDownCondition(e:UInputEvent):void
+		protected function checkKeyDownCondition(e:UInputEvent):void
 		{
 			addCurrentDown(e.code);
 			
-			assertActions(e.altKey, e.ctrlKey, e.shiftKey);
+			assertCombos(e.altKey, e.ctrlKey, e.shiftKey);
 		}
 		
-		private function checkKeyHoldCondition(e:UInputEvent):void
+		protected function checkKeyHoldCondition(e:UInputEvent):void
 		{
 			addCurrentDown(e.code);
 			
-			assertActions(e.altKey, e.ctrlKey, e.shiftKey);
+			assertCombos(e.altKey, e.ctrlKey, e.shiftKey);
 		}
 		
-		private function checkKeyUpCondition(e:UInputEvent):void
+		protected function checkKeyUpCondition(e:UInputEvent):void
 		{
 			removeCurrentDown(e.code);
 			
-			desertActions(e.altKey, e.ctrlKey, e.shiftKey);
+			desertCombos(e.altKey, e.ctrlKey, e.shiftKey);
 		}
 		
-		private function onInputReset(e:UInputEvent):void
+		protected function onInputReset(e:UInputEvent):void
 		{
 			clearAllCurrents();
 			this.dispatchEvent(e.clone());
@@ -287,15 +297,16 @@ package com.lordofduct.ui
 			
 			if(_dispatcher)
 			{
-				_dispatcher.removeEventListener(KeyboardEvent.KEY_DOWN, checkKeyDownCondition );
-				_dispatcher.removeEventListener(KeyboardEvent.KEY_UP, checkKeyUpCondition );
-				_dispatcher.removeEventListener(FocusEvent.FOCUS_OUT, onDispatcherFocusOut );
+				_dispatcher.removeEventListener(UInputEvent.INPUT_PRESS, checkKeyDownCondition );
+				_dispatcher.removeEventListener(UInputEvent.INPUT_HOLD, checkKeyHoldCondition );
+				_dispatcher.removeEventListener(UInputEvent.INPUT_RELEASE, checkKeyUpCondition );
+				_dispatcher.removeEventListener(FocusEvent.FOCUS_OUT, onInputReset );
 			}
 			
 			_dispatcher = null;
 			_currentDowns = null;
-			_actionToCombo = null;
-			_actionToActive = null;
+			_idToCombo = null;
+			_idToActive = null;
 		}
 	}
 }

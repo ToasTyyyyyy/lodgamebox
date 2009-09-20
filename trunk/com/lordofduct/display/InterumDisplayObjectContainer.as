@@ -14,7 +14,7 @@ package com.lordofduct.display
 		public var inheritSkewX:Boolean = false;
 		public var inheritSkewY:Boolean = false;
 		public var inheritScaleX:Boolean = false;
-		public var inheritScaley:Boolean = false;
+		public var inheritScaleY:Boolean = false;
 		
 		public function InterumDisplayObjectContainer()
 		{

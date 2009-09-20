@@ -57,7 +57,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 				if(mesh1) mesh1.currentPhase = m1p;
 				if(mesh2) mesh2.currentPhase = m2p;
 				
-				var res:CollisionResult = testAbstractMesh( body1.collisionMesh, body2.collisionMesh, body1.physicalTransform.matrix, body2.physicalTransform.matrix );
+				res = testAbstractMesh( body1.collisionMesh, body2.collisionMesh, body1.physicalTransform.matrix, body2.physicalTransform.matrix );
 				
 				if(res)
 				{

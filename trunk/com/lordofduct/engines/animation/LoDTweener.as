@@ -1,6 +1,7 @@
 package com.lordofduct.engines.animation
 {
 	import com.lordofduct.util.DeltaPulseTimer;
+	import com.lordofduct.util.SingletonEnforcer;
 	
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
@@ -20,7 +21,7 @@ package com.lordofduct.engines.animation
 		{
 			SingletonEnforcer.assertSingle(LoDTweener);
 			
-			_timer:DeltaPulseTimer = new DeltaPulseTimer(40);
+			_timer = new DeltaPulseTimer(40);
 			_frate = Math.round( 1000 / 40 );
 			_timer.addEventListener(TimerEvent.TIMER, updateAll, false, 0, true );
 		}

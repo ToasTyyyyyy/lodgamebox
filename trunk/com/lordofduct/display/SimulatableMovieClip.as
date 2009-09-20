@@ -51,6 +51,7 @@ package com.lordofduct.display
 {
 	import com.lordofduct.engines.physics.ISimulatableAttrib;
 	import com.lordofduct.engines.physics.forces.IForceSimulator;
+	import com.lordofduct.engines.physics.integrals.EulerKinematicIntegral;
 	import com.lordofduct.engines.physics.integrals.IKinematicIntegral;
 	import com.lordofduct.geom.Vector2;
 	import com.lordofduct.util.LoDMath;
@@ -72,7 +73,7 @@ package com.lordofduct.display
 		
 		private var _integrator:IKinematicIntegral;
 		
-		public function SimulatableSprite(integrator:IKinematicIntegral=null)
+		public function SimulatableMovieClip(integrator:IKinematicIntegral=null)
 		{
 			super();
 			

@@ -41,7 +41,7 @@ package com.lordofduct.ui
 			{
 				case KEYBOARD_CONTROLLER : this.registerGameController( new KeyboardController( idx, disp ) ); break;
 				case MOUSE_CONTROLLER : this.registerGameController( new MouseController( idx, disp as InteractiveObject ) ); break;
-				default this.registerGameController( new GameController( idx ) );
+				default : this.registerGameController( new GameController( idx ) );
 			}
 		}
 		
