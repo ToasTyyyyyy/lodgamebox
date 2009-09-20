@@ -119,7 +119,7 @@ package com.lordofduct.engines.physics.collisionResolvers
 			var depth:Number = result.depth;
 			
 			//get base info
-			var penAxis = Vector2.normal(normal);
+			var penAxis:Vector2 = Vector2.normal(normal);
 			if(Vector2.subtract(body1.centerOfMass, body2.centerOfMass).dot(penAxis) < 0)
 			{
 				normal.negate();
@@ -180,6 +180,5 @@ package com.lordofduct.engines.physics.collisionResolvers
 			body2.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION_RESOLVED, result ) );
 			body2.dispatchEvent( new PhysicsEvent( PhysicsEvent.BODY_MOVED, result ) );
 		}
-		
 	}
 }

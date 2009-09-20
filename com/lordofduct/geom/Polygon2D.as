@@ -8,11 +8,9 @@ package com.lordofduct.geom
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	public class Polygon2D implements IGeometricShape
+	public class Polygon2D extends PointList implements IGeometricShape
 	{
 		private var _maxVerts:int;
-		private var _vX:Array = new Array();
-		private var _vY:Array = new Array();
 		
 		private var _center:Vector2;
 		private var _boundingRect:Rectangle;
@@ -30,7 +28,6 @@ package com.lordofduct.geom
  * Properties
  */
 		public function get maxVerts():int { return _maxVerts; }
-		public function get numVerts():int { return _vX.length; }
 		
 	/**
 	 * IGeometricShape interface
@@ -60,93 +57,56 @@ package com.lordofduct.geom
 /**
  * Methods
  */	
-		public function getVert( index:uint ):Vector2
+		override public function pushVert(pnt:*, ...rest ):void
 		{
-			return (index < this.numVerts) ? new Vector2( _vX[index], _vY[index] ) : null;
-		}
-		
-		public function getVertList( mat:Matrix=null ):Array
-		{
-			var arr:Array = new Array();
-			while(arr.length < _vX.length)
-			{
-				var v:Vector2 = new Vector2( _vX[arr.length], _vY[arr.length] );
-				if(mat) v.transformByMatrix(mat);
-				arr.push( v );
-			}
-			return arr;
-		}
-		
-		public function getVertX( index:uint ):Number
-		{
-			return _vX[index];
-		}
-		
-		public function getVertY( index:uint ):Number
-		{
-			return _vY[index];
-		}
-		
-		public function pushVert(pnt:*, ...rest ):void
-		{
-			Assertions.isTrue( (pnt is Point || pnt is Point2D), "com.lordofduct.geom::Polygon2D - can not access object that is not a Point or Point2D." );
 			Assertions.smallerOrEqual( this.numVerts, uint(_maxVerts), "com.lordofduct.geom::Polygon2D - can not add more verts then is allowed by maxVerts." );
 			
-			_vX.push( pnt.x );
-			_vY.push( pnt.y );
+			super.pushVert(pnt);
 			_dirty = true;
 			
 			for each( pnt in rest )
 			{
-				this.pushVert( pnt );
+				super.pushVert( pnt );
 			}
 		}
 		
-		public function pushVertPair(ix:Number, iy:Number):void
+		override public function pushVertPair(ix:Number, iy:Number):void
 		{
 			Assertions.smallerOrEqual( this.numVerts, uint(_maxVerts), "com.lordofduct.geom::Polygon2D - can not add more verts then is allowed by maxVerts." );
-			_vX.push( ix );
-			_vY.push( iy );
+			
+			super.pushVertPair(ix, iy);
 			_dirty = true;
 		}
 		
-		public function popVert():Vector2
-		{
-			return (this.numVerts) ? new Vector2( _vX.pop(), _vY.pop() ) : null;
-		}
-		
-		public function setVert( index:uint, pnt:* ):void
+		override public function setVert( index:uint, pnt:* ):void
 		{
 			Assertions.smaller( index, uint(_maxVerts), "com.lordofduct.geom::Polygon2D - can not access vert out of max vert range." );
-			Assertions.isTrue( (pnt is Point || pnt is Point2D), "com.lordofduct.geom::Polygon2D - can not access object that is not a Point or Point2D." );
 			
-			_vX[index] = pnt.x;
-			_vY[index] = pnt.y;
+			super.setVert( index, pnt );
 			_dirty = true;
 		}
 		
-		public function setVertPair( index:uint, ix:Number, iy:Number ):void
+		override public function setVertPair( index:uint, ix:Number, iy:Number ):void
 		{
 			Assertions.smaller( index, uint(_maxVerts), "com.lordofduct.geom::Polygon2D - can not access vert out of max vert range." );
 			
-			_vX[index] = ix;
-			_vY[index] = iy;
+			super.setVertPair( index, ix, iy );
 			_dirty = true;
 		}
 		
-		public function setVertX( index:uint, value:Number ):void
+		override public function setVertX( index:uint, value:Number ):void
 		{
 			Assertions.smaller( index, uint(_maxVerts), "com.lordofduct.geom::Polygon2D - can not access vert out of max vert range." );
 			
-			_vX[index] = value;
+			super.setVertX( index, value );
 			_dirty = true;
 		}
 		
-		public function setVertY( index:uint, value:Number ):void
+		override public function setVertY( index:uint, value:Number ):void
 		{
 			Assertions.smaller( index, uint(_maxVerts), "com.lordofduct.geom::Polygon2D - can not access vert out of max vert range." );
 			
-			_vY[index] = value;
+			super.setVertY( index, value );
 			_dirty = true;
 		}
 		

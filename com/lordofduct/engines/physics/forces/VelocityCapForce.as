@@ -2,6 +2,7 @@ package com.lordofduct.engines.physics.forces
 {
 	import com.lordofduct.engines.physics.ISimulatableAttrib;
 	import com.lordofduct.geom.Vector2;
+	import com.lordofduct.util.LoDMath;
 
 	public class VelocityCapForce extends SpeedCapForce implements IForceSimulator
 	{
@@ -24,7 +25,7 @@ package com.lordofduct.engines.physics.forces
 			{
 				var vel:Vector2 = body.velocity;
 				//set vel length so that when projected on _dir you get _cap
-				vel.length = _cap * vel.length / (vel.x * _dir.x + vel.y * _dir.y);
+				vel.length = this.speedCap * vel.length / (vel.x * _dir.x + vel.y * _dir.y);
 				body.velocity = vel;
 			}
 			

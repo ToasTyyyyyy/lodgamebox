@@ -91,7 +91,7 @@ package com.lordofduct.util.asset
 		{
 			Assertions.notNil(idx,"com.lordofduct.utils::AssetManager - idx param must be non-null");
 			
-			var asset:Sprite = (_assets[idx] is Loader) _assets[idx].content as Sprite : _assets[idx] as Sprite;
+			var asset:Sprite = (_assets[idx] is Loader) ? _assets[idx].content as Sprite : _assets[idx] as Sprite;
 			Assertions.notNil(asset, "com.lordofduct.utils::AssetManager - Item not registered in library with the id: " + idx, Error);
 			Assertions.notNil(asset.loaderInfo, "com.lordofduct.utils::AssetManager - Item " + idx + " does not contain a LoaderInfo object and must not be a SWF", Error );
 			return asset;
@@ -108,7 +108,7 @@ package com.lordofduct.util.asset
 		
 		public function getInstanceFromSWFLibrary( idx:String, className:String ):*
 		{
-			var clazz:Class = this.getClassFromSWFLibrary( idx );
+			var clazz:Class = this.getClassFromSWFLibrary( idx, className );
 			return new clazz();
 		}
 		

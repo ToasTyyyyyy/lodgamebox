@@ -96,7 +96,8 @@ package com.lordofduct.geom
 		 */
 		public function reset():void
 		{
-			_coords.splice(0);//empty array
+			_cX.length = 0;
+			_cY.length = 0;
 		}
 		
 		public function getPosition(t:Number):Point

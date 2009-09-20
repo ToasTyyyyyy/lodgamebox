@@ -1,7 +1,6 @@
-package com.lordofduct.util
+package com.lordofduct.util.asset
 {
-	import flash.display.Loader;
-	import flash.net.URLRequest;
+	import com.lordofduct.util.SingletonEnforcer;
 	
 	public class AssetPreloadManager
 	{

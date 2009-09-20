@@ -1,7 +1,9 @@
 // ActionScript file
 package com.lordofduct.util.supplemental
 {
-	private function polyContains( pnt:Point, ...verts ):Boolean
+	import flash.geom.Point;
+	
+	public function polyContains( pnt:Point, ...verts ):Boolean
 	{
 		var i:int, j:int, p1x:Number, p1y:Number, p2x:Number, p2y:Number, rtn:Boolean = false;
 		for( i = 0; i < verts.length; i++ )

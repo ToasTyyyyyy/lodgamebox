@@ -25,6 +25,7 @@ package com.lordofduct.media
 	
 	import flash.utils.Dictionary;
 	import flash.utils.Proxy;
+	import flash.utils.flash_proxy;
 
 	final public class URIPlaylist extends Proxy implements IIdentifiable
 	{

@@ -1,8 +1,8 @@
 package com.lordofduct.engines.physics
 {
+	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
 	import com.lordofduct.engines.physics.forces.IForceSimulator;
-	import com.lordofduct.geom.Vector2;
 	import com.lordofduct.util.Assertions;
 	
 	public class PhysicsCollection implements IPhysicsCollection
@@ -15,6 +15,7 @@ package com.lordofduct.engines.physics
 		
 		private var _bodies:Array = new Array();
 		private var _simulators:Array = new Array();
+		private var _arbiterList:ArbiterList = new ArbiterList();
 		
 		public function PhysicsCollection(alg:ICollisionResolver=null, steps:Boolean=true, collides:Boolean=true, resolves:Boolean=true)
 		{
@@ -98,15 +99,28 @@ package com.lordofduct.engines.physics
 			_simulators.length = 0;
 		}
 		
-		public function simulate(dt:Number, includedForces:Array=null):void
+		public function step(dt:Number, includedForces:Array=null):void
 		{
 			if(!_stepsInternal) return;
 			
+			//resolve arbiters
+			var al:int = _arbiterList.length, arbiter:Arbiter, i:int;
+			var invDt:Number = (dt > 0) : 1 / dt : 0;
+			
+			for(i = 0; i < al; i++)
+			{
+				arbiter = _arbiterList.getItem(i);
+				
+				arbiter.preStep( invDt, dt );
+				arbiter.applyImpulse();
+			}
+			
+			//update positions
 			includedForces = (includedForces) ? includedForces.concat(_simulators) : _simulators.slice();
 			
 			var body:ISimulatableAttrib;
 			
-			for (var i:int = 0; i < _bodies.length; i++)
+			for (i = 0; i < _bodies.length; i++)
 			{
 				body = _bodies[i] as ISimulatableAttrib;
 				if(body && body.isDynamicMass) (body as ISimulatableAttrib).kinematicIntegrator.step(dt, body as ISimulatableAttrib, includedForces);
@@ -118,32 +132,32 @@ package com.lordofduct.engines.physics
 			if(!_colInternal) return;
 			
 			var coll:Array = this.getPhysicalBodyList();
-			var phys:LoDPhysicsEngine = LoDPhysicsEngine.instance;
-			var other:IPhysicalAttrib, body:IPhysicalAttrib;
+			var body1:IPhysicalAttrib, body2:IPhysicalAttrib;
 			
 			while( coll.length )
 			{
-				body = coll.pop() as IPhysicalAttrib;
+				body1 = coll.pop() as IPhysicalAttrib;
 				
-				for each( other in coll )
+				for each( body2 in coll )
 				{
-					phys.testCollisionOf( body, other, _resInternal, _alg );
-				}
-			}
-		}
-		
-		public function collideAgainst(value:*, resolve:Boolean=true, resAlg:ICollisionResolver=null ):void
-		{
-			if(!resAlg) resAlg = _alg;
-			
-			for each(var body:IPhysicalAttrib in _bodies)
-			{
-				if( value is IPhysicsCollection)
-				{
-					IPhysicsCollection(value).collideAgainst(body, resolve, resAlg);
-				} else if( value is IPhysicalAttrib )
-				{
-					LoDPhysicsEngine.instance.testCollisionOf( body, value as IPhysicalAttrib, resolve, resAlg );
+					var detector:ICollisionDetector = (body1.collisionMesh.collisionDetector.weight > body2.collisionMesh.collisionDetector.weight) ? body1.collisionMesh.collisionDetector : body2.collisionMesh.collisionDetector;
+					var arb:Arbiter = new Arbiter(body1, body2, _alg);
+					var res:Object = detector.testBodyBody( body1, body2 );
+					
+					if(res)
+					{
+						var index:int = _arbiterList.indexOf(arb);
+						
+						if(index >= 0)
+						{
+							arb = _arbiterList.getItem(index);
+							arb.update.apply(arb, res);
+						} else {
+							arb.update.apply(arb, res);
+							_arbiterList.add(arb);
+						}
+					}
+					else _arbiterList.remove(arb);
 				}
 			}
 		}

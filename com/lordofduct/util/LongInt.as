@@ -98,10 +98,10 @@ package com.lordofduct.util
 			}
 			
 			
-			var radix = 10;
+			var radix:int = 10;
 			var val:String = LoDNumberUtils.cutValueFrom( value.toString(), radix );
 			
-			var isNeg = false;
+			var isNeg:Boolean = false;
 			if(val.substr(0,1) == "-")
 			{
 				isNeg = true;
@@ -143,7 +143,7 @@ package com.lordofduct.util
 		{
 			if(!_high && !_low) return "0";
 			
-			var isNeg:Boolean = _high & (1 << 31);
+			var isNeg:Boolean = Boolean(_high & (1 << 31));
 			var ln:Number;
 			var hn:Number;
 			if(isNeg)
@@ -187,7 +187,7 @@ package com.lordofduct.util
 		{
 			value = LoDNumberUtils.cutValueFrom( value, radix );
 			
-			var isNeg = false;
+			var isNeg:Boolean = false;
 			if(value.substr(0,1) == "-")
 			{
 				isNeg = true;

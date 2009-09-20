@@ -47,12 +47,14 @@ package com.lordofduct.display
 	import com.lordofduct.geom.SyncingLdTransform;
 	import com.lordofduct.geom.SyncingTransform;
 	import com.lordofduct.util.ITransformable;
+	import com.lordofduct.util.LoDMath;
 	
 	import flash.display.MovieClip;
+	import flash.geom.Transform;
 
 	dynamic public class LdTranMovieClip extends MovieClip implements ITransformable
 	{
-		protected var _trans:SyncingTransform = new SyncingLdTransform();
+		protected var _trans:SyncingLdTransform = new SyncingLdTransform();
 		
 		public function LdTranMovieClip()
 		{

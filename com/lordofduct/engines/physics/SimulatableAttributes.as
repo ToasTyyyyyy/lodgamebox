@@ -1,7 +1,9 @@
 package com.lordofduct.engines.physics
 {
+	import com.lordofduct.engines.physics.forces.IForceSimulator;
 	import com.lordofduct.engines.physics.integrals.EulerKinematicIntegral;
 	import com.lordofduct.engines.physics.integrals.IKinematicIntegral;
+	import com.lordofduct.geom.Vector2;
 	import com.lordofduct.util.LoDMath;
 	import com.lordofduct.util.LoDMatrixTransformer;
 	

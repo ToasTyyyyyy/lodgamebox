@@ -123,6 +123,5 @@ package com.lordofduct.engines.physics.collisionResolvers
 			body2.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION_RESOLVED, result ) );
 			body2.dispatchEvent( new PhysicsEvent( PhysicsEvent.BODY_MOVED, result ) );
 		}
-		
 	}
 }
