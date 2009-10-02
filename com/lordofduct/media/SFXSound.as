@@ -22,6 +22,9 @@
  */
 package com.lordofduct.media
 {
+	import com.lordofduct.events.SFXEvent;
+	import com.lordofduct.util.LoDMath;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -33,17 +36,17 @@ package com.lordofduct.media
 	import flash.media.SoundTransform;
 	import flash.net.URLRequest;
 	import flash.utils.Timer;
-	
-	import com.lordofduct.events.SFXEvent;
-	import com.lordofduct.util.LoDMath;
 
 	public class SFXSound extends EventDispatcher implements ISFX
 	{
 		//info
 		private var _id:String;
 		private var _sound:Sound;
+		private var _id3:ID3Info;
 		
 		//volume and playback objects
+		private var _uri:*;
+		private var _context:SoundLoaderContext;
 		private var _transform:SoundTransform = new SoundTransform();
 		private var _channel:SoundChannel;
 		
@@ -61,26 +64,23 @@ package com.lordofduct.media
 			super();
 			
 			_id = id;
+			_uri = snd;
+			_context = context;
 			
-			if (snd is Sound)
+			if(!(snd is Sound) && !(snd is String) && !(snd is Class)) throw new Error("gigo.media::SFXObject - object passed to SFXSound must be a Sound object or an url to a audio file");
+			
+			//If the snd was a Sound, then load it now and prepare the id3 data as it's already taking up memory
+			if(_uri is Sound)
 			{
-				_sound = snd;
-			} else if (snd is String)
-			{
-				_sound = new Sound();
-				_sound.addEventListener( IOErrorEvent.IO_ERROR, loadCompletionHandler, false, 0, true );
-				_sound.addEventListener( Event.ID3, id3InfoReady, false, 0, true );
-				_sound.addEventListener( Event.COMPLETE, loadCompletionHandler, false, 0, true );
-				_sound.load( new URLRequest( snd ), context );
-			} else {
-				throw new Error("gigo.media::SFXObject - object passed to SFXSound must be a Sound object or a url to a audio file");
+				_sound = _uri;
+				_id3 = _sound.id3;
 			}
 		}
 		
 /**
  * Public interface
  */
-		public function get id3():ID3Info { return _sound.id3; }
+		public function get id3():ID3Info { return _id3; }
 		public function get loops():int { return _loops; }
 		public function get totalLoops():int { return _totalLoops; }
 		
@@ -155,8 +155,12 @@ package com.lordofduct.media
 		
 		private function id3InfoReady(e:Event):void
 		{
-			this.dispatchEvent( new Event( Event.ID3 ) );
+			if(!_sound) return;
+			
 			_sound.removeEventListener( Event.ID3, id3InfoReady );
+			_id3 = _sound.id3;
+			
+			this.dispatchEvent( new Event( Event.ID3 ) );
 		}
 		
 		private function loadCompletionHandler(e:Event):void
@@ -190,6 +194,8 @@ package com.lordofduct.media
 	 */
 		public function play( opts:Object=null ):void
 		{
+			if(!_sound) this.loadSound(_uri, _context);
+			
 			//start playing sound
 			if (!opts) opts = new Object();
 			if (_channel) _channel.stop();
@@ -294,6 +300,73 @@ package com.lordofduct.media
 			this.volume = 0;
 		}
 		
+	/**
+	 * Public load managing
+	 */
+		public function loadSound(snd:*, context:SoundLoaderContext=null):void
+		{
+			if(_sound) this.closeSound();
+			
+			_uri = snd;
+			_context = context;
+			
+			if (snd is Sound)
+			{
+				//is snd is a Sound, then attach it
+				_sound = snd;
+				_id3 = _sound.id3;
+			} else if (snd is String)
+			{
+				//if snd is a String, then attempt to load it as a uri
+				_uri = snd as String;
+				_sound = new Sound();
+				_sound.addEventListener( IOErrorEvent.IO_ERROR, loadCompletionHandler, false, 0, true );
+				_sound.addEventListener( Event.ID3, id3InfoReady, false, 0, true );
+				_sound.addEventListener( Event.COMPLETE, loadCompletionHandler, false, 0, true );
+				_sound.load( new URLRequest( snd ), context );
+			} else if ( snd is Class)
+			{
+				//if snd is a class that extends Sound, attempt to instantiate it
+				try
+				{
+					_sound = new snd();
+				} catch (err:Error)
+				{
+					throw new Error("gigo.media::SFXObject - object passed to SFXSound must be a Sound object or a url to an audio file");
+				}
+			}else {
+				throw new Error("gigo.media::SFXObject - object passed to SFXSound must be a Sound object or a url to an audio file");
+			}
+		}
+		
+		public function closeSound():void
+		{
+			this.stop();
+			
+			if(_sound)
+			{
+				_sound.removeEventListener( Event.ID3, id3InfoReady );
+				_sound.removeEventListener( IOErrorEvent.IO_ERROR, loadCompletionHandler );
+				_sound.removeEventListener( Event.COMPLETE, loadCompletionHandler );
+				if(_uri is String)
+				{
+					//only close the Sound if it was loaded internally
+					try
+					{
+						_sound.close();
+					} catch(err:Error)
+					{
+						//do nothing, the sound couldn't be closed, no problems there
+					}
+				}
+				
+				_sound = null;
+			}
+			
+			this.destroyChannel();
+			this.destroyLoopWatcher();
+		}
+		
 /**
  * IDipsose interface
  */
@@ -303,20 +376,10 @@ package com.lordofduct.media
 		{
 			var id:String = args[0], snd:* = args[1], context:SoundLoaderContext = args[2];
 			_id = id;
+			_uri = snd;
+			_context = context;
 			
-			if (snd is Sound)
-			{
-				_sound = snd;
-			} else if (snd is String)
-			{
-				_sound = new Sound();
-				_sound.addEventListener( IOErrorEvent.IO_ERROR, loadCompletionHandler, false, 0, true );
-				_sound.addEventListener( Event.ID3, id3InfoReady, false, 0, true );
-				_sound.addEventListener( Event.COMPLETE, loadCompletionHandler, false, 0, true );
-				_sound.load( new URLRequest( snd ), context );
-			} else {
-				throw new Error("gigo.media::SFXObject - object passed to SFXSound must be a Sound object or a url to a audio file");
-			}
+			if(!(snd is Sound) && !(snd is String)) throw new Error("gigo.media::SFXObject - object passed to SFXSound must be a Sound object or a url to an audio file");
 			
 			_disposed = false;
 		}
@@ -324,11 +387,12 @@ package com.lordofduct.media
 		public function dispose():void
 		{
 			if(_disposed) return;
-			if (_sound) _sound.removeEventListener( Event.ID3, id3InfoReady );
-			this.destroyChannel();
-			this.destroyLoopWatcher();
+			this.closeSound();
 			
 			_id = undefined;
+			_uri = undefined;
+			_context = undefined;
+			
 			_sound = undefined;
 			_transform = undefined;
 			_channel = undefined;

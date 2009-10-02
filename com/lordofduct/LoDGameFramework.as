@@ -1,5 +1,6 @@
 package com.lordofduct
 {
+	import com.lordofduct.util.DeltaTimer;
 	import com.lordofduct.util.SingletonEnforcer;
 	
 	import flash.display.Stage;
@@ -30,12 +31,28 @@ package com.lordofduct
  * Class Definition
  */
 		private var _stage:Stage;
+		private var _gameTimer:DeltaTimer;
 		
-		public function init(stg:Stage):void
+		public function init(stg:Stage, dTimer:DeltaTimer=null ):void
 		{
 			_stage = stg;
+			_gameTimer = dTimer;
 		}
 		
 		public function get stage():Stage { return _stage; }
+		
+		public function get gameTimer():DeltaTimer { return _gameTimer; }
+		
+		
+		
+		public function attachGlobal( idx:String, obj:* ):void
+		{
+			this[idx] = obj;
+		}
+		
+		public function removeGlobal( idx:String ):void
+		{
+			this[idx] = undefined;
+		}
 	}
 }

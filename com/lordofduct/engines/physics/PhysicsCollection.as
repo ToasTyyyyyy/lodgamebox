@@ -2,12 +2,13 @@ package com.lordofduct.engines.physics
 {
 	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
+	import com.lordofduct.engines.physics.collisionResolvers.ImpulseCollisionResolver;
 	import com.lordofduct.engines.physics.forces.IForceSimulator;
 	import com.lordofduct.util.Assertions;
 	
 	public class PhysicsCollection implements IPhysicsCollection
 	{
-		private var _alg:ICollisionResolver;
+		private var _arb:Class;
 		
 		private var _colInternal:Boolean = false;
 		private var _stepsInternal:Boolean = false;
@@ -17,22 +18,16 @@ package com.lordofduct.engines.physics
 		private var _simulators:Array = new Array();
 		private var _arbiterList:ArbiterList = new ArbiterList();
 		
-		public function PhysicsCollection(alg:ICollisionResolver=null, steps:Boolean=true, collides:Boolean=true, resolves:Boolean=true)
+		public function PhysicsCollection(arbiter:Class=null, steps:Boolean=true, collides:Boolean=true, resolves:Boolean=true)
 		{
-			_alg = alg;
+			_arb = (arbiter) ? arbiter : Arbiter;
 			_stepsInternal = steps;
 			_colInternal = collides;
 			_resInternal = resolves;
 		}
 /**
  * Properties
- */
-		public function get collisionResolver():ICollisionResolver { return _alg; }
-		public function set collisionResolver(value:ICollisionResolver):void
-		{
-			_alg = value;
-		}
-		
+ */	
 		public function get collidesInternal():Boolean { return _colInternal; }
 		public function set collidesInternal(value:Boolean):void { _colInternal = value; }
 		
@@ -105,7 +100,7 @@ package com.lordofduct.engines.physics
 			
 			//resolve arbiters
 			var al:int = _arbiterList.length, arbiter:Arbiter, i:int;
-			var invDt:Number = (dt > 0) : 1 / dt : 0;
+			var invDt:Number = (dt > 0) ? 1 / dt : 0;
 			
 			for(i = 0; i < al; i++)
 			{
@@ -118,12 +113,21 @@ package com.lordofduct.engines.physics
 			//update positions
 			includedForces = (includedForces) ? includedForces.concat(_simulators) : _simulators.slice();
 			
-			var body:ISimulatableAttrib;
+			var body:ISimulatableAttrib, subForces:Array, force:IForceSimulator;
 			
 			for (i = 0; i < _bodies.length; i++)
 			{
 				body = _bodies[i] as ISimulatableAttrib;
-				if(body && body.isDynamicMass) (body as ISimulatableAttrib).kinematicIntegrator.step(dt, body as ISimulatableAttrib, includedForces);
+				if(body && body.isDynamicMass)
+				{
+					body.kinematicIntegrator.step(dt, body as ISimulatableAttrib, includedForces);
+					
+					subForces = includedForces.concat( body.getForceSimulators() );
+					for each( force in subForces )
+					{
+						if(force) force.constrain(body);
+					}
+				}
 			}
 		}
 		
@@ -141,44 +145,24 @@ package com.lordofduct.engines.physics
 				for each( body2 in coll )
 				{
 					var detector:ICollisionDetector = (body1.collisionMesh.collisionDetector.weight > body2.collisionMesh.collisionDetector.weight) ? body1.collisionMesh.collisionDetector : body2.collisionMesh.collisionDetector;
-					var arb:Arbiter = new Arbiter(body1, body2, _alg);
+					var arb:Arbiter = new _arb(body1, body2);
 					var res:Object = detector.testBodyBody( body1, body2 );
 					
 					if(res)
 					{
 						var index:int = _arbiterList.indexOf(arb);
+						if(!(res is Array)) res = [ res ];
 						
 						if(index >= 0)
 						{
 							arb = _arbiterList.getItem(index);
-							arb.update.apply(arb, res);
+							arb.update(res as Array);
 						} else {
-							arb.update.apply(arb, res);
+							arb.update(res as Array);
 							_arbiterList.add(arb);
 						}
 					}
 					else _arbiterList.remove(arb);
-				}
-			}
-		}
-		
-		public function constrain(includedForces:Array=null):void
-		{
-			var forces:Array = _simulators.concat( includedForces );
-			var bodies:Array = this.getPhysicalBodyList();
-			var subForces:Array, sim:ISimulatableAttrib;
-			
-			for (var i:int = 0; i < bodies.length; i++)
-			{
-				sim = bodies[i] as ISimulatableAttrib;
-				
-				if(!sim) continue;
-				
-				subForces = forces.concat( sim.getForceSimulators() );
-				
-				for each( var force:IForceSimulator in subForces )
-				{
-					if(force) force.constrain(sim);
 				}
 			}
 		}

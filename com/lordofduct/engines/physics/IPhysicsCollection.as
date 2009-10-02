@@ -5,9 +5,6 @@ package com.lordofduct.engines.physics
 	
 	public interface IPhysicsCollection
 	{
-		function get collisionResolver():ICollisionResolver
-		function set collisionResolver(value:ICollisionResolver):void
-		
 		function get collidesInternal():Boolean
 		function set collidesInternal(value:Boolean):void
 		

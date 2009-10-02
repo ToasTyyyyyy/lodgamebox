@@ -7,24 +7,30 @@ package com.lordofduct.engines.physics.collisionResolvers
 
 	public class Phys2DCollisionResolver extends Arbiter
 	{
+		
+		
 		public function Phys2DCollisionResolver(b1:IPhysicalAttrib, b2:IPhysicalAttrib)
 		{
 			super(b1, b2);
 		}
 		
-		override public function update(result:CollisionResult, ...args):void
+		override public function update( results:Array ):void
 		{
-			
+			//TODO
+			super.update(results);
 		}
 		
 		override public function preStep(invDt:Number, dt:Number):void
 		{
-			
+			for each( var result:CollisionResult in this.collisions )
+			{
+				result.contactPoints = this.getContacts( result.body1, result.body2, result.normal, result.penetrationAxis, result.depth );
+			}
 		}
 		
 		override public function applyImpulse():void
 		{
-			var normal:Vector2 = this.collisionResult.normal.clone(), penAxis:Vector2 = this.collisionResult.penetrationAxis.clone(), contacts:Array
+			var normal:Vector2 = this.collisionResult.normal.clone(), penAxis:Vector2 = this.collisionResult.penetrationAxis.clone(), contacts:Array;
 			
 			var c1:Vector2 = body1.centerOfMass;
 			var c2:Vector2 = body2.centerOfMass;
@@ -149,6 +155,7 @@ package com.lordofduct.engines.physics.collisionResolvers
 			var sumInvMass:Number = b1inv + b2inv;
 			if(!sumInvMass) return null;
 			
+		
 			var mtdA:Vector2 = Vector2.multiply( axis, b1inv / sumInvMass );
 			var mtdB:Vector2 = Vector2.multiply( axis, -b2inv / sumInvMass );
 			

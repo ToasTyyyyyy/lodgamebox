@@ -35,7 +35,7 @@ package com.lordofduct.engines.physics
 			_arr.length = 0;
 		}
 		
-		public function contains( arb:Arbiter ):void
+		public function contains( arb:Arbiter ):Boolean
 		{
 			return (this.indexOf(arb) != -1);
 		}
