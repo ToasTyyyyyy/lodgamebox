@@ -6,7 +6,7 @@ package com.lordofduct.engines.physics
 	{
 		private var _body1:IPhysicalAttrib;
 		private var _body2:IPhysicalAttrib;
-		
+		private var _latestCollisions:Array;
 		
 		
 		public function Arbiter(b1:IPhysicalAttrib, b2:IPhysicalAttrib)
@@ -20,12 +20,15 @@ package com.lordofduct.engines.physics
  */
 		public function get body1():IPhysicalAttrib { return _body1; }
 		public function get body2():IPhysicalAttrib { return _body2; }
+		
+		public function get collisions():Array { return _latestCollisions.slice(); }
+		public function set collisions(value:Array):void { _latestCollisions = value; }
 /**
  * Methods
  */
-		public function update( result:CollisionResult, ...args ):void
+		public function update( results:Array ):void
 		{
-			
+			_latestCollisions = results;
 		}
 		
 		public function preStep( invDt:Number, dt:Number ):void

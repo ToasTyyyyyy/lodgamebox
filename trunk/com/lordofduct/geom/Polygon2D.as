@@ -121,7 +121,7 @@ package com.lordofduct.geom
 		 * ...
 		 * maxVerts-1 = leg maxVerts-1 -> 0
 		 */
-		public function computeSideLength( index:uint, mat:Matrix=null ):Number
+		override public function computeSideLength( index:uint, mat:Matrix=null ):Number
 		{
 			index = LoDMath.wrap( index, this.numAxes );
 			Assertions.smaller( index, uint(_maxVerts), "com.lordofduct.geom::Polygon2D - can not access vert out of max vert range." );

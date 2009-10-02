@@ -32,13 +32,13 @@
  */
 package com.lordofduct.media
 {
+	import com.lordofduct.util.IDisposable;
+	import com.lordofduct.util.SingletonEnforcer;
+	
 	import flash.media.SoundLoaderContext;
 	import flash.utils.Dictionary;
 	import flash.utils.Proxy;
 	import flash.utils.flash_proxy;
-	
-	import com.lordofduct.util.IDisposable;
-	import com.lordofduct.util.SingletonEnforcer;
 	
 	public dynamic class SFXManager extends Proxy
 	{
@@ -70,10 +70,23 @@ package com.lordofduct.media
  * Class definition
  */
 		private var _idToSFX:Dictionary = new Dictionary();
+		private var _bgChannels:Array = new Array();
 		
+		/**
+		 * Add an ISFX object. The id you can reference it by is the value present 
+		 * in its 'id' property.
+		 */
 		public function addSFX( sfx:ISFX ):void
 		{
 			_idToSFX[sfx.id] = sfx;
+		}
+		
+		/**
+		 * Add an ISFX object independent of the value in it's 'id' property
+		 */
+		public function addSFXById( idx:String, sfx:ISFX ):void
+		{
+			_idToSFX[idx] = sfx;
 		}
 		
 		public function removeSFX( sfx:ISFX ):void
@@ -134,6 +147,25 @@ package com.lordofduct.media
 		
 		
 /**
+ * Background Music Channels
+ */
+		public function setBackgroundChannel( sfx:ISFX, channel:int=0 ):void
+		{
+			var old:ISFX = _bgChannels[channel];
+			_bgChannels[channel] = sfx;
+			
+			if(old && old != sfx)
+			{
+				old.stop();
+			}
+		}
+		
+		public function getBackgroundChannel( channel:int=0 ):ISFX
+		{
+			return _bgChannels[channel];
+		}
+		
+/**
  * Factory methods
  * 
  * these methods are used to create objects as accessible properties of this manager. 
@@ -173,6 +205,12 @@ package com.lordofduct.media
 				sfx.addSFX( sound );
 			}
 			
+			addSFX( sfx );
+		}
+		
+		public function createSFXNoise( idx:String, snd:*, context:SoundLoaderContext=null ):void
+		{
+			var sfx:SFXNoise = new SFXNoise( idx, snd, context );
 			addSFX( sfx );
 		}
 		

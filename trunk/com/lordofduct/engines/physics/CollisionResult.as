@@ -14,18 +14,13 @@ package com.lordofduct.engines.physics
 		 * normal - vector pointing direction of collision from body1 -> body2
 		 * depth - Absolute value of how deep the overlap is
 		 */
-		public var penetrationAxis:Vector2;
-		public var normal:Vector2;//essentially the separating axis
-		public var depth:Number = 0;//is the depth across the normal perpendicular that the two body's intersect
-		/**
-		 * Properties set by Physics Engine before calculating reaction values
-		 * 
-		 * body1 - the object colliding
-		 * body2 - the object being collided with
-		 */
 		public var body1:IPhysicalAttrib;
 		public var body2:IPhysicalAttrib;
 		public var collisionResolver:ICollisionResolver;
+		public var penetrationAxis:Vector2;
+		public var normal:Vector2;//essentially the separating axis
+		public var depth:Number = 0;//is the depth across the normal perpendicular that the two body's intersect
+		public var contactPoints:Array;
 		
 		public var body1phase:int = -1;
 		public var body2phase:int = -1;

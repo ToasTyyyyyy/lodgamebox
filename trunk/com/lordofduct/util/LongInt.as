@@ -1,5 +1,7 @@
 package com.lordofduct.util
 {
+	import flash.utils.ByteArray;
+	
 	public class LongInt
 	{
 		//this is used to temporarily convert a value of any type to a LongInt
@@ -15,6 +17,14 @@ package com.lordofduct.util
 			{
 				this.setTo(value);
 			}
+		}
+		
+		public function get32BitSplit():Array { return [ _high, _low ]; }
+		public function set32BitSplit( high:uint, low:uint ):void { _high = high; _low = low; }
+		public function writeToByteArray( bar:ByteArray ):void
+		{
+			bar.writeUnsignedInt( _high );
+			bar.writeUnsignedInt( _low );
 		}
 		
 		public function add( value:* ):void

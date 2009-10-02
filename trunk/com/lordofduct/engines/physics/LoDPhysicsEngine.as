@@ -160,9 +160,8 @@ package com.lordofduct.engines.physics
 		{
 			for each( var group:IPhysicsCollection in _groups )
 			{
-				group.simulate(dt);
+				group.step(dt);
 				group.collide();
-				group.constrain();
 			}
 		}
 		

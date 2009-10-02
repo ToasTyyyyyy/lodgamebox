@@ -1,5 +1,6 @@
 package com.lordofduct.engines.physics
 {
+	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.engines.physics.collisionMesh.ICollisionMesh;
 	import com.lordofduct.geom.LdTransform;
 	import com.lordofduct.geom.Vector2;
