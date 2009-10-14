@@ -352,7 +352,7 @@ package com.lordofduct.util
 		}
 		
 		/**
-		 * Returns all factors of a value as positive integers. Negative integers are included as the sign is assumed to be relative.
+		 * Returns all factors of a value as positive integers. Negative integers are excluded as the sign is assumed to be relative.
 		 * 
 		 * for efficiency we use the same analytical algorithm from isPrime where we only check while i <= val / i. We test both odds and evens now though 
 		 * as we haven't thrown out all trivial values. Still the same concept applies. Which means all primes of 16 can be found by the time i reach 4, instead of 
