@@ -41,11 +41,11 @@ package com.lordofduct.engines.animation
 	 * ITween Interface
 	 */
 		public function get target():Object { return _targ; }
+		public function get delay():Number { return _delay; }
 		public function get duration():Number { return _dur; }
 		public function get passed():Number { return LoDMath.clamp( _pos - _delay, _dur ); }
 		public function get position():Number { return this.passed / _dur; }
 		public function get property():String { return _prop; }
-		public function get delay():Number { return _delay; }
 		
 	/**
 	 * SimpleTween Interface
@@ -64,8 +64,8 @@ package com.lordofduct.engines.animation
 			if(_paused) return false;
 			
 			var op:Number = _pos;
-			_pos = LoDMath.clamp( _pos + dt, _dur );
-			var t:Number = _pos - _delay;
+			_pos = _pos + dt;
+			var t:Number = LoDMath.clamp(_pos - _delay, _dur );
 			
 			if( _pos < _delay ) return false;
 			else if ( op <= _delay && t > 0 )
@@ -77,7 +77,7 @@ package com.lordofduct.engines.animation
 			
 			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_UPDATE, this.position ) );
 			
-			if ( _pos >= _dur )
+			if ( _pos - _delay >= _dur )
 			{
 				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_COMPLETE, 1 ) );
 				return true;
@@ -85,9 +85,7 @@ package com.lordofduct.engines.animation
 				return false;
 			}
 		}
-	/**
-	 * SimpleTween Interface
-	 */
+		
 		public function pause():void
 		{
 			if(_paused) return;
@@ -112,6 +110,19 @@ package com.lordofduct.engines.animation
 			
 			_pos = _dur - _pos + _delay;
 			this.update(0);
+		}
+		
+	/**
+	 * IDisposable interface
+	 */
+		public function dispose():void
+		{
+			//TODO
+		}
+		
+		public function reengage(...args):void
+		{
+			//TODO
 		}
 	}
 }

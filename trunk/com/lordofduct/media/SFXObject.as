@@ -266,6 +266,8 @@ package com.lordofduct.media
 			_transform = value;
 			if( this.type == SFXObject.SOUND_TYPE && _channel ) _channel.soundTransform = _transform;
 			else if( this.type == SFXObject.UNKNOWN_TYPE ) _sound.soundTransform = _transform;
+			
+			this.dispatchEvent( new SFXEvent( SFXEvent.VOLUME_CHANGE ) );
 		}
 		
 		public function get volume():Number { return _transform.volume; }
@@ -274,6 +276,8 @@ package com.lordofduct.media
 			_transform.volume = value;
 			if( this.type == SFXObject.SOUND_TYPE && _channel ) _channel.soundTransform = _transform;
 			else if( this.type == SFXObject.UNKNOWN_TYPE ) _sound.soundTransform = _transform;
+			
+			this.dispatchEvent( new SFXEvent( SFXEvent.VOLUME_CHANGE ) );
 		}
 		
 		public function get panning():Number { return _transform.pan; }

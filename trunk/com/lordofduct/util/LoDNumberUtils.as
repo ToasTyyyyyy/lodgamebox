@@ -6,6 +6,15 @@ package com.lordofduct.util
 		{
 		}
 		
+		public static function toLength( value:uint, length:int ):String
+		{
+			var str:String = value.toString();
+			
+			while(str.length < length) str = "0" + str;
+			
+			return str;
+		}
+		
 		/**
 		 * Converts a Number to a 16.16 fixed-point binary value stored in a signed integer
 		 */

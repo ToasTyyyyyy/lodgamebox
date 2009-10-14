@@ -43,7 +43,6 @@ package com.lordofduct.geom
 					var p3:Point = Point.interpolate(p1,p2,t);
 					a2.push(p3);
 				}
-				a1.splice(0,a1.length);
 				a1 = a2.splice(0,a2.length);
 			}
 			

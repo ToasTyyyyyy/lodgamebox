@@ -47,7 +47,8 @@ package com.lordofduct.engines.animation
 		public function get frameRate():int { return _frate; }
 		public function set frameRate( value:int ):void
 		{
-			var delay:int = Math.max( 10, Math.round( 1000 / value ) );
+			value = Math.max( 10, Math.min( 100, value ) );
+			var delay:int = Math.round( 1000 / value );
 			_frate = Math.round(1000 / delay);
 			_timer.pulseDelay = delay;
 		}
@@ -57,11 +58,11 @@ package com.lordofduct.engines.animation
 	 */
 		public function registerTween( tween:ITween ):void
 		{
+			if(_timer.paused) _timer.start();
+			
 			var obj:Object = (_members[tween.target]) ? _members[tween.target] : new Object();
 			obj[tween.property] = tween;
 			_members[tween.target] = obj;
-			
-			tween.update(_timer.deltaSinceLastTick());
 		}
 		
 		public function tweenTo( obj:Object, func:Function, dur:Number, vars:Object, delay:Number=0 ):void
@@ -91,6 +92,7 @@ package com.lordofduct.engines.animation
 		private function updateAll(e:TimerEvent):void
 		{
 			var dt:Number = _timer.dt;
+			var count:int = 0;
 			
 			for each(var map:Object in _members)
 			{
@@ -99,9 +101,13 @@ package com.lordofduct.engines.animation
 					if(tween.update(dt))
 					{
 						delete map[tween.property];
+					} else {
+						count++;
 					}
 				}
 			}
+			
+			if(!count && !_timer.paused) _timer.pause();
 		}
 	}
 }

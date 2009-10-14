@@ -76,7 +76,6 @@ package com.lordofduct.util
 		 */
 		public function pause():void
 		{
-			this.update();
 			_isPaused = true;
 		}
 		

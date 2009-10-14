@@ -79,6 +79,8 @@ package com.lordofduct.display
 		public function PhysicalMovieClip()
 		{
 			super();
+			
+			
 		}
 		
 /**
@@ -87,8 +89,7 @@ package com.lordofduct.display
 	/**
 	 * IVisibleObject Interface
 	 */
-		public function get view():DisplayObject { return _view; }
-		public function set view(value:DisplayObject):void { _view = value; }
+		public function get view():DisplayObject { return this; }
 	/**
 	 * IPhysicalAttrib Interface
 	 */

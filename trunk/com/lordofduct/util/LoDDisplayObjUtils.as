@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LoDDisplayObjUtils - written by Dylan Engelman a.k.a LordOfDuct
  * 
  * Class written and devised for the LoDGameLibrary. The use of this code 
@@ -31,6 +31,8 @@
  */
 package com.lordofduct.util
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.geom.Matrix;
@@ -48,6 +50,26 @@ package com.lordofduct.util
 /**
  * Class Definition
  */
+		public static function drawDisplayObjectAsIs( obj:DisplayObject, mat:Matrix=null, w:Number=NaN, h:Number=NaN ):Bitmap
+		{
+			if (!obj) return null;
+			
+			if(isNaN(w) || isNaN(h))
+			{
+				var rect:Rectangle = obj.getBounds( obj );
+				
+				if (!rect.width && isNaN(w) || !rect.height) return null;
+				
+				if(isNaN(w)) w =  Math.abs(rect.left) + rect.right;
+				if(isNaN(h)) h = Math.abs(rect.top) + rect.bottom;
+			}
+			
+			if(!mat) mat = obj.transform.matrix;
+			var bmd:BitmapData = new BitmapData( w, h, true, 0x00000000);
+			bmd.draw( obj, mat, null, null, null, true );
+			
+			return new Bitmap( bmd );
+		}
 		
 		public static function localToLocal( pnt:Point, start:DisplayObject, end:DisplayObject ):Point
 		{
@@ -98,7 +120,7 @@ package com.lordofduct.util
 			var m:Matrix = child.transform.matrix;
 			var par:DisplayObjectContainer = child.parent;
 			
-			while( par != endParent )
+			while( par && par != endParent )
 			{
 				m.concat( par.transform.matrix );
 				par = par.parent;

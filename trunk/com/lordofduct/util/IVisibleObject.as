@@ -73,6 +73,6 @@ package com.lordofduct.util
 	public interface IVisibleObject
 	{
 		function get view():DisplayObject
-		function set view(value:DisplayObject):void
+		//function set view(value:DisplayObject):void
 	}
 }

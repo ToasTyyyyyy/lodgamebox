@@ -3,7 +3,10 @@ package com.lordofduct.engines.physics.collisionResolvers
 	import com.lordofduct.engines.physics.Arbiter;
 	import com.lordofduct.engines.physics.CollisionResult;
 	import com.lordofduct.engines.physics.IPhysicalAttrib;
-
+	import com.lordofduct.engines.physics.collisionMesh.IPhasedCollisionMesh;
+	import com.lordofduct.engines.physics.ISimulatableAttrib;
+	import com.lordofduct.geom.Vector2;
+	
 	public class SimpleCollisionResolver extends Arbiter
 	{
 		public function SimpleCollisionResolver(b1:IPhysicalAttrib, b2:IPhysicalAttrib)
@@ -12,7 +15,7 @@ package com.lordofduct.engines.physics.collisionResolvers
 		}
 		
 		override public function update(results:Array):void
-		{
+		{	
 			for each( var result:CollisionResult in results )
 			{
 				if(body1.collisionMesh is IPhasedCollisionMesh)
@@ -89,13 +92,15 @@ package com.lordofduct.engines.physics.collisionResolvers
 				{
 					sim1.physicalTransform.x += mtdA.x;
 					sim1.physicalTransform.y += mtdA.y;
-					sim1.velocity.reflect(Vector2.normalize(mtdA));
+					//sim1.velocity.reflect(Vector2.normalize(mtdA));
+					sim1.velocity.setTo(0,0);
 				}
 				if(sim2 && sim2.isDynamicMass)
 				{
 					sim2.physicalTransform.x += mtdB.x;
 					sim2.physicalTransform.y += mtdB.y;
 					sim2.velocity.reflect(Vector2.normalize(mtdB));
+					sim2.velocity.setTo(0,0);
 				}
 			}
 			

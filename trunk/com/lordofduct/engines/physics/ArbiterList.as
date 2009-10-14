@@ -42,11 +42,11 @@ package com.lordofduct.engines.physics
 		
 		public function indexOf( arb:Arbiter ):int
 		{
-			var arbiter:Object;
+			var arbiter:Arbiter;
 			
 			for( var i:int = 0; i < _arr.length; i++ )
 			{
-				arbiter = _arr[i];
+				arbiter = _arr[i] as Arbiter;
 				if(arb.equals(arbiter)) return i;
 			}
 			

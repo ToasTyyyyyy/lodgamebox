@@ -1,6 +1,5 @@
 package com.lordofduct.engines.physics
 {
-	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
 	import com.lordofduct.geom.Vector2;
 	import com.lordofduct.util.IClonable;
 	import com.lordofduct.util.IDisposable;
@@ -16,7 +15,6 @@ package com.lordofduct.engines.physics
 		 */
 		public var body1:IPhysicalAttrib;
 		public var body2:IPhysicalAttrib;
-		public var collisionResolver:ICollisionResolver;
 		public var penetrationAxis:Vector2;
 		public var normal:Vector2;//essentially the separating axis
 		public var depth:Number = 0;//is the depth across the normal perpendicular that the two body's intersect

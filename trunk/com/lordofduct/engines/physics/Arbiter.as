@@ -28,7 +28,7 @@ package com.lordofduct.engines.physics
  */
 		public function update( results:Array ):void
 		{
-			_latestCollisions = results;
+			_latestCollisions = results.slice();
 		}
 		
 		public function preStep( invDt:Number, dt:Number ):void
