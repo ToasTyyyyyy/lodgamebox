@@ -328,7 +328,7 @@ package com.lordofduct.util
 		 * 
 		 * Thusly we would only have to loop as long as i <= val / i. Once we've reached the middle compliment, all subsequent factors have been resolved.
 		 * 
-		 * This shrinks the number of loops for odd values from [ floor(val / 2) - 1 ] down to [ max( 1, floor(sqrt(val) / 2) - 1) ]
+		 * This shrinks the number of loops for odd values from [ floor(val / 2) - 1 ] down to [ ceil(sqrt(val) / 2) - 1 ]
 		 * 
 		 * example, if we checked EVERY odd number for the validity of the prime 7927, we'd loop 3962 times
 		 * 
