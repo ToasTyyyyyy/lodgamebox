@@ -1,4 +1,4 @@
-/**
+﻿/**
  * KeyboardControls - written by Dylan Engelman a.k.a LordOfDuct
  * 
  * Class written and devised for the LoDGameLibrary. The use of this code 
@@ -127,7 +127,7 @@ package com.lordofduct.ui
 		/**
 		 * Is id currently activated?
 		 */
-		public function isComboActive( id:String ):Boolean
+		public function isComboIdActive( id:String ):Boolean
 		{
 			return _idToActive[ id ];
 		}
@@ -136,7 +136,7 @@ package com.lordofduct.ui
 		 * Is combo strictly activated. Returns true if and only if the supplied combo's combination 
 		 * is the ONLY keys currently pressed.
 		 */
-		public function isComboUnique( id:String ):Boolean
+		public function isComboIdUnique( id:String ):Boolean
 		{
 			if (!this.isComboActive(id)) return false;
 			

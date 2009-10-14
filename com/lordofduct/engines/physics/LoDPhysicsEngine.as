@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LoDPhysicsEngine - written by Dylan Engelman a.k.a LordOfDuct
  * 
  * Class written and devised for the LoDGameLibrary. The use of this code 
@@ -32,7 +32,6 @@
 package com.lordofduct.engines.physics
 {
 	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
-	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
 	import com.lordofduct.engines.physics.collisionResolvers.SimpleCollisionResolver;
 	import com.lordofduct.events.PhysicsEvent;
 	import com.lordofduct.util.Assertions;
@@ -72,7 +71,6 @@ package com.lordofduct.engines.physics
 		private var _switch:DeltaTimer;
 		private var _groups:Array = new Array();
 		private var _detail:uint = 1;
-		private var _defColRes:ICollisionResolver = SimpleCollisionResolver.instance;
 		
 		/**
 		 * A reference to the DeltaTimer used to update the Physics. 
@@ -96,9 +94,6 @@ package com.lordofduct.engines.physics
 		 */
 		public function get detail():uint { return _detail; }
 		public function set detail(value:uint):void { _detail = Math.max(1,value); }
-		
-		public function get defaultCollisionResolver():ICollisionResolver { return _defColRes; }
-		public function set defaultCollisionResolver(value:ICollisionResolver):void { if(value) _defColRes = value; }
 		
 	/**
 	 * Public Methods
@@ -165,7 +160,7 @@ package com.lordofduct.engines.physics
 			}
 		}
 		
-		public function testCollisionOf( body1:IPhysicalAttrib, body2:IPhysicalAttrib, resolve:Boolean=false, resAlg:ICollisionResolver=null ):*
+		/* public function testCollisionOf( body1:IPhysicalAttrib, body2:IPhysicalAttrib, resolve:Boolean=false, resAlg:ICollisionResolver=null ):*
 		{	
 			if( !body1 || !body2 ) return null;
 			if( body1 == body2 ) return null;
@@ -174,23 +169,15 @@ package com.lordofduct.engines.physics
 			
 			var detector:ICollisionDetector = (body1.collisionMesh.collisionDetector.weight > body2.collisionMesh.collisionDetector.weight) ? body1.collisionMesh.collisionDetector : body2.collisionMesh.collisionDetector;
 			return detector.testBodyBody( body1, body2, resolve, resAlg );
-		}
+		} */
 		
-		public function poolCollisionResult( result:CollisionResult, resolve:Boolean=true, resAlg:ICollisionResolver=null ):void
+		public function poolCollisionResult( result:CollisionResult ):void
 		{
 			if(result)
 			{
-				if(!resAlg) resAlg = LoDPhysicsEngine.instance.defaultCollisionResolver;
-				result.collisionResolver = resAlg;
-				
 				this.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION, result ) );
 				if(result.body1) result.body1.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION, result ) );
 				if(result.body2) result.body2.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION, result ) );
-				
-				if(resolve && result.collisionResolver)
-				{
-					result.collisionResolver.resolveCollision(result);
-				}
 			}
 		}
 	}

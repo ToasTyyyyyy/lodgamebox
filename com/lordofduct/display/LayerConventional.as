@@ -23,7 +23,8 @@ package com.lordofduct.display
 
 	public class LayerConventional extends LdTranSprite
 	{
-		private var _depthRatio:Number = 0;
+		private var _dpX:Number = 0;
+		private var _dpY:Number = 0;
 		private var _screen:GameScreen = null;
 		
 		public function LayerConventional()
@@ -41,8 +42,14 @@ package com.lordofduct.display
 		 * 
 		 * larger value scroll more quickly then lower values
 		 */
-		public function get depthRatio():Number { return _depthRatio; }
-		public function set depthRatio(value:Number):void { _depthRatio = LoDMath.clamp( value, 1, -1 ); }
+		public function get depthRatio():Number { return _dpX; }
+		public function set depthRatio(value:Number):void { _dpX = _dpY = LoDMath.clamp( value, 1, -1 ); }
+		
+		public function get depthRatioX():Number { return _dpX; }
+		public function set depthRatioX(value:Number):void { _dpX = LoDMath.clamp( value, 1, -1 ); }
+		
+		public function get depthRatioY():Number { return _dpY; }
+		public function set depthRatioY(value:Number):void { _dpY = LoDMath.clamp( value, 1, -1 ); }
 		
 		/**
 		 * Render this layer
@@ -54,9 +61,8 @@ package com.lordofduct.display
 		public function render(mat:Matrix=null):void
 		{
 			mat = (mat) ? mat.clone() : new Matrix();
-			var dr:Number = 1 + this.depthRatio;
-			mat.tx *= dr;
-			mat.ty *= dr;
+			mat.tx *= 1 + this.depthRatioX;
+			mat.ty *= 1 + this.depthRatioY;
 			
 			var m:Matrix = this.ldTransform.matrix;
 			m.concat(mat);

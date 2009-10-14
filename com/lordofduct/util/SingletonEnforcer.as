@@ -98,9 +98,15 @@ package com.lordofduct.util
 		 * 
 		 * @param clazz - The Class to assert as being the only instance.
 		 */
-		public static function assertSingle(clazz:Class):void
+		public static function assertSingle(clazz:Class, inst:*=null, ...args):void
 		{
 			if(_insts[clazz]) throw new Error("Error creating class, {"+clazz+"}. It's a singleton and cannot be instantiated more than once.");
+			
+			if(inst)
+			{
+				_insts[clazz] = inst;
+				if(args && args.length) for each( var cl:Class in args) { _insts[cl] = -1; }
+			}
 		}
 	}
 }

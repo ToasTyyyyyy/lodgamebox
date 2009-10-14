@@ -197,6 +197,15 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * Find the angle of a segment from (x1, y1) -> (x2, y2 )
+		 */
+		public static function angleBetween(x1:Number, y1:Number, x2:Number, y2:Number):Number
+		{
+			return Math.atan2( y2 - y1, x2 - x1 );
+		}
+		
+		
+		/**
 		 * set an angle with in the bounds of -PI to PI
 		 */
 		public static function normalizeAngle( angle:Number, radians:Boolean=true ):Number
@@ -296,6 +305,30 @@ package com.lordofduct.util
 		 * Lastly we loop through all odd divisors. No point in checking 1 or even divisors, because if it were divisible by an even 
 		 * number it would be divisible by 2. If any divisor existed when i > value / i then its compliment would have already 
 		 * been located. And lastly the loop will never reach i == val because i will never be > sqrt(val).
+		 * 
+		 * proof of validity for algorithm:
+		 * 
+		 * all trivial values are thrown out immediately by checking if even or less then 2
+		 * 
+		 * all remaining possibilities MUST be odd, an odd is resolved as the multiplication of 2 odd values only. (even * any value == even)
+		 * 
+		 * in resolution a * b = val, a = val / b. As every compliment a for b, b and a can be swapped resulting in b being <= a. If a compliment for b 
+		 * exists then that compliment would have already occured (as it is odd) in the swapped addition at the even split.
+		 * 
+		 * Example...
+		 * 
+		 * 16
+		 * 1 * 16
+		 * 2 * 8
+		 * 4 * 4
+		 * 8 * 2
+		 * 16 * 1
+		 * 
+		 * checks for 1, 2, and 4 would have already checked the validity of 8 and 16.
+		 * 
+		 * Thusly we would only have to loop as long as i <= val / i. Once we've reached the middle compliment, all subsequent factors have been resolved.
+		 * 
+		 * This shrinks the number of loops for odd values from [ floor(val / 2) - 1 ] down significantly... TODO analyze the number of loops required for some given odd value N.
 		 */
 		static public function isPrime( val:int ):Boolean
 		{

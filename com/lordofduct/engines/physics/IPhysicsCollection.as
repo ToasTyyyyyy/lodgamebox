@@ -1,6 +1,5 @@
 package com.lordofduct.engines.physics
 {
-	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
 	import com.lordofduct.engines.physics.forces.IForceSimulator;
 	
 	public interface IPhysicsCollection
@@ -14,6 +13,7 @@ package com.lordofduct.engines.physics
 		function get resolvesInternal():Boolean
 		function set resolvesInternal(value:Boolean):void
 		
+		function getPhysicalBodyList():Array
 		function getForceSimulators():Array
 		function addForceSimulator(force:IForceSimulator):void
 		function removeForceSimulator(force:IForceSimulator):void

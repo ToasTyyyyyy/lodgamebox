@@ -29,7 +29,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 		
 		override public function get weight():Number { return 2.1; }
 		
-		override public function testBodyBody(body1:IPhysicalAttrib, body2:IPhysicalAttrib, resolve:Boolean=false, resAlg:ICollisionResolver=null):*
+		override public function testBodyBody(body1:IPhysicalAttrib, body2:IPhysicalAttrib):*
 		{
 			if(!body1 || !body2) return null;
 			
@@ -38,7 +38,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 			var mesh2:IPhasedCollisionMesh = body2.collisionMesh as IPhasedCollisionMesh;
 			
 			//if neither mesh is phased, then just do a regular SAT collision detection
-			if(!mesh1 && !mesh2) return super.testBodyBody(body1, body2, resolve, resAlg);
+			if(!mesh1 && !mesh2) return super.testBodyBody(body1, body2);
 			
 			//prepare a value to store collision results
 			var results:Array = new Array(), res:CollisionResult;
@@ -68,7 +68,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 					results.push(res);
 				}
 				
-				LoDPhysicsEngine.instance.poolCollisionResult( res, resolve, resAlg );
+				LoDPhysicsEngine.instance.poolCollisionResult( res );
 			}
 			
 			//reset mesh phase positions before completing

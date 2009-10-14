@@ -1,13 +1,18 @@
 package com.lordofduct.display
 {
+	import com.lordofduct.util.LoDMath;
+	
 	import flash.display.Shape;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.geom.Point;
 	
 	public class GameScreen extends LayerContainer
 	{
 		private var _camera:GameCamera;
 		private var _renderRect:Rectangle;
+		private var _camBounds:Rectangle;
+		
 		private var _mask:Shape;
 		
 		/**
@@ -20,8 +25,7 @@ package com.lordofduct.display
 		{
 			_camera = camera;
 			_mask = new Shape();
-			this.mask = _mask;
-			this.addChild(_mask);
+			//this.setInternalMask(_mask);
 			this.renderRect = (rect) ? rect : new Rectangle( 0, 0, 500, 500 );
 			this.setGameScreen( this );
 		}
@@ -40,17 +44,41 @@ package com.lordofduct.display
 		public function get renderRect():Rectangle { return _renderRect; }
 		public function set renderRect( value:Rectangle ):void { if (value != null) _renderRect = value; updateMask(); }
 		
+		public function get cameraBoundary():Rectangle { return _camBounds; }
+		public function set cameraBoundary(value:Rectangle):void { _camBounds = value; }
+		
 		override public function render(mat:Matrix=null):void
 		{
+			//first get matrix to use
 			if (!mat)
 			{
 				//if not matrix param grab rendering matrix from camera
 				mat = (_camera) ? _camera.getRenderingMatrix() : new Matrix();
-				mat.tx -= _renderRect.x - _renderRect.width / 2;
-				mat.ty -= _renderRect.y - _renderRect.height / 2;
 			} else {
 				//otherwise just use a clone of the supplied matrix
 				mat = mat.clone();
+			}
+			
+			mat.tx -= _renderRect.x - _renderRect.width / 2;
+			mat.ty -= _renderRect.y - _renderRect.height / 2;
+			
+			//if _camBounds, restrain matrix
+			if(_camBounds)
+			{
+				var m2:Matrix = mat.clone();
+				m2.invert();
+				var rect:Rectangle = LoDMath.transformRectByMatrix( _renderRect, m2 );
+				
+				var hmax:Number = _camBounds.right - Math.abs( rect.right - m2.tx );
+				var hmin:Number = _camBounds.left + Math.abs( rect.left - m2.tx );
+				var vmax:Number = _camBounds.bottom - Math.abs( rect.bottom - m2.ty );
+				var vmin:Number = _camBounds.top + Math.abs( rect.top - m2.ty );
+				
+				m2.tx = LoDMath.clamp( m2.tx, hmax, hmin );
+				m2.ty = LoDMath.clamp( m2.ty, vmax, vmin );
+				
+				m2.invert();
+				mat = m2;
 			}
 			
 			super.render(mat);

@@ -1,5 +1,6 @@
-package com.lordofduct.display
+﻿package com.lordofduct.display
 {
+	import com.lordofduct.util.IDisposable;
 	import com.lordofduct.util.LoDDisplayObjUtils;
 	import com.lordofduct.util.LoDMath;
 	
@@ -16,10 +17,15 @@ package com.lordofduct.display
 	public class LayerBitmapTile extends LayerConventional
 	{
 		private var _bmd:BitmapData;
+		private var _tiled:Boolean;
+		private var _smoothed:Boolean;
 		
-		public function LayerBitmapTile(bmd:*=null)
+		public function LayerBitmapTile(bmd:*=null, tile:Boolean=true, smooth:Boolean=false)
 		{
 			super();
+			
+			_tiled = tile;
+			_smoothed = smooth;
 			
 			if(bmd is BitmapData)
 			{
@@ -32,6 +38,12 @@ package com.lordofduct.display
 		
 		public function get bitmapData():BitmapData { return _bmd; }
 		public function set bitmapData( value:BitmapData ):void { _bmd = value; }
+		
+		public function get tiled():Boolean { return _tiled; }
+		public function set tiled(value:Boolean):void { _tiled = value; }
+		
+		public function get smoothed():Boolean { return _smoothed; }
+		public function set smoother(value:Boolean):void { _smoothed = value; }
 		
 		public function loadBitmapFromUrl( url:String ):void
 		{
@@ -61,7 +73,7 @@ package com.lordofduct.display
 			
 			this.graphics.clear();
 			
-			if (this.bitmapData && this.gameScreen && this.stage )
+			if(this.bitmapData && this.gameScreen && this.stage )
 			{
 				var ul:Point = LoDDisplayObjUtils.localToLocal( this.gameScreen.renderRect.topLeft, this.gameScreen, this );
 				var br:Point = LoDDisplayObjUtils.localToLocal( this.gameScreen.renderRect.bottomRight, this.gameScreen, this );
@@ -71,12 +83,12 @@ package com.lordofduct.display
 				var w:Number = Math.abs(br.x - ul.x);
 				var h:Number = Math.abs(br.y - ul.y);
 				
-				this.graphics.beginBitmapFill( this.bitmapData );
+				this.graphics.beginBitmapFill( this.bitmapData, null, this.tiled, this.smoothed );
 				this.graphics.drawRect( pnt.x, pnt.y, w, h );
 				this.graphics.endFill();
 				
 				//other way of doing it, not sure which is faster yet, I'm assuming the prior
-				/* var m:Matrix = LoDDisplayObjUtils.instance.getInverseConcatenatedMatrixThroughList( this, this.gameScreen );
+				/* var m:Matrix = LoDDisplayObjUtils.getInverseConcatenatedMatrixThroughList( this, this.gameScreen );
 				var rect:Rectangle = LoDMath.transformRectByMatrix( this.gameScreen.renderRect, m );
 				
 				this.graphics.beginBitmapFill( this.bitmapData );

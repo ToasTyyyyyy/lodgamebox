@@ -66,7 +66,7 @@ package com.lordofduct.engines.physics.collisionDetectors
  */
 		public function get weight():Number { return 0; }
 		
-		public function testBodyBody( body1:IPhysicalAttrib, body2:IPhysicalAttrib, resolve:Boolean=false, resAlg:ICollisionResolver=null ):*
+		public function testBodyBody( body1:IPhysicalAttrib, body2:IPhysicalAttrib ):*
 		{
 			if(!body1 || !body2) return null;
 			
@@ -77,7 +77,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 				res.body2 = body2;
 			}
 			
-			LoDPhysicsEngine.instance.poolCollisionResult( res, resolve, resAlg );
+			LoDPhysicsEngine.instance.poolCollisionResult( res );
 			
 			return res;
 		}

@@ -41,30 +41,24 @@ package com.lordofduct.media
 	import flash.utils.Proxy;
 	import flash.utils.flash_proxy;
 	
-	public dynamic class SFXManager extends Proxy
+	public dynamic class SFXManagerUnmutable extends Proxy
 	{
 		/**
 		 * Enforce that this is a Singleton
 		 * Utilizes the Guttershark method of Singleton Enforcement. Alter this section 
 		 * to change the Singleton enforcement method.
 		 */
-		private static var _inst:SFXManager;
+		private static var _inst:SFXManagerUnmutable;
 		
-		public static function gi():SFXManager
+		public static function get instance():SFXManagerUnmutable
 		{
-			if (!_inst) _inst=SingletonEnforcer.gi(SFXManager);
+			if (!_inst) _inst=SingletonEnforcer.gi(SFXManagerUnmutable);
 			return _inst;
 		}
 		
-		public static function get instance():SFXManager
-		{
-			if (!_inst) _inst=SingletonEnforcer.gi(SFXManager);
-			return _inst;
-		}
-		
-		public function SFXManager()
+		public function SFXManagerUnmutable()
 		{	
-			SingletonEnforcer.assertSingle(SFXManager);
+			SingletonEnforcer.assertSingle(SFXManagerUnmutable);
 		}
 		
 /**
@@ -73,22 +67,9 @@ package com.lordofduct.media
 		private var _idToSFX:Dictionary = new Dictionary();
 		private var _bgChannels:Array = new Array();
 		
-		private var _mute:Boolean = false;
-		private var _backedUpVolume:Dictionary = new Dictionary();
-		
 /**
  * Properties
  */
-		public function get muted():Boolean { return _mute; }
-		public function set muted(value:Boolean):void
-		{
-			if(value == _mute) return;
-			
-			_mute = value;
-			
-			if(_mute) addMutedToAll();
-			else removeMutedFromAll();
-		}
 /**
  * Methods
  */
@@ -99,13 +80,6 @@ package com.lordofduct.media
 		public function addSFX( sfx:ISFX ):void
 		{
 			_idToSFX[sfx.id] = sfx;
-			
-			if(_mute)
-			{
-				_backedUpVolume[sfx] = sfx.volume;
-				sfx.volume = 0;
-				sfx.addEventListener( SFXEvent.VOLUME_CHANGE, keepMuted, false, 0, true );
-			}
 		}
 		
 		/**
@@ -115,13 +89,6 @@ package com.lordofduct.media
 		{
 			sfx.id = idx;
 			_idToSFX[idx] = sfx;
-			
-			if(_mute)
-			{
-				_backedUpVolume[sfx] = sfx.volume;
-				sfx.volume = 0;
-				sfx.addEventListener( SFXEvent.VOLUME_CHANGE, keepMuted, false, 0, true );
-			}
 		}
 		
 		public function removeSFX( sfx:ISFX ):void
@@ -129,13 +96,6 @@ package com.lordofduct.media
 			if(!this.isManagingSFX(sfx.id)) return;
 			
 			delete _idToSFX[sfx.id];
-			
-			if(_mute)
-			{
-				sfx.removeEventListener( SFXEvent.VOLUME_CHANGE, keepMuted );
-				if(_backedUpVolume[sfx]) sfx.volume = _backedUpVolume[sfx];
-				delete _backedUpVolume[sfx];
-			}
 		}
 		
 		public function removeSFXById( idx:String ):void
@@ -143,34 +103,17 @@ package com.lordofduct.media
 			var sfx:ISFX = _idToSFX[idx];
 			if(!sfx) return;
 			
-			if(_mute)
-			{
-				sfx.removeEventListener( SFXEvent.VOLUME_CHANGE, keepMuted );
-				if(_backedUpVolume[sfx]) sfx.volume = _backedUpVolume[sfx];
-				delete _backedUpVolume[sfx];
-			}
-			
 			delete _idToSFX[ idx ];
 		}
 		
 		public function removeAll():void
 		{
-			if(_mute) removeMutedFromAll();
-			_backedUpVolume = new Dictionary();
-			
 			_idToSFX = new Dictionary();
 		}
 		
 		public function destroySFX( sfx:ISFX ):void
 		{
 			if(!this.isManagingSFX(sfx.id)) return;
-			
-			if(_mute)
-			{
-				sfx.removeEventListener( SFXEvent.VOLUME_CHANGE, keepMuted );
-				if(_backedUpVolume[sfx]) sfx.volume = _backedUpVolume[sfx];
-				delete _backedUpVolume[sfx];
-			}
 			
 			delete _idToSFX[sfx.id];
 			sfx.dispose();
@@ -183,21 +126,11 @@ package com.lordofduct.media
 			
 			delete _idToSFX[idx];
 			
-			if(_mute)
-			{
-				sfx.removeEventListener( SFXEvent.VOLUME_CHANGE, keepMuted );
-				if(_backedUpVolume[sfx]) sfx.volume = _backedUpVolume[sfx];
-				delete _backedUpVolume[sfx];
-			}
-			
 			if (sfx) sfx.dispose();
 		}
 		
 		public function destroyAll():void
 		{
-			if(_mute) removeMutedFromAll();
-			_backedUpVolume = new Dictionary();
-			
 			for each( var sfx:ISFX in _idToSFX )
 			{
 				sfx.dispose();
@@ -295,47 +228,7 @@ package com.lordofduct.media
 	/**
 	 * Private methods
 	 */
-		private function keepMuted(e:SFXEvent):void
-		{	
-			var sfx:ISFX = e.currentTarget as ISFX;
-			
-			if(!this.isManagingSFX(sfx.id))
-			{
-				sfx.removeEventListener( SFXEvent.VOLUME_CHANGE, keepMuted );
-				return;
-			}
-			
-			if(!_mute)
-			{
-				removeMutedFromAll();
-				return;
-			}
-			
-			_backedUpVolume[sfx] = sfx.volume;
-			sfx.removeEventListener( SFXEvent.VOLUME_CHANGE, keepMuted );
-			sfx.volume = 0;
-			sfx.addEventListener( SFXEvent.VOLUME_CHANGE, keepMuted, false, 0, true );
-		}
 		
-		private function addMutedToAll():void
-		{
-			for each( var sfx:ISFX in _idToSFX )
-			{	
-				_backedUpVolume[sfx] = sfx.volume;
-				sfx.volume = 0;
-				sfx.addEventListener( SFXEvent.VOLUME_CHANGE, keepMuted, false, 0, true );
-			}
-		}
-		
-		private function removeMutedFromAll():void
-		{
-			for each( var sfx:ISFX in _idToSFX )
-			{	
-				sfx.removeEventListener( SFXEvent.VOLUME_CHANGE, keepMuted );
-				if(_backedUpVolume[sfx]) sfx.volume = _backedUpVolume[sfx];
-				delete _backedUpVolume[sfx];
-			}
-		}
 		
 /**
  * Proxy overrides

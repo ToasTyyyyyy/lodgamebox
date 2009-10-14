@@ -22,6 +22,7 @@ package com.lordofduct.events
 		public static const LOOP:String = "loop";
 		public static const COMPLETE:String = "complete";
 		public static const TRACK_CHANGE:String = "trackChange";
+		public static const VOLUME_CHANGE:String = "volumeChange";
 		
 		public function SFXEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

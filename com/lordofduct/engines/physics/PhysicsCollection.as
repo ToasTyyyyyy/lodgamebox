@@ -1,8 +1,6 @@
 package com.lordofduct.engines.physics
 {
 	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
-	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
-	import com.lordofduct.engines.physics.collisionResolvers.ImpulseCollisionResolver;
 	import com.lordofduct.engines.physics.forces.IForceSimulator;
 	import com.lordofduct.util.Assertions;
 	
@@ -60,14 +58,14 @@ package com.lordofduct.engines.physics
 			return Boolean( _bodies.indexOf( body ) >= 0 );
 		}
 		
+	/**
+	 * IPhysicsCollection methods Interface
+	 */
 		public function getPhysicalBodyList():Array
 		{
 			return _bodies.slice();
 		}
 		
-	/**
-	 * IPhysicsCollection methods Interface
-	 */
 		public function getForceSimulators():Array
 		{
 			return _simulators.slice();
@@ -101,6 +99,8 @@ package com.lordofduct.engines.physics
 			//resolve arbiters
 			var al:int = _arbiterList.length, arbiter:Arbiter, i:int;
 			var invDt:Number = (dt > 0) ? 1 / dt : 0;
+			
+			//TODO - check if resolves internal
 			
 			for(i = 0; i < al; i++)
 			{
@@ -144,6 +144,8 @@ package com.lordofduct.engines.physics
 				
 				for each( body2 in coll )
 				{
+					if(body1 == body2) continue;
+					
 					var detector:ICollisionDetector = (body1.collisionMesh.collisionDetector.weight > body2.collisionMesh.collisionDetector.weight) ? body1.collisionMesh.collisionDetector : body2.collisionMesh.collisionDetector;
 					var arb:Arbiter = new _arb(body1, body2);
 					var res:Object = detector.testBodyBody( body1, body2 );

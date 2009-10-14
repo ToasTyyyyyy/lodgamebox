@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LayerContainer - written by Dylan Engelman a.k.a LordOfDuct
  * 
  * Class written and devised for the LoDGameLibrary. The use of this code 
@@ -18,6 +18,7 @@ package com.lordofduct.display
 	import com.lordofduct.util.Assertions;
 	import com.lordofduct.util.LoDMath;
 	
+	import flash.display.DisplayObject;
 	import flash.geom.Matrix;
 	
 	public class LayerContainer extends LayerConventional
@@ -36,22 +37,36 @@ package com.lordofduct.display
 /**
  * Public Methods
  */
-		
-		public function addLayer( layer:LayerConventional ):void
+		public function setInternalMask(obj:DisplayObject):void
 		{
+			this.mask = obj;
+			super.addChild(obj);
+		}
+		
+		public function addLayer( layer:LayerConventional ):LayerConventional
+		{
+			if(!layer) return null;
+			
 			if (this.containsLayer( layer )) this.removeLayer( layer );
 			
 			_layers.push( layer );
 			this.reassertLayers();
+			
+			return layer;
 		}
 		
-		public function addLayerAt( layer:LayerConventional, index:int ):void
+		public function addLayerAt( layer:LayerConventional, index:int ):LayerConventional
 		{
+			if(!layer) return null;
+			
 			if (this.containsLayer( layer )) this.removeLayer( layer );
 			
-			index = LoDMath.clamp( index, this.numLayers - 1 );
+			index = LoDMath.clamp( index, this.numLayers );
+			
 			_layers.splice( index, 0, layer );
 			this.reassertLayers();
+			
+			return layer;
 		}
 		
 		public function containsLayer( layer:LayerConventional ):Boolean
@@ -73,22 +88,31 @@ package com.lordofduct.display
 			return _layers.indexOf( layer );
 		}
 		
-		public function removeLayer( layer:LayerConventional ):void
+		public function removeLayer( layer:LayerConventional ):LayerConventional
 		{
 			Assertions.isTrue( this.containsLayer(layer), "com.lordofduct.display::LayerContainer - can not remove a layer that is not a child of this object.", Error );
 			
 			var index:int = _layers.indexOf( layer);
 			if (index >= 0) _layers.splice( index, 1 );
-			if (this.contains(layer)) this.removeChild(layer);
+			if (layer.gameScreen == this.gameScreen) layer.setGameScreen(null);
+			if (this.contains(layer)) super.removeChild(layer);
+			
+			return layer;
 		}
 		
-		public function removeLayerAt( index:int ):void
+		public function removeLayerAt( index:int ):LayerConventional
 		{
 			Assertions.isTrue( Boolean( this.numLayers ), "com.lordofduct.display::LayerContainer - can not remove layers from an empty container.", Error );
 			
 			index = LoDMath.clamp(index, this.numLayers - 1);
 			var layer:LayerConventional = _layers.splice( index, 1 )[0];
-			if (layer && this.contains(layer)) this.removeChild(layer);
+			if (layer && this.contains(layer))
+			{
+				layer.setGameScreen( null );
+				return super.removeChild(layer) as LayerConventional;
+			} else {
+				return null;
+			}
 		}
 		
 		public function setLayerIndex( layer:LayerConventional, index:int ):void
@@ -150,11 +174,11 @@ package com.lordofduct.display
 		private function reassertLayers():void
 		{
 			var i:int = _layers.length;
-			while(--i)
+			while(i--)
 			{
 				var layer:LayerConventional = _layers[i] as LayerConventional;
 				layer.setGameScreen(this.gameScreen);
-				this.addChildAt(layer, 0);
+				super.addChildAt(layer, 0);
 			}
 		}
 		
@@ -179,6 +203,55 @@ package com.lordofduct.display
 			{
 				layer.setGameScreen( screen );
 			}
+		}
+		
+	/**
+	 * DIsplayObjectContainer overrides
+	 */
+		override public function addChild(child:DisplayObject):DisplayObject
+		{
+			Assertions.compatible( child, LayerConventional, "com.lordofduct.display::LayerContainer - children must be of type LayerConventional." );
+			
+			return this.addLayer( child as LayerConventional );
+		}
+		
+		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
+		{
+			Assertions.compatible( child, LayerConventional, "com.lordofduct.display::LayerContainer - children must be of type LayerConventional." );
+			
+			return this.addLayerAt( child as LayerConventional, index );
+		}
+		
+		override public function removeChild(child:DisplayObject):DisplayObject
+		{
+			Assertions.compatible( child, LayerConventional, "com.lordofduct.display::LayerContainer - children must be of type LayerConventional." );
+			
+			return this.removeLayer( child as LayerConventional );
+		}
+		
+		override public function removeChildAt(index:int):DisplayObject
+		{
+			return this.removeLayerAt(index);
+		}
+		
+		override public function setChildIndex(child:DisplayObject, index:int):void
+		{
+			Assertions.compatible( child, LayerConventional, "com.lordofduct.display::LayerContainer - children must be of type LayerConventional." );
+			
+			this.setLayerIndex( child as LayerConventional, index );
+		}
+		
+		override public function swapChildren(child1:DisplayObject, child2:DisplayObject):void
+		{
+			Assertions.compatible( child1, LayerConventional, "com.lordofduct.display::LayerContainer - children must be of type LayerConventional." );
+			Assertions.compatible( child2, LayerConventional, "com.lordofduct.display::LayerContainer - children must be of type LayerConventional." );
+			
+			this.swapLayers( child1 as LayerConventional, child2 as LayerConventional );
+		}
+		
+		override public function swapChildrenAt(index1:int, index2:int):void
+		{
+			this.swapLayersAt( index1, index2 );
 		}
 	}
 }

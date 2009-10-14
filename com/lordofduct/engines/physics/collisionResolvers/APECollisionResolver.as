@@ -1,7 +1,12 @@
-package com.lordofduct.engines.physics.collisionResolvers
+﻿package com.lordofduct.engines.physics.collisionResolvers
 {
-	import com.lordofduct.engines.physics.IPhysicalAttrib;
 	import com.lordofduct.engines.physics.Arbiter;
+	import com.lordofduct.engines.physics.CollisionResult;
+	import com.lordofduct.engines.physics.IPhysicalAttrib;
+	import com.lordofduct.engines.physics.ISimulatableAttrib;
+	import com.lordofduct.engines.physics.collisionMesh.IPhasedCollisionMesh;
+	import com.lordofduct.geom.Vector2;
+	import com.lordofduct.util.LoDMath;
 
 	public class APECollisionResolver extends Arbiter
 	{
@@ -23,7 +28,7 @@ package com.lordofduct.engines.physics.collisionResolvers
 					IPhasedCollisionMesh(body2.collisionMesh).currentPhase = result.body2phase;
 				}
 				
-				if(Vector2.subtract(this.body1.centerOfMass, this.body2.centerOfMass).dot(result.penetrationAxis) < 0)
+				if( Vector2.subtract(this.body1.centerOfMass, this.body2.centerOfMass).dot(result.penetrationAxis) < 0 )
 				{
 					result.normal.negate();
 					result.penetrationAxis.negate();

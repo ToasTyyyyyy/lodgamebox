@@ -36,14 +36,19 @@ package com.lordofduct
 		public function init(stg:Stage, dTimer:DeltaTimer=null ):void
 		{
 			_stage = stg;
-			_gameTimer = dTimer;
+			_gameTimer = (dTimer) ? dTimer : new DeltaTimer();
 		}
 		
 		public function get stage():Stage { return _stage; }
 		
+		public function get frameRate():int { return (_stage) ? _stage.frameRate : 0; }
+		
 		public function get gameTimer():DeltaTimer { return _gameTimer; }
 		
-		
+		public function ticksToMilliseconds(amount:Number):Number
+		{
+			return amount / this.frameRate * 1000;
+		}
 		
 		public function attachGlobal( idx:String, obj:* ):void
 		{

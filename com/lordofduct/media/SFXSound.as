@@ -279,6 +279,8 @@ package com.lordofduct.media
 		{
 			_transform = value;
 			if(_channel ) _channel.soundTransform = _transform;
+			
+			this.dispatchEvent( new SFXEvent( SFXEvent.VOLUME_CHANGE ) );
 		}
 		
 		public function get volume():Number { return _transform.volume; }
@@ -286,6 +288,8 @@ package com.lordofduct.media
 		{
 			_transform.volume = value;
 			if(_channel ) _channel.soundTransform = _transform;
+			
+			this.dispatchEvent( new SFXEvent( SFXEvent.VOLUME_CHANGE ) );
 		}
 		
 		public function get panning():Number { return _transform.pan; }

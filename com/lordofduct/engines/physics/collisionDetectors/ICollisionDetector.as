@@ -11,7 +11,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 	{
 		function get weight():Number
 		
-		function testBodyBody( body1:IPhysicalAttrib, body2:IPhysicalAttrib, resolve:Boolean=false, resAlg:ICollisionResolver=null ):*
+		function testBodyBody( body1:IPhysicalAttrib, body2:IPhysicalAttrib ):*
 		function testAbstractMesh( mesh1:ICollisionMesh, mesh2:ICollisionMesh, mat1:Matrix=null, mat2:Matrix=null ):CollisionResult
 	}
 }

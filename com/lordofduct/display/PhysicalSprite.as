@@ -51,8 +51,6 @@ package com.lordofduct.display
 
 	public class PhysicalSprite extends LdTranSprite implements IPhysicalAttrib
 	{
-		private var _view:DisplayObject;
-		
 		private var _detector:ICollisionDetector = null;
 		private var _mesh:ICollisionMesh = null;
 		
@@ -76,8 +74,7 @@ package com.lordofduct.display
 	/**
 	 * IVisibleObject Interface
 	 */
-		public function get view():DisplayObject { return _view; }
-		public function set view(value:DisplayObject):void { _view = value; }
+		public function get view():DisplayObject { return this; }
 	/**
 	 * IPhysicalAttrib Interface
 	 */
