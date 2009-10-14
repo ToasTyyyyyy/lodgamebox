@@ -351,6 +351,35 @@ package com.lordofduct.util
 			return true;
 		}
 		
+		/**
+		 * Returns all factors of a value as positive integers. Negative integers are included as the sign is assumed to be relative.
+		 * 
+		 * for efficiency we use the same analytical algorithm from isPrime where we only check while i <= val / i. We test both odds and evens now though 
+		 * as we haven't thrown out all trivial values. Still the same concept applies. Which means all primes of 16 can be found by the time i reach 4, instead of 
+		 * having to loop all the way to 16.
+		 * 
+		 * @param val - the integer to find all factors of
+		 * 
+		 * @return Array - an Array sorted numerically ascending of all factors for a value.
+		 */
+		static public function factorsOf( val:int ):Array
+		{
+			val = Math.abs(val);
+			var arr:Array = new Array();
+			
+			for ( var i:int = 1; i <= val / i; i++ )
+			{
+				if(!(val % i))
+				{
+					arr.push( i );
+					arr.push( val / i );
+				}
+			}
+			
+			arr.sort( Array.NUMERIC );
+			return arr;
+		}
+		
 /**
  * Advanced Math
  */
