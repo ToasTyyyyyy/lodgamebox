@@ -35,14 +35,15 @@ package com.lordofduct.util
 		//kind of like randomPop, but returns the value as a Boolean
 		public static function randomBool(...args):Boolean
 		{
-			return Boolean(randomPop());
+			return Boolean( Math.round(Math.random()) );
 		}
 		
 		//return either -1 or +1... good for "flipping" values randomly
 		public static function randomFlip(...args):int
 		{
-			if ( randomBool() ) return 1;
-			else return -1;
+			var n:int = Math.round(Math.random());
+			
+			return n + n - 1;
 		}
 		
 		//returns a random angle in radians from -pi to +pi
