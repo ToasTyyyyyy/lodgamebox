@@ -54,7 +54,7 @@ package com.lordofduct.util
 		//returns -1, 0, or 1 randomly. This can be used for bizarre things like randomizing an array
 		public static function randomShift(...args):int
 		{
-			return randomIntMinMax( 1, -1 );
+			return randomIntMinMax( 2, -1 );
 		}
 		
 		/**
