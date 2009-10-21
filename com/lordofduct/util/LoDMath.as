@@ -372,7 +372,8 @@ package com.lordofduct.util
 				if(!(val % i))
 				{
 					arr.push( i );
-					arr.push( val / i );
+					var c:int = val / i;
+					if(c != i) arr.push( c );
 				}
 			}
 			
@@ -383,5 +384,39 @@ package com.lordofduct.util
 /**
  * Advanced Math
  */
+		static public function factorial( value:int ):int
+		{
+			if(value < 1) return 0;
+			
+			var res:int = value;
+			
+			while( --value )
+			{
+				res *= value;
+			}
+			
+			return res;
+		}
+		
+		static public function gammaFunction( value:int ):int
+		{
+			return factorial( value - 1 );
+		}
+		
+		static public function fallingFactorial( base:int, exp:int ):int
+		{
+			return factorial(base) / factorial(base - exp);
+		}
+		
+		static public function risingFactorial( base:int, exp:int ):int
+		{
+			//expanded from gammaFunction for speed
+			return factorial( base + exp - 1 ) / factorial( base - 1 );
+		}
+		
+		static public function binCoef( n:int, k:int ):int
+		{
+			return fallingFactorial( n, k ) / factorial(k);
+		}
 	}
 }
