@@ -418,5 +418,10 @@ package com.lordofduct.util
 		{
 			return fallingFactorial( n, k ) / factorial(k);
 		}
+		
+		static public function risingBinCoef( n:int, k:int ):int
+		{
+			return risingFactorial( n, k ) / factorial(k);
+		}
 	}
 }
