@@ -142,6 +142,7 @@ package com.lordofduct.util
 			_timer.addEventListener(TimerEvent.TIMER, updateByPulse, false, 0, true );
 			_hiccup = 0;
 			this.updateByPulse(e);
+			_timer.start();
 		}
 	}
 }
