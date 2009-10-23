@@ -104,6 +104,9 @@ package com.lordofduct.util
 			_reinitPoint = getTimer();
 		}
 		
+		/**
+		 * change in time since the last tick update... in milliseconds
+		 */
 		public function deltaSinceLastTick():int
 		{
 			return getTimer() - _time - _reinitPoint;
