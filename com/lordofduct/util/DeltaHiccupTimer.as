@@ -65,6 +65,7 @@ package com.lordofduct.util
 			_timer.addEventListener(TimerEvent.TIMER, updateByPulse, false, 0, true );
 			_timer.reset();
 			_timer.start();
+			_hiccup = 0;
 		}
 		
 		/**
