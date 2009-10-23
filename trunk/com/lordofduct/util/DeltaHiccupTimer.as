@@ -34,18 +34,22 @@ package com.lordofduct.util
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
-	public class DeltaPulseTimer extends DeltaTimer
+	public class DeltaHiccupTimer extends DeltaTimer
 	{
 		private var _timer:Timer;
 		
-		public function DeltaPulseTimer( delay:int=1000, repeat:int=0  )
+		private var _delay:int;
+		private var _hiccup:int;
+		
+		public function DeltaHiccupTimer( delay:int=1000, repeat:int=0  )
 		{
 			super(repeat);
-			_timer = new Timer(delay);
+			_delay = delay;
+			_timer = new Timer(_delay);
 		}
 		
-		public function get pulseDelay():int { return _timer.delay; }
-		public function set pulseDelay( value:int ):void { _timer.delay = value; }
+		public function get pulseDelay():int { return _delay; }
+		public function set pulseDelay( value:int ):void { _delay = value; _timer.delay = _delay; }
 /**
  * Overrides
  */
@@ -71,6 +75,7 @@ package com.lordofduct.util
 			super.pause();
 			
 			_timer.removeEventListener(TimerEvent.TIMER, updateByPulse );
+			_hiccup = this.deltaSinceLastTick();
 			_timer.stop();
 		}
 		
@@ -85,7 +90,14 @@ package com.lordofduct.util
 			
 			if(bool)
 			{
-				_timer.addEventListener(TimerEvent.TIMER, updateByPulse, false, 0, true );
+				var d:int = _delay - (_hiccup % _delay);
+				if(d <= 0)
+				{
+					this.resumeWithHiccup(null);
+					return;
+				}
+				_timer.delay = d;
+				_timer.addEventListener(TimerEvent.TIMER, resumeWithHiccup, false, 0, true );
 				_timer.start();
 			}
 		}
@@ -119,6 +131,16 @@ package com.lordofduct.util
 		private function updateByPulse(e:TimerEvent):void
 		{
 			this.update();
+		}
+		
+		private function resumeWithHiccup(e:TimerEvent):void
+		{
+			_timer.removeEventListener(TimerEvent.TIMER, resumeWithHiccup );
+			_timer.stop();
+			_timer.delay = _delay;
+			_timer.addEventListener(TimerEvent.TIMER, updateByPulse, false, 0, true );
+			_hiccup = 0;
+			this.updateByPulse(e);
 		}
 	}
 }
