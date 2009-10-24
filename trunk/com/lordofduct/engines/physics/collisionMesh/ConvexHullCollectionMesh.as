@@ -1,7 +1,6 @@
 package com.lordofduct.engines.physics.collisionMesh
 {
-	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
-	import com.lordofduct.engines.physics.collisionDetectors.PhasedSATCollisionDetector;
+	import com.lordofduct.engines.physics.collisionDetectors.SATCollision;
 	import com.lordofduct.geom.IGeometricShape;
 	import com.lordofduct.geom.Interval;
 	import com.lordofduct.geom.Ray2D;
@@ -14,7 +13,7 @@ package com.lordofduct.engines.physics.collisionMesh
 
 	public class ConvexHullCollectionMesh implements IPhasedCollisionMesh
 	{
-		private var _alg:ICollisionDetector;
+		private var _alg:Class;
 		private var _geom:Array = new Array();
 		private var _rect:Rectangle;
 		private var _tl:Number;
@@ -22,9 +21,9 @@ package com.lordofduct.engines.physics.collisionMesh
 		
 		private var _curPhase:int = -1;
 		
-		public function ConvexHullCollectionMesh(geom:*, alg:ICollisionDetector=null)
+		public function ConvexHullCollectionMesh(geom:*, alg:Class=null)
 		{
-			_alg = (alg) ? alg : PhasedSATCollisionDetector.instance;
+			_alg = (alg) ? alg : SATCollision;
 			
 			_geom = _geom.concat( geom );
 			Assertions.allAreCompatible(_geom, IGeometricShape, "com.lordofduct.engines.physics.collisionMesh::ConvexHullMesh - geom param must be of type Array or IGeometricShape" );
@@ -55,10 +54,10 @@ package com.lordofduct.engines.physics.collisionMesh
 		/**
 		 * The algorithm this mesh utilizes for detecting collision with other objects.
 		 */
-		public function get collisionDetector():ICollisionDetector { return _alg; }
-		public function set collisionDetector(value:ICollisionDetector):void
+		public function get collisionDetector():Class { return _alg; }
+		public function set collisionDetector(value:Class):void
 		{
-			_alg = (value) ? value : PhasedSATCollisionDetector.instance;
+			_alg = (value) ? value : SATCollision;
 		}
 		
 		public function get tensorLength():Number

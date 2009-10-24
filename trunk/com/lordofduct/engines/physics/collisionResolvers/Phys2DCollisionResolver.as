@@ -1,7 +1,6 @@
 package com.lordofduct.engines.physics.collisionResolvers
 {
 	import com.lordofduct.engines.physics.Arbiter;
-	import com.lordofduct.engines.physics.CollisionResult;
 	import com.lordofduct.engines.physics.IPhysicalAttrib;
 	import com.lordofduct.geom.Vector2;
 
@@ -14,23 +13,20 @@ package com.lordofduct.engines.physics.collisionResolvers
 			super(b1, b2);
 		}
 		
-		override public function update( results:Array ):void
-		{
-			//TODO
-			super.update(results);
-		}
-		
 		override public function preStep(invDt:Number, dt:Number):void
 		{
-			for each( var result:CollisionResult in this.collisions )
-			{
-				result.contactPoints = this.getContacts( result.body1, result.body2, result.normal, result.penetrationAxis, result.depth );
-			}
+			if(!this.collision) return;
+			//TODO
 		}
 		
 		override public function applyImpulse():void
 		{
-			var normal:Vector2 = this.collisionResult.normal.clone(), penAxis:Vector2 = this.collisionResult.penetrationAxis.clone(), contacts:Array;
+			if(!this.collision) return;
+			
+			var normal:Vector2 = this.collision.normal.clone();
+			var penAxis:Vector2 = this.collision.penetrationAxis.clone();
+			var depth:Number = this.collision.depth;
+			var contacts:Array = this.getContacts(body1, body2, normal, penAxis, depth);
 			
 			var c1:Vector2 = body1.centerOfMass;
 			var c2:Vector2 = body2.centerOfMass;

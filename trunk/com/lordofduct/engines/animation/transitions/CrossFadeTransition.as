@@ -82,7 +82,7 @@
 			else if ( op <= _delay && t > 0 )
 			{
 				startTransition();
-				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_START, t ) );
+				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_START, this.target, t ) );
 			}
 			
 			//update
@@ -90,13 +90,13 @@
 			if(_startBmp) _startBmp.alpha = 1 - a;
 			if(_endBmp) _endBmp.alpha = a;
 			
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_UPDATE, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_UPDATE, this.target, this.position ) );
 			
 			//check complete
 			if ( _pos - _delay >= _dur )
 			{
 				this.finishTransition();
-				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_COMPLETE, 1 ) );
+				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_COMPLETE, this.target, 1 ) );
 				return true;
 			} else {
 				return false;
@@ -108,7 +108,7 @@
 			if(_paused) return;
 			
 			_paused = true;
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_PAUSE, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_PAUSE, this.target, this.position ) );
 		}
 		
 		public function resume():void
@@ -116,7 +116,7 @@
 			if(!_paused) return;
 			
 			_paused = false;
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_RESUME, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_RESUME, this.target, this.position ) );
 		}
 		
 		public function invert():void

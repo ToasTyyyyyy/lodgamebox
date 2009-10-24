@@ -72,13 +72,13 @@ package com.lordofduct.engines.animation.transitions
 			if( _pos < _delay ) return false;
 			else if ( op <= _delay && t > 0 )
 			{
-				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_START, t ) );
+				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_START, this.target, t ) );
 			}
 			
 			if ( _pos - _delay >= _dur )
 			{
 				this.swapChildren();
-				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_COMPLETE, 1 ) );
+				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_COMPLETE, this.target, 1 ) );
 				return true;
 			} else {
 				return false;
@@ -90,7 +90,7 @@ package com.lordofduct.engines.animation.transitions
 			if(_paused) return;
 			
 			_paused = true;
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_PAUSE, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_PAUSE, this.target, this.position ) );
 		}
 		
 		public function resume():void
@@ -98,7 +98,7 @@ package com.lordofduct.engines.animation.transitions
 			if(!_paused) return;
 			
 			_paused = false;
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_RESUME, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_RESUME, this.target, this.position ) );
 		}
 		
 		public function invert():void

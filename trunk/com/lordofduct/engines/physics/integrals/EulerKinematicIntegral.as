@@ -31,7 +31,7 @@ package com.lordofduct.engines.physics.integrals
 		}
 		
 		public function integrateKinematicBody(dt:Number, body:ISimulatableAttrib, deriv:Derivative):void
-		{	
+		{
 			body.physicalTransform.x += deriv.velX * dt;
 			body.physicalTransform.y += deriv.velY * dt;
 			body.physicalTransform.rotate( deriv.velA * dt );

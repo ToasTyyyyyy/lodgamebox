@@ -1,38 +1,39 @@
 package com.lordofduct.engines.physics.collisionDetectors
 {
+	import com.lordofduct.engines.physics.Collision;
 	import com.lordofduct.engines.physics.CollisionResult;
 	import com.lordofduct.engines.physics.IPhysicalAttrib;
 	import com.lordofduct.engines.physics.LoDPhysicsEngine;
 	import com.lordofduct.engines.physics.collisionMesh.ICollisionMesh;
-	import com.lordofduct.engines.physics.collisionResolvers.ICollisionResolver;
 	import com.lordofduct.geom.Interval;
 	import com.lordofduct.geom.Vector2;
-	import com.lordofduct.util.SingletonEnforcer;
 	
 	import flash.geom.Matrix;
-	
-	public class SATCollisionDetector implements ICollisionDetector
+
+	public class SATCollision extends Collision
 	{
-		private static var _inst:SATCollisionDetector;
-		
-		public static function get instance():SATCollisionDetector
+		public function SATCollision(b1:IPhysicalAttrib, b2:IPhysicalAttrib)
 		{
-			if (!_inst) _inst = SingletonEnforcer.gi(SATCollisionDetector);
+			super(b1, b2, 2);
+		}
+		
+		override public function collides():Boolean
+		{
+			var res:CollisionResult = SATCollision.testBodyBody( this.body1, this.body2 );
+			if(!res) return false;
 			
-			return _inst;
+			this.updateByCollisionResult( res );
+			
+			return true;
 		}
 		
-		public function SATCollisionDetector(clazz:Class=null)
+		override public function getContacts():Array
 		{
-			if(!clazz) clazz = SATCollisionDetector;
-			SingletonEnforcer.assertSingle(clazz);
+			return null;
 		}
-		
 /**
- * Class Definition
+ * STATIC INTERFACE
  */
-		public function get weight():Number { return 2; }
-		
 		public function testBodyBody( body1:IPhysicalAttrib, body2:IPhysicalAttrib ):*
 		{
 			if(!body1 || !body2) return null;
