@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Assertions - written by Dylan Engelman a.k.a LordOfDuct
  * 
  * Class written and devised for the LoDGameLibrary. The use of this code 
@@ -326,6 +326,12 @@ package com.lordofduct.util
 			if(message) if(notNil(str) && (regx.test(str))) throwError(message,exceptionType);
 			if(nil(str)) return true;
 			return !regx.test(str);
+		}
+		
+		public static function classImplements(clazz:Class, implementor:Class, message:String=null, exceptionType:Class=null):Boolean
+		{
+			//TODO
+			return false;
 		}
 	}
 }

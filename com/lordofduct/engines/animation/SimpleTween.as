@@ -16,7 +16,7 @@ package com.lordofduct.engines.animation
 		private var _dur:Number;
 		private var _delay:Number;
 		
-		private var _pos:Number;
+		private var _pos:Number = 0;
 		private var _paused:Boolean = false;
 		
 		public function SimpleTween( targ:Object, prop:String, func:Function, dur:Number, begin:Number, finish:Number, startDelay:Number=0 )
@@ -70,16 +70,16 @@ package com.lordofduct.engines.animation
 			if( _pos < _delay ) return false;
 			else if ( op <= _delay && t > 0 )
 			{
-				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_START, t ) );
+				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_START, _targ, t ) );
 			}
 			
 			_targ[_prop] = _funct( t, _begin, _finish - _begin, _dur );
 			
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_UPDATE, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_UPDATE, _targ, this.position ) );
 			
 			if ( _pos - _delay >= _dur )
 			{
-				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_COMPLETE, 1 ) );
+				this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_COMPLETE, _targ, 1 ) );
 				return true;
 			} else {
 				return false;
@@ -91,7 +91,7 @@ package com.lordofduct.engines.animation
 			if(_paused) return;
 			
 			_paused = true;
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_PAUSE, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_PAUSE, _targ, this.position ) );
 		}
 		
 		public function resume():void
@@ -99,7 +99,7 @@ package com.lordofduct.engines.animation
 			if(!_paused) return;
 			
 			_paused = false;
-			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_RESUME, this.position ) );
+			this.dispatchEvent( new TweenerEvent( TweenerEvent.TWEEN_RESUME, _targ, this.position ) );
 		}
 		
 		public function invert():void

@@ -40,7 +40,6 @@
 package com.lordofduct.display
 {
 	import com.lordofduct.engines.physics.IPhysicalAttrib;
-	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.engines.physics.collisionMesh.ICollisionMesh;
 	import com.lordofduct.geom.LdTransform;
 	import com.lordofduct.geom.SyncingLdTransform;
@@ -51,7 +50,6 @@ package com.lordofduct.display
 
 	public class PhysicalSprite extends LdTranSprite implements IPhysicalAttrib
 	{
-		private var _detector:ICollisionDetector = null;
 		private var _mesh:ICollisionMesh = null;
 		
 		private var _isRigBody:Boolean = false;
@@ -80,9 +78,6 @@ package com.lordofduct.display
 	 */
 		public function get physicalTransform():LdTransform { return _trans; }
 		public function set physicalTransform(value:LdTransform):void { _trans = new SyncingLdTransform( value.matrix, this.transform as SyncingTransform );; }
-		
-		public function get collisionDetector():ICollisionDetector { return _detector; }
-		public function set collisionDetector(value:ICollisionDetector):void { _detector = value; }
 		
 		public function get collisionMesh():ICollisionMesh { return _mesh; }
 		public function set collisionMesh(value:ICollisionMesh):void { _mesh = value; }

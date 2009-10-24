@@ -1,6 +1,5 @@
 package com.lordofduct.engines.physics
 {
-	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
 	import com.lordofduct.engines.physics.collisionMesh.ICollisionMesh;
 	import com.lordofduct.geom.LdTransform;
 	import com.lordofduct.geom.Vector2;
@@ -12,9 +11,6 @@ package com.lordofduct.engines.physics
 	{
 		function get physicalTransform():LdTransform
 		function set physicalTransform(value:LdTransform):void
-		
-		function get collisionDetector():ICollisionDetector
-		function set collisionDetector(value:ICollisionDetector):void
 		
 		function get collisionMesh():ICollisionMesh
 		function set collisionMesh(value:ICollisionMesh):void

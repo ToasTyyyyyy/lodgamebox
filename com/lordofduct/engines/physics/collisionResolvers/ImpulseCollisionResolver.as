@@ -1,6 +1,7 @@
 package com.lordofduct.engines.physics.collisionResolvers
 {
 	import com.lordofduct.engines.physics.Arbiter;
+	import com.lordofduct.engines.physics.Collision;
 	import com.lordofduct.engines.physics.CollisionResult;
 	import com.lordofduct.engines.physics.IPhysicalAttrib;
 	import com.lordofduct.engines.physics.ISimulatableAttrib;
@@ -16,82 +17,38 @@ package com.lordofduct.engines.physics.collisionResolvers
 			super(b1, b2);
 		}
 		
-		override public function update(results:Array):void
-		{
-			for each( var result:CollisionResult in results )
-			{
-				if(body1.collisionMesh is IPhasedCollisionMesh)
-				{
-					IPhasedCollisionMesh(body1.collisionMesh).currentPhase = result.body1phase;
-				}
-				if(body2.collisionMesh is IPhasedCollisionMesh)
-				{
-					IPhasedCollisionMesh(body2.collisionMesh).currentPhase = result.body2phase;
-				}
-				
-				if(Vector2.subtract(this.body1.centerOfMass, this.body2.centerOfMass).dot(result.penetrationAxis) < 0)
-				{
-					result.normal.negate();
-					result.penetrationAxis.negate();
-				}
-			}
-			
-			if(body1.collisionMesh is IPhasedCollisionMesh)
-			{
-				IPhasedCollisionMesh(body1.collisionMesh).currentPhase = -1;
-			}
-			if(body2.collisionMesh is IPhasedCollisionMesh)
-			{
-				IPhasedCollisionMesh(body2.collisionMesh).currentPhase = -1;
-			}
-			
-			super.update(results);
-		}
-		
 		override public function preStep(invDt:Number, dt:Number):void
 		{
-			for each( var result:CollisionResult in this.collisions )
-			{
-				if(body1.collisionMesh is IPhasedCollisionMesh)
-				{
-					IPhasedCollisionMesh(body1.collisionMesh).currentPhase = result.body1phase;
-				}
-				if(body2.collisionMesh is IPhasedCollisionMesh)
-				{
-					IPhasedCollisionMesh(body2.collisionMesh).currentPhase = result.body2phase;
-				}
-				
-				result.contactPoints = this.getContacts( result.body1, result.body2, result.normal, result.penetrationAxis, result.depth );
-			}
+			if(!this.collision) return;
 			
-			if(body1.collisionMesh is IPhasedCollisionMesh)
+			var result:Collision = this.collision;
+			
+			if(Vector2.subtract(this.body1.centerOfMass, this.body2.centerOfMass).dot(result.penetrationAxis) < 0)
 			{
-				IPhasedCollisionMesh(body1.collisionMesh).currentPhase = -1;
-			}
-			if(body2.collisionMesh is IPhasedCollisionMesh)
-			{
-				IPhasedCollisionMesh(body2.collisionMesh).currentPhase = -1;
+				result.normal.negate();
+				result.penetrationAxis.negate();
 			}
 		}
 		
 		override public function applyImpulse():void
 		{
-			var results:Array = this.collisions;
+			if(!this.collision) return;
 			
-			for each( var result:CollisionResult in results )
-			{
-				if(body1.collisionMesh is IPhasedCollisionMesh)
+			var result:Collision = this.collision;
+			
+			//ALGORITHM
+				/* if(body1.collisionMesh is IPhasedCollisionMesh)
 				{
 					IPhasedCollisionMesh(body1.collisionMesh).currentPhase = result.body1phase;
 				}
 				if(body2.collisionMesh is IPhasedCollisionMesh)
 				{
 					IPhasedCollisionMesh(body2.collisionMesh).currentPhase = result.body2phase;
-				}
+				} */
 				
 				var normal:Vector2 = result.normal;
 				var penAxis:Vector2 = result.penetrationAxis;
-				var contacts:Array = result.contactPoints;
+				var contacts:Array = this.getContacts(body1, body2, normal, penAxis, depth); //result.contactPoints;
 				
 				var c1:Vector2 = body1.centerOfMass;
 				var c2:Vector2 = body2.centerOfMass;
@@ -204,7 +161,7 @@ package com.lordofduct.engines.physics.collisionResolvers
 						sim2.angularVelocity += dav2;
 					}
 				}
-			}
+			//END ALGORITHM
 			
 			if(body1.collisionMesh is IPhasedCollisionMesh)
 			{

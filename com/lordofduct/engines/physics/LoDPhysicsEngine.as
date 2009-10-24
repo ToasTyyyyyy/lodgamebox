@@ -31,8 +31,6 @@
  */
 package com.lordofduct.engines.physics
 {
-	import com.lordofduct.engines.physics.collisionDetectors.ICollisionDetector;
-	import com.lordofduct.engines.physics.collisionResolvers.SimpleCollisionResolver;
 	import com.lordofduct.events.PhysicsEvent;
 	import com.lordofduct.util.Assertions;
 	import com.lordofduct.util.DeltaTimer;
@@ -138,6 +136,56 @@ package com.lordofduct.engines.physics
 			_groups.length = 0;
 		}
 		
+		
+		
+		public function constructArbiter( b1:IPhysicalAttrib, b2:IPhysicalAttrib, arbiterType:Class ):Arbiter
+		{
+			try
+			{
+				var arb:Arbiter = new arbiterType(b1,b2) as Arbiter;
+				if(!arb) Assertions.throwError("com.lordofduct.com.engines::LoDPhysicsEngine - Arbiter type does not extend Arbiter.");
+				return arb;
+			} catch(err:Error)
+			{
+				Assertions.throwError("com.lordofduct.com.engines::LoDPhysicsEngine - Arbiter type does not extend Arbiter.");
+			}
+			
+			return null;
+		}
+		
+		public function constructCollision( b1:IPhysicalAttrib, b2:IPhysicalAttrib, collisionType:Class ):Collision
+		{
+			try
+			{
+				var col:Collision = new collisionType( b1, b2 ) as Collision;
+				if(!col) Assertions.throwError("com.lordofduct.com.engines::LoDPhysicsEngine - Collision type does not extend Collision.", Error);
+				return col;
+			} catch(err:Error)
+			{
+				Assertions.throwError("com.lordofduct.com.engines::LoDPhysicsEngine - Collision type does not extend Collision.", Error);
+			}
+			
+			return null;
+		}
+		
+		public function constructCollisionChosen( b1:IPhysicalAttrib, b2:IPhysicalAttrib ):Collision
+		{
+			try
+			{
+				var col1:Collision = new b1.collisionMesh.collisionDetector(b1,b2) as Collision;
+				var col2:Collision = new b2.collisionMesh.collisionDetector(b1,b2) as Collision;
+				
+				if(!col1 || !col2) Assertions.throwError("com.lordofduct.com.engines::LoDPhysicsEngine - Collision type does not extend Collision.", Error);
+				
+				return (col1.weight > col2.weight) ? col1 : col2;
+			} catch(err:Error)
+			{
+				Assertions.throwError("com.lordofduct.com.engines::LoDPhysicsEngine - Collision type does not extend Collision.", Error);
+			}
+			
+			return null;
+		}
+		
 	/**
 	 * Update Physics
 	 */
@@ -159,17 +207,6 @@ package com.lordofduct.engines.physics
 				group.collide();
 			}
 		}
-		
-		/* public function testCollisionOf( body1:IPhysicalAttrib, body2:IPhysicalAttrib, resolve:Boolean=false, resAlg:ICollisionResolver=null ):*
-		{	
-			if( !body1 || !body2 ) return null;
-			if( body1 == body2 ) return null;
-			if( !body1.collisionMesh || !body2.collisionMesh ) return null;
-			if( !body1.isRigidBody   || !body2.isRigidBody   ) return null;
-			
-			var detector:ICollisionDetector = (body1.collisionMesh.collisionDetector.weight > body2.collisionMesh.collisionDetector.weight) ? body1.collisionMesh.collisionDetector : body2.collisionMesh.collisionDetector;
-			return detector.testBodyBody( body1, body2, resolve, resAlg );
-		} */
 		
 		public function poolCollisionResult( result:CollisionResult ):void
 		{
