@@ -28,12 +28,11 @@ package com.lordofduct.engines.ai
 			while(clasp.open.length)
 			{
 				//find smallest f score in open list
-				var xnode:IAiNode = clasp.getSmallestOpenF();
+				var xnode:IAiNode = clasp.pullSmallestOpenF();
 				
 				//if at goal, we're finished
 				if(xnode == goal) return clasp.constructPath();
 				
-				clasp.open.splice( clasp.open.indexOf(xnode), 1 );
 				clasp.closed.push(xnode);
 				
 				var neighbours:Array = pool.getNeighbours( xnode );
@@ -88,12 +87,12 @@ package com.lordofduct.engines.ai
 				}
 			}
 			
-			var tentative_result:AStarMonoClasp;
-			
 			while(clasps.length)
 			{
 				clasps.sortOn("clasp_f_score", Array.NUMERIC);
 				clasp = clasp[0];
+				
+				if(clasp.resolved) return clasp.constructPath();
 				
 				if(!clasp.open.length)
 				{
@@ -103,21 +102,14 @@ package com.lordofduct.engines.ai
 				
 				goal = clasp.goal;
 				
-				var xnode:IAiNode = clasp.getSmallestOpenF();//Internal Class Dependency
+				var xnode:IAiNode = clasp.pullSmallestOpenF();
+				clasp.closed.push(xnode);
 				
 				if(xnode == goal)
 				{	
-					if(tentative_result == clasp) return clasp.constructPath();//Internal Class Dependency
-					
-					if(clasp.closed.indexOf(xnode) < 0) clasp.closed.push(xnode);
-					tentative_result = clasp;
+					clasp.resolved = true;
 					continue;
-				} else {
-					tentative_result = null;
 				}
-				
-				clasp.open.splice( clasp.open.indexOf(xnode), 1 );
-				clasp.closed.push(xnode);
 				
 				var neighbours:Array = pool.getNeighbours( xnode );
 				
@@ -164,6 +156,8 @@ class AStarMonoClasp
 	public var f_score:Dictionary = new Dictionary();//the sum of g and h
 	public var parent_list:Dictionary = new Dictionary();//a reference to the node that brings you to current
 	
+	public var resolved:Boolean = false;
+	
 	public function AStarMonoClasp(startNode:IAiNode, goalNode:IAiNode)
 	{
 		start = startNode;
@@ -189,21 +183,26 @@ class AStarMonoClasp
 		return arr;
 	}
 	
-	public function getSmallestOpenF():IAiNode
+	public function sortOpenList():void
 	{
-		var smallest:IAiNode = null;
-		var f:Number = Number.POSITIVE_INFINITY;
+		open.sort(sortHelper);
+	}
+	
+	public function pullSmallestOpenF():IAiNode
+	{
+		open.sort(sortHelper);
 		
-		for each( var node:IAiNode in open )
-		{
-			if(f_score[node] < f)
-			{
-				f = f_score[node];
-				smallest = node;
-			}
-		}
+		return open.shift();
+	}
+	
+	private function sortHelper( a:IAiNode, b:IAiNode ):int
+	{
+		var af:Number = f_score[a];
+		var bf:Number = f_score[b];
 		
-		return smallest;
+		if(af > bf) return 1;
+		else if(af < bf) return -1;
+		else return 0;
 	}
 }
 
