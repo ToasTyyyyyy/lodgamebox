@@ -1,15 +1,10 @@
 package com.lordofduct.engines.ai
 {
 	import com.lordofduct.util.IClonable;
-	import com.lordofduct.util.IDisposable;
+	import com.lordofduct.util.IEqualable;
 	
-	public interface IAiNode extends IClonable
+	public interface IAiNode
 	{
-		function get nodeId():String
-		
-		function get x():Number
-		function get y():Number
-		
 		function get weight():Number
 	}
 }

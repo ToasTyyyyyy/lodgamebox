@@ -1,7 +1,8 @@
 ﻿package com.lordofduct.engines.physics
 {
+	import com.lordofduct.util.IEqualable;
 	
-	public class Arbiter
+	public class Arbiter implements IEqualable
 	{
 		private var _body1:IPhysicalAttrib;
 		private var _body2:IPhysicalAttrib;
@@ -24,9 +25,9 @@
 /**
  * Methods
  */
-		public function update( collision:Collision ):void
+		public function update( coll:Collision ):void
 		{
-			_latestCollision = collision;
+			_latestCollision = coll;
 		}
 		
 		public function preStep( invDt:Number, dt:Number ):void

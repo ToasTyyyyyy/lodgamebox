@@ -31,12 +31,13 @@
  */
 package com.lordofduct.geom
 {
+	import com.lordofduct.util.IEqualable;
 	import com.lordofduct.util.LoDMath;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	
-	public class Vector2 extends Point2D
+	public class Vector2 extends Point2D implements IEqualable
 	{
 		private var _dirty:Boolean = true;
 		private var _length:Number;
@@ -469,22 +470,23 @@ package com.lordofduct.geom
  *BASE METHODS
  *<p>the following is a series of methods for basic Vector cleanup</p>
  */
-		public function equals( v:* ):Boolean
-		{
-			return (v.x == this.x && v.y == this.y);
-		}
 		static public function equals( v1:*, v2:* ):Boolean
 		{
-			return (v1.x == v2.x && v1.y == v2.y);
+			try
+			{
+				return (v1.x == v2.x && v1.y == v2.y);
+			} catch(err:Error) {
+				return false;
+			}
 		}
 		
 		public function fuzzyEquals( v:*, epsilon:Number=0.0001 ):Boolean
 		{
-			return (LoDMath.fuzzyEqual(v.x, this.x, epsilon) && LoDMath.fuzzyEqual(v.y, this.y, epsilon))
+			return (LoDMath.fuzzyEqual(v.x, this.x, epsilon) && LoDMath.fuzzyEqual(v.y, this.y, epsilon));
 		}
 		static public function fuzzyEquals( v1:*, v2:*, epsilon:Number=0.0001 ):Boolean
 		{
-			return (LoDMath.fuzzyEqual(v1.x, v2.x, epsilon) && LoDMath.fuzzyEqual(v1.y, v2.y, epsilon))
+			return (LoDMath.fuzzyEqual(v1.x, v2.x, epsilon) && LoDMath.fuzzyEqual(v1.y, v2.y, epsilon));
 		}
 		
 	/**
