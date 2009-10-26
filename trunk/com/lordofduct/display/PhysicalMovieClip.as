@@ -56,8 +56,10 @@ package com.lordofduct.display
 	import com.lordofduct.geom.SyncingLdTransform;
 	import com.lordofduct.geom.SyncingTransform;
 	import com.lordofduct.geom.Vector2;
+	import com.lordofduct.util.LoDMath;
 	
 	import flash.display.DisplayObject;
+	import flash.geom.Rectangle;
 
 	public class PhysicalMovieClip extends LdTranMovieClip implements IPhysicalAttrib
 	{
@@ -124,5 +126,9 @@ package com.lordofduct.display
 /**
  * Methods
  */
+		public function getPhysicalBounds():Rectangle
+		{
+			return (this.collisionMesh) ? LoDMath.transformRectByMatrix( this.collisionMesh.boundingRect, this.physicalTransform.matrix ) : new Rectangle();
+		}
 	}
 }

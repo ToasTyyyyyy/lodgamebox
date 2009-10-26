@@ -3,10 +3,12 @@ package com.lordofduct.engines.physics
 	import com.lordofduct.engines.physics.collisionMesh.ICollisionMesh;
 	import com.lordofduct.geom.LdTransform;
 	import com.lordofduct.geom.Vector2;
+	import com.lordofduct.util.LoDMath;
 	
 	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	import flash.geom.Rectangle;
 	
 	public class PhysicalAttributes extends EventDispatcher implements IPhysicalAttrib, IEventDispatcher
 	{
@@ -74,5 +76,9 @@ package com.lordofduct.engines.physics
 /**
  * Methods
  */
+		public function getPhysicalBounds():Rectangle
+		{
+			return (this.collisionMesh) ? LoDMath.transformRectByMatrix( this.collisionMesh.boundingRect, this.physicalTransform.matrix ) : new Rectangle();
+		}
 	}
 }

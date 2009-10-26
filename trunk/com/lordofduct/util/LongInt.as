@@ -2,7 +2,7 @@ package com.lordofduct.util
 {
 	import flash.utils.ByteArray;
 	
-	public class LongInt
+	public class LongInt implements IEqualable
 	{
 		//this is used to temporarily convert a value of any type to a LongInt
 		//this is used to keep memory down when doing long successions of math

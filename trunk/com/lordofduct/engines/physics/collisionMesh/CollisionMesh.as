@@ -51,7 +51,7 @@ package com.lordofduct.engines.physics.collisionMesh
 		 * body.collisionMesh = mesh;
 		 */
 		public function get boundingRect():Rectangle { return (_rect) ? _rect.clone() : null; }
-		public function set boundingRect(value:Rectangle):void { _rect = value; }
+		public function set boundingRect(value:Rectangle):void { _rect = value; this.invalidate(); }
 		
 		/**
 		 * The algorithm this mesh utilizes for detecting collision with other objects.

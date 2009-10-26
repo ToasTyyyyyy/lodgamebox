@@ -58,6 +58,31 @@ package com.lordofduct.geom
 			this.y = j;
 		}
 		
+		public function convertToASPoint():Point
+		{
+			return new Point( this.x, this.y );
+		}
+		
+	/**
+	 * IEqualable Interface
+	 */
+		public function equals( obj:* ):Boolean
+		{
+			return (obj.x == this.x && obj.y == this.y);
+		}
+		static public function equals( p1:*, p2:* ):Boolean
+		{
+			try
+			{
+				return (p1.x == p2.x && p1.y == p2.y);
+			} catch(err:Error) {
+				return false;
+			}
+		}
+		
+	/**
+	 * IClonable Interface
+	 */
 		public function copy( obj:* ):void
 		{
 			if(obj is Point2D || obj is Point) this.setTo(obj.x, obj.y);
@@ -72,11 +97,6 @@ package com.lordofduct.geom
 		public function clone():*
 		{
 			return new Point2D( this.x, this.y );
-		}
-		
-		public function convertToASPoint():Point
-		{
-			return new Point( this.x, this.y );
 		}
 	}
 }

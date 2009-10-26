@@ -6,6 +6,7 @@ package com.lordofduct.engines.physics
 	import com.lordofduct.util.IVisibleObject;
 	
 	import flash.events.IEventDispatcher;
+	import flash.geom.Rectangle;
 	
 	public interface IPhysicalAttrib extends IEventDispatcher, IVisibleObject
 	{
@@ -39,5 +40,6 @@ package com.lordofduct.engines.physics
 /**
  * Methods
  */
+		function getPhysicalBounds():Rectangle
 	}
 }
