@@ -94,8 +94,8 @@ package com.lordofduct.ui
 			//show this cursor in stage
 			this.hideCursor(_currCursor);
 			_currCursor = cursor;
-			cursor.view.x = _stage.mouseX;
-			cursor.view.y = _stage.mouseY;
+			cursor.view.x = _stage.mouseX - cursor.offset.x;
+			cursor.view.y = _stage.mouseY - cursor.offset.y;
 			_stage.addChild(cursor.view);
 			
 			_stage.addEventListener(MouseEvent.MOUSE_MOVE, updateCursorPosition, false, 0, true );
