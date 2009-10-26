@@ -31,10 +31,8 @@ package com.lordofduct.ui
 			_offset = pnt;
 			_ease = easeFunct;
 			_speed = speed;
-			if(_ease is Function) _useEase = true;
 			
-			if (_view is InteractiveObject) InteractiveObject(_view).mouseEnabled = false;
-			if (_view is DisplayObjectContainer) DisplayObjectContainer(_view).mouseChildren = false;
+			this.invalidate();
 		}
 		
 		public function set offset(value:Point):void { _offset = value; }
@@ -50,7 +48,7 @@ package com.lordofduct.ui
 		public function get easeSpeed():uint { return _speed; }
 		
 		public function set useEase(value:Boolean):void { _useEase = value; }
-		public function get useEase():Boolean { return (_ease is Function) ? _useEase : false; }
+		public function get useEase():Boolean { return (_ease is Function) ? _useEase : false; this.invalidate(); }
 		
 		public function show():void
 		{
@@ -61,11 +59,21 @@ package com.lordofduct.ui
 		{
 			MouseCursorManager.instance.hideCursor(this);
 		}
+		
+		private function invalidate():void
+		{
+			if(_ease is Function) _useEase = true;
+			
+			if (_view is InteractiveObject) InteractiveObject(_view).mouseEnabled = false;
+			if (_view is DisplayObjectContainer) DisplayObjectContainer(_view).mouseChildren = false;
+			
+			if (MouseCursorManager.instance.getCurrentCursor() == this) MouseCursorManager.instance.assertCursor(this);
+		}
 /**
  * IVisibleObject interface
  */
 		public function get view():DisplayObject{ return _view; }
-		public function set view(value:DisplayObject):void{ _view = value; if (MouseCursorManager.instance.getCurrentCursor() == this) MouseCursorManager.instance.assertCursor(this);}
+		public function set view(value:DisplayObject):void{ _view = value; this.invalidate(); }
 /**
  * IIdentifiable interface
  */
