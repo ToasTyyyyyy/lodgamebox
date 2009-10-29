@@ -154,6 +154,7 @@ package com.lordofduct.util
 		{
 			val -= min;
 			max -= min;
+			if(max == 0) return min;
 			val %= max;
 			val += min;
 			while (val < min)
@@ -161,6 +162,21 @@ package com.lordofduct.util
 			
 			return val;
 		}
+		
+		/*
+		//arithmetic version of wrap... need to decide which is more efficient
+		static public function wrap( value:Number, max:Number, min:Number=0 ):Number
+        {
+        	value -= min;
+        	max -= min;
+        	
+        	if(max == 0) return min;
+        	
+        	value = value - max * Math.floor( value / max );
+        	
+        	return value + min;
+        }
+		*/
 		
 		/**
 		 * force a value within the boundaries of two values
