@@ -2,7 +2,7 @@ package com.lordofduct.engines.physics
 {
 	internal class ArbiterList
 	{
-		private var _arr:Array = new Array();
+		private var _list:Array = new Array();
 		
 		public function ArbiterList()
 		{
@@ -12,7 +12,7 @@ package com.lordofduct.engines.physics
 /**
  * Properties
  */
-		public function get length():int { return _arr.length; }
+		public function get length():int { return _list.length; }
 		
 /**
  * Methods
@@ -21,18 +21,18 @@ package com.lordofduct.engines.physics
 		{
 			var index:int = this.indexOf(arb);
 			
-			if(index < 0) _arr.push(arb);
+			if(index < 0) _list.push(arb);
 			else
 			{
-				var last:int = _arr.length - 1;
-				_arr[index] = _arr[last];
-				_arr[last] = arb;
+				var last:int = _list.length - 1;
+				_list[index] = _list[last];
+				_list[last] = arb;
 			}
 		}
 		
 		public function clear():void
 		{
-			_arr.length = 0;
+			_list.length = 0;
 		}
 		
 		public function contains( arb:Arbiter ):Boolean
@@ -44,9 +44,9 @@ package com.lordofduct.engines.physics
 		{
 			var arbiter:Arbiter;
 			
-			for( var i:int = 0; i < _arr.length; i++ )
+			for( var i:int = 0; i < _list.length; i++ )
 			{
-				arbiter = _arr[i] as Arbiter;
+				arbiter = _list[i] as Arbiter;
 				if(arb.equals(arbiter)) return i;
 			}
 			
@@ -57,12 +57,24 @@ package com.lordofduct.engines.physics
 		{
 			var index:int = this.indexOf(arb);
 			
-			if(index != -1) _arr.splice(index, 1);
+			if(index != -1) _list.splice(index, 1);
 		}
 		
 		public function getItem( index:int ):Arbiter
 		{
-			return _arr[index] as Arbiter;
+			return _list[index] as Arbiter;
+		}
+		
+		public function arbiterExistsFor( obj:IPhysicalAttrib ):Array
+		{
+			var arr:Array = new Array();
+			
+			for each ( var arb:Arbiter in _list )
+			{
+				if( arb.relatesTo( obj ) ) arr.push( arb );
+			}
+			
+			return (arr.length) ? arr : null;
 		}
 	}
 }

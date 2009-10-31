@@ -19,6 +19,8 @@
 		{
 			if(!this.collision) return;
 			//TODO
+			
+			super.preStep( invDt, dt );
 		}
 		
 		override public function applyImpulse():void
@@ -110,6 +112,8 @@
 			{
 				IPhasedCollisionMesh(body2.collisionMesh).currentPhase = -1;
 			}
+			
+			super.applyImpulse();
 		}
 	}
 }

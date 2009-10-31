@@ -25,6 +25,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 				result.normal.negate();
 				result.penetrationAxis.negate();
 			}
+			
+			super.preStep( invDt, dt );
 		}
 		
 		override public function applyImpulse():void
@@ -95,6 +97,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 			{
 				IPhasedCollisionMesh(body2.collisionMesh).currentPhase = -1;
 			}
+			
+			super.applyImpulse();
 		}
 	}
 }

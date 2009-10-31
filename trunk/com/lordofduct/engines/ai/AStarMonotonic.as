@@ -12,7 +12,7 @@ package com.lordofduct.engines.ai
 /**
  * Static Interface
  */
-		static public function reduce( pool:IAiPool, start:IAiNode, goal:IAiNode, assumeWeight:Boolean=true ):Array
+		static public function reduce( pool:IAiNodePool, start:IAiNode, goal:IAiNode, assumeWeight:Boolean=true ):Array
 		{
 			if(!pool.containsSeveral(start, goal)) return null;
 			
@@ -63,7 +63,7 @@ package com.lordofduct.engines.ai
 			return null;//failed
 		}
 		
-		static public function reduceMultipleGoals( pool:IAiPool, start:IAiNode, goals:Array, assumeWeight:Boolean=false ):Array
+		static public function reduceMultipleGoals( pool:IAiNodePool, start:IAiNode, goals:Array, assumeWeight:Boolean=false ):Array
 		{
 			goals = goals.slice();
 			if(!pool.contains(start)) return null;
@@ -219,7 +219,7 @@ class AStarMonoClasp
 
 //reduce function with out AStarMonoClasp dependency
 /*
-		static public function reduce( pool:IAiPool, start:IAiNode, goal:IAiNode, assumeWeight:Boolean=true ):Array
+		static public function reduce( pool:IAiNodePool, start:IAiNode, goal:IAiNode, assumeWeight:Boolean=true ):Array
 		{
 			if(!pool.containsSeveral(start, goal)) return null;
 			

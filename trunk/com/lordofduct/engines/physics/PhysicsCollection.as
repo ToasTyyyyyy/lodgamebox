@@ -48,6 +48,13 @@
 			
 			var index:int = _bodies.indexOf(body);
 			_bodies.splice(index,1);
+			
+			var arr:Array = _arbiterList.arbiterExistsFor( body );
+			
+			for each( var arb:Arbiter in arr )
+			{
+				_arbiterList.remove( arb );
+			}
 		}
 		
 		public function containsPhysicalBody( body:IPhysicalAttrib ):Boolean
@@ -150,7 +157,7 @@
 					
 					var arb:Arbiter = new _arb(body1, body2);
 					var index:int = _arbiterList.indexOf(arb);
-					if(index >= 0) arb = _arbiterList.getItem(index);
+					if(index >= 0) arb.copy( _arbiterList.getItem(index) );
 					
 					var collision:Collision = (arb.collision) ? arb.collision : LoDPhysicsEngine.instance.constructCollisionChosen( body1, body2 );
 					
@@ -158,10 +165,34 @@
 					{
 						arb.update(collision);
 						_arbiterList.add(arb);
-					}
-					else _arbiterList.remove(arb);
+					} else _arbiterList.remove(arb);
 				}
 			}
+		}
+		
+		
+		public function collisionExistsFor( body:IPhysicalAttrib ):Boolean
+		{
+			var arr:Array = _arbiterList.arbiterExistsFor( body );
+			
+			return !(arr == null);
+		}
+		
+		public function collisionsFor( body:IPhysicalAttrib ):Array
+		{
+			var arr:Array = _arbiterList.arbiterExistsFor( body );
+			
+			if(!arr) return null;
+			
+			var colls:Array = new Array();
+			
+			for ( var i:int = 0; i < arr.length; i++ )
+			{
+				var coll:Collision = arr[i] as Collision;
+				if(coll) colls.push( coll );
+			}
+			
+			return colls;
 		}
 	}
 }

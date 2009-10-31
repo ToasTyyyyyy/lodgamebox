@@ -31,7 +31,6 @@
  */
 package com.lordofduct.engines.physics
 {
-	import com.lordofduct.events.PhysicsEvent;
 	import com.lordofduct.util.Assertions;
 	import com.lordofduct.util.DeltaTimer;
 	import com.lordofduct.util.SingletonEnforcer;
@@ -205,16 +204,6 @@ package com.lordofduct.engines.physics
 			{
 				group.step(dt);
 				group.collide();
-			}
-		}
-		
-		public function poolCollisionResult( result:CollisionResult ):void
-		{
-			if(result)
-			{
-				this.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION, result ) );
-				if(result.body1) result.body1.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION, result ) );
-				if(result.body2) result.body2.dispatchEvent( new PhysicsEvent( PhysicsEvent.COLLISION, result ) );
 			}
 		}
 	}

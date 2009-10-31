@@ -47,8 +47,6 @@
 				res.body2 = body2;
 			}
 			
-			LoDPhysicsEngine.instance.poolCollisionResult( res );
-			
 			return res;
 		}
 		

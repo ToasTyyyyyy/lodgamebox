@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Vector2 - written by Dylan Engelman a.k.a LordOfDuct
  * 
  * Class written and devised for the LoDGameLibrary. The use of this code 
@@ -478,6 +478,8 @@ package com.lordofduct.geom
 			} catch(err:Error) {
 				return false;
 			}
+			
+			return false;
 		}
 		
 		public function fuzzyEquals( v:*, epsilon:Number=0.0001 ):Boolean

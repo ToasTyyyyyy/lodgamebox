@@ -99,7 +99,7 @@ package com.lordofduct.ui
 			_stage.addChild(cursor.view);
 			
 			_stage.addEventListener(MouseEvent.MOUSE_MOVE, updateCursorPosition, false, 0, true );
-			_stage.addEventListener(Event.ADDED_TO_STAGE, forceCursorToTop, false, 0, true );
+			_stage.addEventListener(Event.ADDED, forceCursorToTop, false, 0, true );
 			Mouse.hide();
 		}
 		
@@ -114,7 +114,7 @@ package com.lordofduct.ui
 			Mouse.show();
 			
 			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, updateCursorPosition );
-			_stage.removeEventListener(Event.ADDED_TO_STAGE, forceCursorToTop );
+			_stage.removeEventListener(Event.ADDED, forceCursorToTop );
 		}
 		
 		public function hideCursor(idx:*):void
@@ -177,14 +177,10 @@ package com.lordofduct.ui
 		
 		private function forceCursorToTop(e:Event):void
 		{
-			if(!_currCursor)
-			{
-				this.showDefaultCursor();
-				return;
-			}
+			if(!_currCursor) return;
 			
 			var obj:DisplayObject = e.target as DisplayObject;
-			if(obj.parent != _stage) return;
+			if(obj == _currCursor.view || obj.parent != _stage) return;
 			
 			_stage.addChild(_currCursor.view);
 		}
