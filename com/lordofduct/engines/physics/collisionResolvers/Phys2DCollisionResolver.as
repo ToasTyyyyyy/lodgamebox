@@ -17,6 +17,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 		{
 			if(!this.collision) return;
 			//TODO
+			
+			super.preStep( invDt, dt );
 		}
 		
 		override public function applyImpulse():void
@@ -139,6 +141,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 					sim2.angularVelocity += dav2;
 				}
 			}
+			
+			super.applyImpulse();
 		}
 		
 		private function getContacts(body1:IPhysicalAttrib, body2:IPhysicalAttrib, normal:Vector2, penAxis:Vector2, depth:Number ):Array

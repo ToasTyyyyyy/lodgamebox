@@ -37,11 +37,14 @@ package com.lordofduct
 		{
 			_stage = stg;
 			_gameTimer = (dTimer) ? dTimer : new DeltaTimer();
+			_gameTimer.start(0);
 		}
 		
 		public function get stage():Stage { return _stage; }
 		
 		public function get frameRate():int { return (_stage) ? _stage.frameRate : 0; }
+		
+		public function get timerFrameRate():Number { return 1 / _gameTimer.dt; }
 		
 		public function get gameTimer():DeltaTimer { return _gameTimer; }
 		

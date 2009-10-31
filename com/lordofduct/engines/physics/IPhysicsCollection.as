@@ -21,5 +21,8 @@ package com.lordofduct.engines.physics
 		
 		function step(dt:Number, includedForces:Array=null):void
 		function collide():void
+		
+		function collisionExistsFor( body:IPhysicalAttrib ):Boolean
+		function collisionsFor( body:IPhysicalAttrib ):Array
 	}
 }

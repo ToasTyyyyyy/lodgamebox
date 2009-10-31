@@ -1,20 +1,21 @@
-package com.lordofduct.events
+﻿package com.lordofduct.events
 {
-	import com.lordofduct.engines.physics.CollisionResult;
+	import com.lordofduct.engines.physics.Collision;
 	
 	import flash.events.Event;
 
 	public class PhysicsEvent extends Event
 	{
-		public static const COLLISION:String = "collission";
+		public static const COLLISION_UPDATED:String = "collisionUpdated";
+		public static const COLLISION_OCCURRED:String = "collissionOccurred";
 		public static const COLLISION_RESOLVED:String = "collissionResolved";
 		public static const BODY_MOVED:String = "bodyMoved";
 		
-		protected var _result:CollisionResult;
+		protected var _result:Collision;
 		
-		public function get collisionResult():CollisionResult { return _result; }
+		public function get collision():Collision { return _result; }
 		
-		public function PhysicsEvent(type:String, result:CollisionResult=null, bubbles:Boolean=true, cancelable:Boolean=false)
+		public function PhysicsEvent(type:String, result:Collision=null, bubbles:Boolean=true, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
 			
@@ -23,7 +24,7 @@ package com.lordofduct.events
 		
 		override public function clone():Event
 		{
-			return new PhysicsEvent( this.type, this.collisionResult, this.bubbles, this.cancelable );
+			return new PhysicsEvent( this.type, this.collision, this.bubbles, this.cancelable );
 		}
 	}
 }

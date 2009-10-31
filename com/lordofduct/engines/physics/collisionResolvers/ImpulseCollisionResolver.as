@@ -28,6 +28,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 				result.normal.negate();
 				result.penetrationAxis.negate();
 			}
+			
+			super.preStep( invDt, dt );
 		}
 		
 		override public function applyImpulse():void
@@ -171,6 +173,8 @@ package com.lordofduct.engines.physics.collisionResolvers
 			{
 				IPhasedCollisionMesh(body2.collisionMesh).currentPhase = -1;
 			}
+			
+			super.applyImpulse();
 		}
 		
 		private function getContacts(body1:IPhysicalAttrib, body2:IPhysicalAttrib, normal:Vector2, penAxis:Vector2, depth:Number ):Array

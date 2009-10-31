@@ -89,6 +89,30 @@ package com.lordofduct.engines.animation
 			return (_members[obj]) ? _members[obj][prop] : null;
 		}
 		
+		public function stopTweenFor( obj:Object, prop:String ):ITween
+		{
+			var tween:ITween = this.getTweenFor( obj, prop );
+			
+			if(tween)
+			{
+				tween.pause();
+			}
+			
+			return tween;
+		}
+		
+		public function removeTweenFor( obj:Object, prop:String ):ITween
+		{
+			var tween:ITween = this.getTweenFor( obj, prop );
+			
+			if(tween)
+			{
+				delete _members[obj][prop];
+			}
+			
+			return tween;
+		}
+		
 		private function updateAll(e:TimerEvent):void
 		{
 			var dt:Number = _timer.dt;

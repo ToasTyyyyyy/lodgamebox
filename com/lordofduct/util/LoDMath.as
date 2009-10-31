@@ -391,6 +391,26 @@ package com.lordofduct.util
 			return arr;
 		}
 		
+		/**
+		 * Returns the distance between any two objects that have x and y properties. If these properties 
+		 * do not exist NaN is returned.
+		 */
+		static public function distanceBetween( obj1:*, obj2:* ):Number
+		{
+			try
+			{
+				var ix:Number = obj1.x - obj2.x;
+				var iy:Number = obj1.y - obj2.y;
+				
+				return Math.sqrt( ix * ix + iy * iy );
+			} catch(err:Error)
+			{
+				return NaN;
+			}
+			
+			return NaN;
+		}
+		
 /**
  * Advanced Math
  */
