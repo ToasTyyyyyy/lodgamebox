@@ -37,7 +37,7 @@
  * 
  * Next it adds the capability for remotely linked XML nodes. What this means is that a given XML file can be broken into several .xml 
  * files and linked together as sub nodes easily. You utilize the 'lodxml' namespace to do this. All src references must be relative to the 
- * root XML document that is used to start the load process, or as fully qualified uris. (./... vs http://somedomain.com/...).
+ * root document that is loading the documents, or as fully qualified uris. (./... vs http://somedomain.com/...).
  * 
  * To make use of this feature you first most declare the 'lodxml' for every .xml document that will have remote xml files. Then each 
  * node that relates to a remote xml file must be named in the 'lodxml' namespace as the name 'remotexml' and have a src attached to it.
@@ -95,6 +95,15 @@
  * NOTE - you can turn off a remotexml node to keep it from loading by setting an attribute of 'active' to false.
  * 
  * ex: <lodxml:remotexml src="./someXml.xml" active="false" />
+ * 
+ * you can then load these remotexml documents on your own terms. Or you can do this just to turn nodes on and off when needed.
+ * 
+ * NOTE - the namespace references the uri 'lodxml', as opposed to a fully resolved uri. This was intentional to keep text length down. I chose the name 'lodxml' because I 
+ * considered it to be a rather unique name (that and I don't have a url that is strong enough that I'd want to reference). If you want to modify such reference you will have 
+ * to change out the namespace references through out this code. This may be changing in the future at the behest of any comments on the matter, or if I expand on the 'lodxml' 
+ * namespace. I hope to in the future add several other options and node types.
+ * 
+ * Please contact me via http://www.lordofduct.com if there are any features you would like included in the 'lodxml' namespace!
  */
 package com.lordofduct.net
 {
