@@ -24,7 +24,7 @@ package com.lordofduct.net
 		private var _worker:Worker;
 		
 		public function Asset( idx:String, src:String=null, forceFileType:String=null )
-		{
+		{	
 			Assertions.isNotTrue( !idx && !src, "com.lordofduct.net::Asset - either the param idx OR src must be present to create a libraryName for this Asset." );
 			
 			_id = idx;
@@ -62,12 +62,6 @@ package com.lordofduct.net
 			_fileType = type;
 			_src = src;
 			
-			if(!_id)
-			{
-				trace("WARNING: No id was supplied for asset with source {"+source+"} using the source as the id");
-				_id = _src;
-			}
-			
 			this.updateWorker();
 			this.checkVisibility();
 			
@@ -89,7 +83,9 @@ package com.lordofduct.net
 		}
 		
 		public function load(req:URLRequest=null, loaderContext:*=null):void
-		{	
+		{
+			Assertions.notNil( _src, "com.lordofduct.net::Asset - can not load if source is not set. Please run 'setSource(...)' before loading.", Error );
+			
 			this.updateWorker();
 			this.checkVisibility();
 			
