@@ -4,8 +4,10 @@ package com.lordofduct.engines.ai
 	
 	public class AStarMonotonic
 	{
+		private var _pool:IAiNodePool;
 		private var _start:IAiNode;
 		private var _goal:IAiNode;
+		private var _assumeWeight:Boolean = false;
 		
 		//accessible for static functions
 		private var open:Array = new Array();//open nodes that can be travelled onto
@@ -16,17 +18,25 @@ package com.lordofduct.engines.ai
 		private var parent_list:Dictionary = new Dictionary();//a reference to the node that brings you to current
 		private var resolved:Boolean = false;
 		
-		public function AStarMonotonic(startNode:IAiNode, goalNode:IAiNode)
+		public function AStarMonotonic(pool:IAINodePool, startNode:IAiNode, goalNode:IAiNode, assmWght:Boolean=true )
 		{
+			if(!pool.containsSeveral(start, goal)) throw new Error("com.lordofduct.engines.ai::AStarMonotonic - pool must contain both start point and goal");
+			
+			_pool = pool;
 			_start = startNode;
 			_goal = goalNode;
+			_assumeWeight = assmWght;
+			
+			AStarMonotonic.reduce( this );
 		}
 		
 /**
  * Properties
  */
+		public function get aiPool():IAiNodePool { return _pool; }
 		public function get start():IAiNode { return _start; }
 		public function get goal():IAiNode { return _goal; }
+		public function get assumeWeight():Boolean { return _assumeWeight; }
 		
 		public function get latest_f_score():Number
 		{
@@ -39,11 +49,7 @@ package com.lordofduct.engines.ai
 /**
  * Methods
  */
-		
-	/**
-	 * Private Static Accessible Interface
-	 */
-		private function constructPath():Array
+		public function constructPath():Array
 		{
 			var node:IAiNode = this.goal;
 			var arr:Array = [ node ];
@@ -57,6 +63,13 @@ package com.lordofduct.engines.ai
 			return arr;
 		}
 		
+		public function reduce():Boolean
+		{
+			return AStarMonotonic.reduce( this );
+		}
+	/**
+	 * Private Static Accessible Interface
+	 */
 		private function sortOpenList():void
 		{
 			open.sort(sortHelper);
@@ -82,11 +95,12 @@ package com.lordofduct.engines.ai
 /**
  * Static Interface
  */
-		static public function reduce( pool:IAiNodePool, start:IAiNode, goal:IAiNode, assumeWeight:Boolean=true ):Array
+		static public function reduce( clasp:AStarMonotonic ):Boolean
 		{
-			if(!pool.containsSeveral(start, goal)) return null;
-			
-			var clasp:AStarMonotonic = new AStarMonotonic( start, goal );
+			var pool:IAiNodePool = clasp.aiPool;
+			var start:IAiNode = clasp.start;
+			var goal:IAiNode = clasp.goal;
+			var assumeWeight:Boolean = clasp.assumeWeight;
 			
 			//set start values
 			clasp.g_score[start] = (assumeWeight) ? start.weight : 0;//NOTE - WEIGHT CHECK
@@ -101,7 +115,7 @@ package com.lordofduct.engines.ai
 				var xnode:IAiNode = clasp.pullSmallestOpenF();
 				
 				//if at goal, we're finished
-				if(xnode == goal) return clasp.constructPath();
+				if(xnode == goal) return true;;
 				
 				clasp.closed.push(xnode);
 				
@@ -130,10 +144,19 @@ package com.lordofduct.engines.ai
 				}
 			}
 			
-			return null;//failed
+			return false;//failed
 		}
 		
-		static public function reduceMultipleGoals( pool:IAiNodePool, start:IAiNode, goals:Array, assumeWeight:Boolean=false ):Array
+		static public function reduceGoal( pool:IAiNodePool, start:IAiNode, goal:IAiNode, assumeWeight:Boolean=true ):AStarMonotonic
+		{
+			if(!pool.containsSeveral(start, goal)) return null;
+			
+			var clasp:AStarMonotonic = new AStarMonotonic( pool, start, goal, assumeWeight );
+			
+			return (AStarMonotonic.reduce( clasp )) ? clasp : null;
+		}
+		
+		static public function reduceMultipleGoals( pool:IAiNodePool, start:IAiNode, goals:Array, assumeWeight:Boolean=false ):AStarMonotonic
 		{
 			goals = goals.slice();
 			if(!pool.contains(start)) return null;
@@ -148,7 +171,7 @@ package com.lordofduct.engines.ai
 				
 				if(goal && pool.contains(goal))
 				{
-					clasp = new AStarMonotonic( start, goal );
+					clasp = new AStarMonotonic( pool, start, goal, assumeWeight );
 					clasp.g_score[start] = (assumeWeight) ? start.weight : 0;//NOTE - WEIGHT CHECK
 					clasp.h_score[start] = pool.heuristicDistance( start, goal );
 					clasp.f_score[start] = clasp.g_score[start] + clasp.h_score[start];
@@ -162,7 +185,7 @@ package com.lordofduct.engines.ai
 				clasps.sortOn("latest_f_score", Array.NUMERIC);
 				clasp = clasp[0];
 				
-				if(clasp.resolved) return clasp.constructPath();
+				if(clasp.resolved) return clasp;
 				
 				if(!clasp.open.length)
 				{
