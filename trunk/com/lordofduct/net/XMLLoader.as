@@ -91,6 +91,10 @@
  * NOTE - the bytesLoaded and bytesTotal values may not accurately represent the size of the XML when there are remote nodes. Because each remote node is loaded independently 
  * and the loader doesn't know the size of them until they start loading, the bytesTotal size will increase as more nodes are added to the que. If you are watching these values 
  * to update some preloader bar, this may cause the preloader to jump upto near 100% and then back down again over and over as new remotexml nodes are added into the que.
+ * 
+ * NOTE - you can turn off a remotexml node to keep it from loading by setting an attribute of 'active' to false.
+ * 
+ * ex: <lodxml:remotexml src="./someXml.xml" active="false" />
  */
 package com.lordofduct.net
 {
@@ -212,7 +216,7 @@ package com.lordofduct.net
 			
 			if(_xmlData.namespace("lodxml"))
 			{
-				var list:XMLList = _xmlData.descendants( new QName("lodxml", "remotexml") ).(hasOwnProperty("@src") && !hasComplexContent());
+				var list:XMLList = _xmlData.descendants( new QName("lodxml", "remotexml") ).(hasOwnProperty("@src") && !hasComplexContent() && !(hasOwnProperty("@active") && @active.toLowerCase() == "false"));
 				var len:int = list.length();
 				if(!len)
 				{
@@ -275,7 +279,7 @@ package com.lordofduct.net
 			var src:String = _subloadersToSrcUri[subloader];
 			var xml:XML = subloader.data;
 			
-			var list:XMLList = _xmlData.descendants( new QName("lodxml", "remotexml") ).(hasOwnProperty("@src") && @src == src && !hasComplexContent());
+			var list:XMLList = _xmlData.descendants( new QName("lodxml", "remotexml") ).(hasOwnProperty("@src") && @src == src && !hasComplexContent() && !(hasOwnProperty("@active") && @active.toLowerCase() == "false") );
 			
 			for each( var node:XML in list )
 			{
