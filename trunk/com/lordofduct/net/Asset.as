@@ -15,18 +15,18 @@ package com.lordofduct.net
 		private var _id:String;
 		
 		private var _data:Object;
-		private var _fileType:String;
 		private var _src:String;
+		private var _fileType:String;
 		
 		private var _visible:Boolean = false;
 		private var _cont:Sprite;
 		
 		private var _worker:Worker;
-		private var _bytesLoaded:int = 0;
-		private var _bytesTotal:int = 0;
 		
-		public function Asset( idx:String, src:String=null, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null )
+		public function Asset( idx:String, src:String=null, forceFileType:String=null )
 		{
+			Assertions.isNotTrue( !idx && !src, "com.lordofduct.net::Asset - either the param idx OR src must be present to create a libraryName for this Asset." );
+			
 			_id = idx;
 			
 			if(!_id)
@@ -35,7 +35,7 @@ package com.lordofduct.net
 				_id = src;
 			}
 			
-			if(src) this.load( src, forceFileType, req, loaderContext );
+			this.setSource( src, forceFileType, req, loaderContext );
 		}
 		
 		public function get id():String { return _id; }
@@ -88,31 +88,31 @@ package com.lordofduct.net
 			return (_data) ? _data.constructor as Class : null;
 		}
 		
-		public function load( src:String, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null ):void
+		public function load(req:URLRequest=null, loaderContext:*=null):void
+		{	
+			this.updateWorker();
+			this.checkVisibility();
+			
+			if(req) Assertions.equal( req.url, _src, "com.lordofduct.net::Asset - when loading an Asset and supplying a URLRequest, both sources must match" );
+			else req = new URLRequest( _src );
+			
+			_worker.load( req, loaderContext );
+		}
+		
+		public function setSource( src:String, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null ):void
 		{
+			//set source uri
+			_src = src;
+			
+			//set filetype
 			if(!forceFileType)
 			{
-				var type:String = StringUtils.findFileType( src );
+				var type:String = StringUtils.findFileType( _src );
 				Assertions.notNil( type, "com.lordofduct.net::Asset - the fileType could not be found for this source uri.", Error );
 				_fileType = type;
 			} else {
 				_fileType = forceFileType.toLowerCase();
 			}
-			
-			_src = src;
-			
-			if(!_id)
-			{
-				trace("WARNING: No id was supplied for asset with source {"+source+"} using the source as the id");
-				_id = _src;
-			}
-			
-			this.updateWorker();
-			this.checkVisibility();
-			
-			//actually load the shit
-			if(req) Assertions.equal( req.url, _src, "com.lordofduct.net::Asset - when loading an Asset and supplying a URLRequest, both sources must match" );
-			_worker.load( req, loaderContext );
 		}
 		
 	/**
