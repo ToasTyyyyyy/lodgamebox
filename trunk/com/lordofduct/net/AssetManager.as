@@ -6,6 +6,7 @@ package com.lordofduct.net
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 	import flash.utils.Proxy;
+	import flash.utils.flash_proxy;
 		
 	public dynamic class AssetManager extends Proxy
 	{
