@@ -1,9 +1,8 @@
-package com.lordofduct.media
+package com.lordofduct.net
 {
 	import com.lordofduct.util.Assertions;
 	import com.lordofduct.util.SingletonEnforcer;
 	
-	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 	import flash.utils.Proxy;
@@ -29,12 +28,28 @@ package com.lordofduct.media
  */
 		private var _assets:Dictionary = new Dictionary();
 		
-		public function addAsset( idx:String, obj:* ):void
+		public function addAsset( asset:Asset ):void
+		{
+			Assertions.notNil( asset, "com.lordofduct.utils::AssetManager - asset param must be non-null" );
+			
+			_asset[asset.id] = asset;
+		}
+		
+		public function addAssetByObject( idx:String, obj:*, type:String=null ):void
 		{
 			Assertions.notNil(idx,"com.lordofduct.utils::AssetManager - idx param must be non-null");
 			Assertions.notNil(obj,"com.lordofduct.utils::AssetManager - obj param must be non-null");
 			
-			_assets[idx] = obj;
+			var asset:Asset = new Asset( idx );
+			asset.applyAssetData( obj, type, Asset.LOCAL_SOURCE );
+			this.addAsset( asset );
+		}
+		
+		public function loadAsset( idx:String, src:String=null, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null ):void
+		{
+			var asset:Asset = new Asset( idx, src, forceFileType, req, loaderContext );
+			
+			this.addAsset( asset );
 		}
 		
 		public function removeAsset( idx:String ):void
@@ -54,59 +69,53 @@ package com.lordofduct.media
 			return Boolean( _assets[idx] );
 		}
 		
-		public function getAsset( idx:String ):*
+		public function getAsset( idx:String ):Asset
 		{
 			Assertions.notNil(idx,"com.lordofduct.utils::AssetManager - idx param must be non-null");
 			
 			var asset:* = _assets[idx];
-			Assertions.notNil(asset,"com.lordofduct.utils::AssetManager - Item not registered in library with the id: " + idx, Error);
+			Assertions.notNil(asset,"com.lordofduct.utils::AssetManager - Asset not registered in library with the id: " + idx, Error);
 			return asset;
 		}
 		
-		public function getAssetClass( idx:String ):Class
+		public function getAssetContentClass( idx:String ):Class
 		{
-			var asset:* = getAsset( idx );
-			var clazz:Class = asset.constructor as Class;
-			
-			Assertions.notNil(clazz,"com.lordofduct.utils::AssetManager - Item with id: " + idx + " does not implicitly derive a Class constructor", Error);
-			
-			return clazz;
+			return this.getAsset( idx ).getContentClassType();
 		}
 		
-		public function cloneAsset( idx:String ):*
+		public function cloneAssetContent( idx:String ):Object
 		{
-			var clazz:Class = getAssetClass(idx);
-			return new clazz();
+			return this.getAsset( idx ).cloneContent();
 		}
 		
 /**
  * SWF and SWFLibrary methods
  */
-		/**
-		 * Returns a loaded SWF object
-		 * 
-		 * If the SWF is in a Loader instance it returns the content of the Loader, not the Loader itself.
-		 */
 		public function getSWF( idx:String ):Sprite
 		{
-			Assertions.notNil(idx,"com.lordofduct.utils::AssetManager - idx param must be non-null");
+			var asset:Asset = this.getAsset( idx );
 			
-			var asset:Sprite = (_assets[idx] is Loader) ? _assets[idx].content as Sprite : _assets[idx] as Sprite;
-			Assertions.notNil(asset, "com.lordofduct.utils::AssetManager - Item not registered in library with the id: " + idx, Error);
-			Assertions.notNil(asset.loaderInfo, "com.lordofduct.utils::AssetManager - Item " + idx + " does not contain a LoaderInfo object and must not be a SWF", Error );
-			return asset;
+			if(!asset) return null;
+			
+			var spr:Sprite = asset.content as Sprite;
+			
+			if(!spr || !spr.loaderInfo) return null;
+			
+			return spr;
 		}
 		
 		public function getClassFromSWFLibrary( idx:String, className:String ):Class
 		{
 			Assertions.notNil(className, "com.lordofduct.utils::AssetManager - className param must be non-null");
 			
-			var swf:Sprite = getSWF( idx );
+			var swf:Sprite = this.getSWF( idx );
+			if(!swf) return null;
+			
 			var clazz:Class = swf.loaderInfo.applicationDomain.getDefinition(className) as Class;
 			return clazz;
 		}
 		
-		public function getInstanceFromSWFLibrary( idx:String, className:String ):*
+		public function getInstanceFromSWFLibrary( idx:String, className:String ):Object
 		{
 			var clazz:Class = this.getClassFromSWFLibrary( idx, className );
 			return new clazz();
