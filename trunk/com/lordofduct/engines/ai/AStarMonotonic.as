@@ -4,9 +4,79 @@ package com.lordofduct.engines.ai
 	
 	public class AStarMonotonic
 	{
-		public function AStarMonotonic()
+		private var _start:IAiNode;
+		private var _goal:IAiNode;
+		
+		//accessible for static functions
+		private var open:Array = new Array();//open nodes that can be travelled onto
+		private var closed:Array = new Array();//nodes checked for travel
+		private var g_score:Dictionary = new Dictionary();//the distance and weight from start to current
+		private var h_score:Dictionary = new Dictionary();//the distance from current to goal
+		private var f_score:Dictionary = new Dictionary();//the sum of g and h
+		private var parent_list:Dictionary = new Dictionary();//a reference to the node that brings you to current
+		private var resolved:Boolean = false;
+		
+		public function AStarMonotonic(startNode:IAiNode, goalNode:IAiNode)
 		{
+			_start = startNode;
+			_goal = goalNode;
+		}
+		
+/**
+ * Properties
+ */
+		public function get start():IAiNode { return _start; }
+		public function get goal():IAiNode { return _goal; }
+		
+		public function get latest_f_score():Number
+		{
+			return (closed.length) ? f_score[closed[closed.length - 1]] : 0;
+		}
+	/**
+	 * Private Static Accessible Interface
+	 */
+		
+/**
+ * Methods
+ */
+		
+	/**
+	 * Private Static Accessible Interface
+	 */
+		private function constructPath():Array
+		{
+			var node:IAiNode = this.goal;
+			var arr:Array = [ node ];
 			
+			while( parent_list[node] != this.start )
+			{
+				node = parent_list[node];
+				arr.push( node );
+			}
+			
+			return arr;
+		}
+		
+		private function sortOpenList():void
+		{
+			open.sort(sortHelper);
+		}
+		
+		private function pullSmallestOpenF():IAiNode
+		{
+			open.sort(sortHelper);
+			
+			return open.shift();
+		}
+		
+		private function sortHelper( a:IAiNode, b:IAiNode ):int
+		{
+			var af:Number = f_score[a];
+			var bf:Number = f_score[b];
+			
+			if(af > bf) return 1;
+			else if(af < bf) return -1;
+			else return 0;
 		}
 		
 /**
@@ -16,7 +86,7 @@ package com.lordofduct.engines.ai
 		{
 			if(!pool.containsSeveral(start, goal)) return null;
 			
-			var clasp:AStarMonoClasp = new AStarMonoClasp( start, goal );
+			var clasp:AStarMonotonic = new AStarMonotonic( start, goal );
 			
 			//set start values
 			clasp.g_score[start] = (assumeWeight) ? start.weight : 0;//NOTE - WEIGHT CHECK
@@ -69,7 +139,7 @@ package com.lordofduct.engines.ai
 			if(!pool.contains(start)) return null;
 			
 			var goal:IAiNode;
-			var clasp:AStarMonoClasp;
+			var clasp:AStarMonotonic;
 			var clasps:Array = new Array();
 			
 			for( var i:int = 0; i < goals.length; i++ )
@@ -78,7 +148,7 @@ package com.lordofduct.engines.ai
 				
 				if(goal && pool.contains(goal))
 				{
-					clasp = new AStarMonoClasp( start, goal );
+					clasp = new AStarMonotonic( start, goal );
 					clasp.g_score[start] = (assumeWeight) ? start.weight : 0;//NOTE - WEIGHT CHECK
 					clasp.h_score[start] = pool.heuristicDistance( start, goal );
 					clasp.f_score[start] = clasp.g_score[start] + clasp.h_score[start];
@@ -89,7 +159,7 @@ package com.lordofduct.engines.ai
 			
 			while(clasps.length)
 			{
-				clasps.sortOn("clasp_f_score", Array.NUMERIC);
+				clasps.sortOn("latest_f_score", Array.NUMERIC);
 				clasp = clasp[0];
 				
 				if(clasp.resolved) return clasp.constructPath();
@@ -140,81 +210,6 @@ package com.lordofduct.engines.ai
 		}
 	}
 }
-
-import com.lordofduct.engines.ai.IAiNode;
-import flash.utils.Dictionary;
-
-class AStarMonoClasp
-{
-	public var start:IAiNode;
-	public var goal:IAiNode;
-	
-	public var open:Array = new Array();//open nodes that can be travelled onto
-	public var closed:Array = new Array();//nodes checked for travel
-	public var g_score:Dictionary = new Dictionary();//the distance and weight from start to current
-	public var h_score:Dictionary = new Dictionary();//the distance from current to goal
-	public var f_score:Dictionary = new Dictionary();//the sum of g and h
-	public var parent_list:Dictionary = new Dictionary();//a reference to the node that brings you to current
-	
-	public var resolved:Boolean = false;
-	
-	public function AStarMonoClasp(startNode:IAiNode, goalNode:IAiNode)
-	{
-		start = startNode;
-		goal = goalNode;
-	}
-	
-	public function get clasp_f_score():Number
-	{
-		return (closed.length) ? f_score[closed[closed.length - 1]] : 0;
-	}
-	
-	public function constructPath():Array
-	{
-		var node:IAiNode = goal;
-		var arr:Array = [ node ];
-		
-		while( parent_list[node] != start )
-		{
-			node = parent_list[node];
-			arr.push( node );
-		}
-		
-		return arr;
-	}
-	
-	public function sortOpenList():void
-	{
-		open.sort(sortHelper);
-	}
-	
-	public function pullSmallestOpenF():IAiNode
-	{
-		open.sort(sortHelper);
-		
-		return open.shift();
-	}
-	
-	private function sortHelper( a:IAiNode, b:IAiNode ):int
-	{
-		var af:Number = f_score[a];
-		var bf:Number = f_score[b];
-		
-		if(af > bf) return 1;
-		else if(af < bf) return -1;
-		else return 0;
-	}
-}
-
-
-
-
-
-
-
-
-
-
 
 
 //reduce function with out AStarMonoClasp dependency
