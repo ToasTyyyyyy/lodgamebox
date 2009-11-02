@@ -6,7 +6,6 @@ package com.lordofduct.net
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 	import flash.utils.Proxy;
-	import flash.utils.flash_proxy;
 		
 	public dynamic class AssetManager extends Proxy
 	{
@@ -45,9 +44,15 @@ package com.lordofduct.net
 			this.addAsset( asset );
 		}
 		
-		public function loadAsset( idx:String, src:String=null, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null ):void
+		public function addRemoteAsset( idx:String, src:String=null, forceFileType:String=null ):void
+		{
+			this.addAsset( new Asset( idx, src, forceFileType ) );
+		}
+		
+		public function addAndLoadRemoteAsset( idx:String, src:String=null, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null ):void
 		{
 			var asset:Asset = new Asset( idx, src, forceFileType, req, loaderContext );
+			asset.load( req, loaderContext );
 			
 			this.addAsset( asset );
 		}
