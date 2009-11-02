@@ -34,13 +34,13 @@ package com.lordofduct.net
 			_asset[asset.id] = asset;
 		}
 		
-		public function addAssetByObject( idx:String, obj:*, type:String=null ):void
+		public function addAssetByObject( idx:String, obj:*, type:String=null, src:String=null, addToContainer:Boolean=true ):void
 		{
 			Assertions.notNil(idx,"com.lordofduct.utils::AssetManager - idx param must be non-null");
 			Assertions.notNil(obj,"com.lordofduct.utils::AssetManager - obj param must be non-null");
 			
 			var asset:Asset = new Asset( idx );
-			asset.applyAssetData( obj, type, Asset.LOCAL_SOURCE );
+			asset.applyAssetData( obj, type, src, addToContainer );
 			this.addAsset( asset );
 		}
 		
