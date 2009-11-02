@@ -8,6 +8,7 @@ package com.lordofduct.engines.ai
 		private var _start:IAiNode;
 		private var _goal:IAiNode;
 		private var _assumeWeight:Boolean = false;
+		private var _reduced:Boolean = false;
 		
 		//accessible for static functions
 		private var $open:Array = new Array();//open nodes that can be travelled onto
@@ -16,7 +17,6 @@ package com.lordofduct.engines.ai
 		private var $h_score:Dictionary = new Dictionary();//the distance from current to goal
 		private var $f_score:Dictionary = new Dictionary();//the sum of g and h
 		private var $parent_list:Dictionary = new Dictionary();//a reference to the node that brings you to current
-		private var $resolved:Boolean = false;
 		
 		public function AStarMonotonic(pool:IAINodePool, startNode:IAiNode, goalNode:IAiNode, assmWght:Boolean=true )
 		{
@@ -27,7 +27,7 @@ package com.lordofduct.engines.ai
 			_goal = goalNode;
 			_assumeWeight = assmWght;
 			
-			AStarMonotonic.reduce( this );
+			this.reduce();
 		}
 		
 /**
@@ -36,9 +36,17 @@ package com.lordofduct.engines.ai
 		public function get aiPool():IAiNodePool { return _pool; }
 		public function get start():IAiNode { return _start; }
 		public function get goal():IAiNode { return _goal; }
-		public function get assumeWeight():Boolean { return _assumeWeight; }
 		
-		public function get reduced():Boolean { return this.$resolved; }
+		public function get assumeWeight():Boolean { return _assumeWeight; }
+		public function set assumeWeight(value:Boolean):void
+		{
+			if(value != _assumeWeight) _reduced = false;
+			
+			_assumeWeight = value;
+		}
+		
+		public function get reduced():Boolean { return _reduced; }
+		public function set reduced(value:Boolean):void { _reduced = value; }
 		
 		public function get latest_f_score():Number
 		{
@@ -102,7 +110,7 @@ package com.lordofduct.engines.ai
  */
 		static public function reduce( clasp:AStarMonotonic ):Boolean
 		{
-			clasp.$resolved = false;
+			clasp.reduced = false;
 			var pool:IAiNodePool = clasp.aiPool;
 			var start:IAiNode = clasp.start;
 			var goal:IAiNode = clasp.goal;
@@ -123,7 +131,7 @@ package com.lordofduct.engines.ai
 				//if at goal, we're finished
 				if(xnode == goal)
 				{
-					clasp.$resolved = true;
+					clasp.reduced = true;
 					return true;
 				}
 				
@@ -195,7 +203,7 @@ package com.lordofduct.engines.ai
 				clasps.sortOn("latest_f_score", Array.NUMERIC);
 				clasp = clasp[0];
 				
-				if(clasp.$resolved) return clasp;
+				if(clasp.reduced) return clasp;
 				
 				if(!clasp.$open.length)
 				{
@@ -210,7 +218,7 @@ package com.lordofduct.engines.ai
 				
 				if(xnode == goal)
 				{	
-					clasp.$resolved = true;
+					clasp.reduced = true;
 					continue;
 				}
 				
