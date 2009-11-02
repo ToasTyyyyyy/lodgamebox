@@ -53,6 +53,9 @@ package com.lordofduct.engines.ai
  */
 		public function constructPath():Array
 		{
+			//if this wasn't reduced, don't do it!
+			if(!this.reduced) return null;
+			
 			var node:IAiNode = this.goal;
 			var arr:Array = [ node ];
 			
@@ -99,6 +102,7 @@ package com.lordofduct.engines.ai
  */
 		static public function reduce( clasp:AStarMonotonic ):Boolean
 		{
+			clasp.$resolved = false;
 			var pool:IAiNodePool = clasp.aiPool;
 			var start:IAiNode = clasp.start;
 			var goal:IAiNode = clasp.goal;
@@ -239,95 +243,3 @@ package com.lordofduct.engines.ai
 		}
 	}
 }
-
-
-//reduce function with out AStarMonoClasp dependency
-/*
-		static public function reduce( pool:IAiNodePool, start:IAiNode, goal:IAiNode, assumeWeight:Boolean=true ):Array
-		{
-			if(!pool.containsSeveral(start, goal)) return null;
-			
-			var open:Array = new Array();//open nodes that can be travelled onto
-			var closed:Array = new Array();//nodes checked for travel
-			var g_score:Dictionary = new Dictionary();//the distance and weight from start to current
-			var h_score:Dictionary = new Dictionary();//the distance from current to goal
-			var f_score:Dictionary = new Dictionary();//the sum of g and h
-			var parent_list:Dictionary = new Dictionary();//a reference to the node that brings you to current
-			
-			//set start values
-			g_score[start] = (assumeWeight) ? start.weight : 0;//NOTE - WEIGHT CHECK
-			h_score[start] = pool.heuristicDistance( start, goal );
-			f_score[start] = g_score[start] + h_score[start];
-			
-			open.push( start );
-			
-			while(open.length)
-			{
-				//find smallest f score in open list
-				var xnode:IAiNode = getSmallestF(open, f_score);
-				
-				//if at goal, we're finished
-				if(xnode == goal) return constructPath(parent_list, start, goal);
-				
-				open.splice( open.indexOf(xnode), 1 );
-				closed.push(xnode);
-				
-				var neighbours:Array = pool.getNeighbours( xnode );
-				
-				for each( var ynode:IAiNode in neighbours )
-				{
-					if(closed.indexOf(ynode) >= 0) continue;
-					
-					var tentative_g_score:Number = g_score[xnode] + pool.heuristicDistance( xnode, ynode );
-					if(assumeWeight) tentative_g_score += ynode.weight;//NOTE - WEIGHT CHECK
-					
-					if(open.indexOf(ynode) < 0)
-					{
-						parent_list[ynode] = xnode;
-						g_score[ynode] = tentative_g_score;
-						h_score[ynode] = pool.heuristicDistance( ynode, goal );
-						f_score[ynode] = g_score[ynode] + h_score[ynode];
-						open.push(ynode);
-					} else if( tentative_g_score < g_score[ynode] )
-					{
-						parent_list[ynode] = xnode;
-						g_score[ynode] = tentative_g_score;
-						f_score[ynode] = g_score[ynode] + h_score[ynode];
-					}
-				}
-			}
-			
-			return null;//failed
-		}
-		
-		private static function constructPath( parent_list:Dictionary, start:IAiNode, goal:IAiNode ):Array
-		{
-			var node:IAiNode = goal;
-			var arr:Array = [ node ];
-			
-			while( parent_list[node] != start )
-			{
-				node = parent_list[node];
-				arr.push( node );
-			}
-			
-			return arr;
-		}
-		
-		private static function getSmallestF( list:Array, f_score:Dictionary ):IAiNode
-		{
-			var smallest:IAiNode;
-			var f:Number = Number.POSITIVE_INFINITY;
-			
-			for each( var node:IAiNode in list )
-			{
-				if(f_score[node] < f)
-				{
-					f = f_score[node];
-					smallest = node;
-				}
-			}
-			
-			return smallest;
-		}
-*/
