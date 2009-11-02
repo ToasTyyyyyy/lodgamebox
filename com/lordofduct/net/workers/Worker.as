@@ -1,4 +1,4 @@
-package com.lordofduct.net.workers
+﻿package com.lordofduct.net.workers
 {
 	import com.lordofduct.net.Asset;
 	import com.lordofduct.net.AssetFileTypes;
@@ -91,7 +91,7 @@ package com.lordofduct.net.workers
 		
 		protected function onHTTPStatus(e:HTTPStatusEvent):void
 		{
-			if(hse.status != 0 && hse.status != 200)
+			if(e.status != 0 && e.status != 200)
 			{
 				this.removeRelevantEventListeners();
 				this.close();
@@ -139,7 +139,7 @@ package com.lordofduct.net.workers
 /**
  * Static Interface
  */
-		static private var _filetypeClazzes:Dictionary = buildDefaultFiletypes();
+		static private var _filetypeClazzes:Dictionary;
 		
 		static private function buildDefaultFiletypes():Dictionary
 		{
@@ -154,7 +154,7 @@ package com.lordofduct.net.workers
 			dict[AssetFileTypes.XML ] = XMLWorker;
 			dict[AssetFileTypes.MP3 ] = SoundWorker;
 			dict[AssetFileTypes.AIF ] = SoundWorker;
-			dict[AssetFileTypes.CSS ] = SylteSheetWorker;
+			dict[AssetFileTypes.CSS ] = StyleSheetWorker;
 			
 			dict[AssetFileTypes.LOCAL ] = LocalWorker;
 			
@@ -163,6 +163,8 @@ package com.lordofduct.net.workers
 		
 		static public function registerWorkerForFileType( fileType:String, clazz:Class ):void
 		{
+			if(!_filetypeClazzes) _filetypeClazzes = buildDefaultFiletypes();
+			
 			_filetypeClazzes[fileType.toLowerCase()] = clazz;
 		}
 		
@@ -174,9 +176,10 @@ package com.lordofduct.net.workers
 		
 		static public function getWorkerClass( fileType:String ):Class
 		{
+			if(!_filetypeClazzes) _filetypeClazzes = buildDefaultFiletypes();
 			if(!fileType) return SimpleWorker;
 			
-			var clazz:Class = _filetypeClazzes[asset.fileType] as Class;
+			var clazz:Class = _filetypeClazzes[fileType] as Class;
 			if(!clazz) clazz = SimpleWorker;
 			
 			return clazz;

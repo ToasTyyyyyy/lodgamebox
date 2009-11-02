@@ -7,6 +7,8 @@ package com.lordofduct.net.workers
 	import flash.net.URLRequest;
 	import flash.system.LoaderContext;
 	
+	import com.lordofduct.net.Asset;
+	
 	public class BitmapWorker extends Worker
 	{
 		public function BitmapWorker(asset:Asset)

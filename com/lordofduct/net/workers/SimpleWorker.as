@@ -1,8 +1,10 @@
-package com.lordofduct.net.workers
+﻿package com.lordofduct.net.workers
 {
 	import flash.events.*;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	
+	import com.lordofduct.net.Asset;
 
 	public class SimpleWorker extends Worker
 	{
@@ -22,7 +24,7 @@ package com.lordofduct.net.workers
 			
 			if(!obj) return null;
 			
-			var clazz:Class = obj.constructor as Class;
+			var clazz:Class = Object(obj).constructor as Class;
 			return new clazz();
 		}
 		
@@ -34,7 +36,7 @@ package com.lordofduct.net.workers
 			this.loader = null;
 		}
 		
-		override public function load( asset:Asset, req:URLRequest=null, context:*=null ):void
+		override public function load( req:URLRequest=null, context:*=null ):void
 		{
 			if(!this.loader) this.loader = new URLLoader();
 			
@@ -55,7 +57,7 @@ package com.lordofduct.net.workers
 		
 		override protected function onComplete(e:Event):void
 		{
-			this.relatedAsset.applyAssetData( e.loader.data, this.relatedAsset.fileType, this.relatedAsset.source );
+			this.relatedAsset.applyAssetData( this.loader.data, this.relatedAsset.fileType, this.relatedAsset.source );
 			
 			super.onComplete(e);
 		}

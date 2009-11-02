@@ -3,6 +3,8 @@ package com.lordofduct.net.workers
 	import com.lordofduct.net.Asset;
 	
 	import flash.display.DisplayObject;
+	import flash.events.*;
+	import flash.net.URLRequest;
 
 	public class LocalWorker extends Worker
 	{
@@ -22,7 +24,7 @@ package com.lordofduct.net.workers
 			
 			if(!obj) return null;
 			
-			var clazz:Class = obj.constructor as Class;
+			var clazz:Class = Object(obj).constructor as Class;
 			return new clazz();
 		}
 		
@@ -31,7 +33,7 @@ package com.lordofduct.net.workers
 			//do nothing
 		}
 		
-		override public function load( asset:Asset, req:URLRequest=null, context:*=null ):void
+		override public function load( req:URLRequest=null, context:*=null ):void
 		{
 			//do nothing
 		}

@@ -1,4 +1,4 @@
-package com.lordofduct.net
+﻿package com.lordofduct.net
 {
 	import com.lordofduct.util.Assertions;
 	import com.lordofduct.util.SingletonEnforcer;
@@ -7,6 +7,7 @@ package com.lordofduct.net
 	import flash.utils.Dictionary;
 	import flash.utils.Proxy;
 	import flash.utils.flash_proxy;
+	import flash.net.URLRequest;
 		
 	public dynamic class AssetManager extends Proxy
 	{
@@ -32,7 +33,7 @@ package com.lordofduct.net
 		{
 			Assertions.notNil( asset, "com.lordofduct.utils::AssetManager - asset param must be non-null" );
 			
-			_asset[asset.id] = asset;
+			_assets[asset.id] = asset;
 		}
 		
 		public function addAssetByObject( idx:String, obj:*, type:String=null, src:String=null, addToContainer:Boolean=true ):void
@@ -52,7 +53,7 @@ package com.lordofduct.net
 		
 		public function addAndLoadRemoteAsset( idx:String, src:String=null, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null ):void
 		{
-			var asset:Asset = new Asset( idx, src, forceFileType, req, loaderContext );
+			var asset:Asset = new Asset( idx, src, forceFileType );
 			asset.load( req, loaderContext );
 			
 			this.addAsset( asset );

@@ -1,9 +1,11 @@
-package com.lordofduct.net.workers
+﻿package com.lordofduct.net.workers
 {
 	import flash.events.*;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.text.StyleSheet;
+	
+	import com.lordofduct.net.Asset;
 	
 	public class StyleSheetWorker extends Worker
 	{
@@ -62,7 +64,7 @@ package com.lordofduct.net.workers
 		override protected function onComplete(e:Event):void
 		{
 			var sheet:StyleSheet = new StyleSheet();
-			sheet.parseCSS( e.loader.data );
+			sheet.parseCSS( this.loader.data );
 			this.relatedAsset.applyAssetData( sheet, this.relatedAsset.fileType, this.relatedAsset.source );
 			
 			super.onComplete(e);

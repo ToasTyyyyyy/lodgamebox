@@ -1022,7 +1022,7 @@ package com.lordofduct.util
 		 */
 		static public function isValidCCNumber(strNumber:String):Boolean
 		{
-			var ccNumber:String=StringUtils.gi().toNumeric(strNumber);
+			var ccNumber:String=StringUtils.toNumeric(strNumber);
 			if(ccNumber.length > 0 && !isNaN(ccNumber as Number) && (ccNumber.length >= MINIMUM_CARD_LENGTH && ccNumber.length <= MAXIMUM_CARD_LENGTH))
 			{
 				var aNumbers:Array=strNumber.split("");

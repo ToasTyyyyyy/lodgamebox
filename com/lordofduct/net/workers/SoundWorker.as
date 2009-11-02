@@ -1,9 +1,11 @@
-package com.lordofduct.net.workers
+﻿package com.lordofduct.net.workers
 {
 	import flash.events.*;
 	import flash.media.Sound;
 	import flash.media.SoundLoaderContext;
 	import flash.net.URLRequest;
+	
+	import com.lordofduct.net.Asset;
 	
 	public class SoundWorker extends Worker
 	{
@@ -29,7 +31,7 @@ package com.lordofduct.net.workers
 				return new Sound( new URLRequest( snd.url ) );
 			} else {
 				//if library sound create a new one
-				var clazz:Class = snd.constructor as Class;
+				var clazz:Class = Object(snd).constructor as Class;
 				return new clazz();
 			}
 		}
