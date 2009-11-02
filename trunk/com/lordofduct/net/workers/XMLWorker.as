@@ -1,7 +1,10 @@
-package com.lordofduct.net.workers
+﻿package com.lordofduct.net.workers
 {
 	import flash.events.*;
 	import flash.net.URLRequest;
+	
+	import com.lordofduct.net.Asset;
+	import com.lordofduct.net.XMLLoader;
 
 	public class XMLWorker extends Worker
 	{

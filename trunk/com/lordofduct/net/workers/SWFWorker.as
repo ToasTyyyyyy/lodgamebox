@@ -1,10 +1,12 @@
-package com.lordofduct.net.workers
+﻿package com.lordofduct.net.workers
 {
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.*;
 	import flash.net.URLRequest;
 	import flash.system.LoaderContext;
+	
+	import com.lordofduct.net.Asset;
 	
 	public class SWFWorker extends Worker
 	{
@@ -24,7 +26,7 @@ package com.lordofduct.net.workers
 			
 			if(!cont) return null;
 			
-			var clazz:Class = cont.constructor as Class;
+			var clazz:Class = Object(cont).constructor as Class;
 			return new clazz();
 		}
 		

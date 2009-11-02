@@ -1,4 +1,4 @@
-package com.lordofduct.net
+﻿package com.lordofduct.net
 {
 	import com.lordofduct.net.workers.Worker;
 	import com.lordofduct.util.Assertions;
@@ -35,10 +35,11 @@ package com.lordofduct.net
 				_id = src;
 			}
 			
-			this.setSource( src, forceFileType, req, loaderContext );
+			this.setSource( src, forceFileType );
 		}
 		
 		public function get id():String { return _id; }
+		public function set id(value:String):void { }
 		
 		public function get content():Object { return _data; }
 		
@@ -79,7 +80,7 @@ package com.lordofduct.net
 		
 		public function getContentClassType():Class
 		{
-			return (_data) ? _data.constructor as Class : null;
+			return (_data) ? Object(_data).constructor as Class : null;
 		}
 		
 		public function load(req:URLRequest=null, loaderContext:*=null):void
@@ -95,7 +96,7 @@ package com.lordofduct.net
 			_worker.load( req, loaderContext );
 		}
 		
-		public function setSource( src:String, forceFileType:String=null, req:URLRequest=null, loaderContext:*=null ):void
+		public function setSource( src:String, forceFileType:String=null ):void
 		{
 			//set source uri
 			_src = src;
@@ -125,7 +126,7 @@ package com.lordofduct.net
 		private function updateWorker():void
 		{
 			var work:Worker = Worker.getWorker( this );
-			var workerClazz:Class = work.constructor as Class;
+			var workerClazz:Class = Object(work).constructor as Class;
 			
 			if(!_worker || !(_worker is workerClazz) ) _worker = work;
 		}
