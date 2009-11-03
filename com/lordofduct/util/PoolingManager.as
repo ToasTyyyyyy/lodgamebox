@@ -1,3 +1,7 @@
+/**
+ * NOT FUNCTIONING PROPERLY
+ */
+
 package com.lordofduct.util
 {
 	import flash.utils.Dictionary;

@@ -1,3 +1,7 @@
+/**
+ * NOT FUNCTIONING PROPERLY
+ */
+
 package com.lordofduct.geom
 {
 	import com.lordofduct.util.Assertions;
