@@ -253,11 +253,11 @@ package com.lordofduct.util
 			mat.ty += y;
 		}
 		
-	    public static function matchInternalPointWithExternal(mat:Matrix, internalPoint:Point, externalPoint:Point):void
+	    public static function matchInternalPointWithExternal(mat:Matrix, interPnt:Point, extPnt:Point):void
 		{
-			var internalPointTransformed:Point = mat.transformPoint(internalPoint);
-			var dx:Number = externalPoint.x - internalPointTransformed.x;
-			var dy:Number = externalPoint.y - internalPointTransformed.y;	
+			var pntT:Point = mat.transformPoint(interPnt);
+			var dx:Number = extPnt.x - pntT.x;
+			var dy:Number = extPnt.y - pntT.y;
 			mat.tx += dx;
 			mat.ty += dy;
 		}

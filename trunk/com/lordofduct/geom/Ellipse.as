@@ -232,12 +232,12 @@ package com.lordofduct.geom
 		{	
 			var cen:Vector2 = this.getSimpleCenter(mat);
 			var m:Matrix = LoDMatrixTransformer.createRotationMatrix(_rot);
-			if(mat) m.concat(mat);
+			//if(mat) m.concat(mat);
 			
 			var i:int = 40, ang:Number, pnt:Vector2 = new Vector2();
 			
 			pnt.setTo(_rh, 0);
-			//pnt.rotateByMatrix(m);
+			pnt.rotateByMatrix(m);
 			gr.moveTo(pnt.x + cen.x, pnt.y + cen.y);
 			
 			while(--i > 0)
@@ -246,12 +246,12 @@ package com.lordofduct.geom
 				pnt.x = _rh * Math.cos(ang);
 				pnt.y = _rv * Math.sin(ang);
 				
-				//pnt.rotateByMatrix(m);
+				pnt.rotateByMatrix(m);
 				gr.lineTo(pnt.x + cen.x, pnt.y + cen.y);
 			}
 			
 			pnt.setTo(_rh, 0);
-			//pnt.rotateByMatrix(m);
+			pnt.rotateByMatrix(m);
 			gr.lineTo(pnt.x + cen.x, pnt.y + cen.y);
 		}
 		

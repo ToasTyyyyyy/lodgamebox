@@ -8,35 +8,86 @@ package com.lordofduct.util
 		
 		/**
 		 * Random Number between minimum and maximum
+		 * 
+		 * @param - max - maximum value in range
+		 * @param - min - minimum value in range, default 0
+		 * 
+		 * @return Number - a value in the range
+		 * 
+		 * Because Math.random is a random number generator the value it creates is a value from 0.0...1->0.9999. This allows 
+		 * for easy probability dispersment across discrete and continuous mathematics. Similarily the value 0 isn't created either. 
+		 * This means that the actual min and max value won't ever be created as whole values... you'll probably get something really 
+		 * close, or a rare chance of it occuring due to float error and rounding. So don't expect to ever get the actual min or max values.
 		 */
 		public static function randomMinMax(max:Number, min:Number = 0):Number
 		{
 			return Math.random() * (max - min) + min;
 		}
 		
-		//returns a random integer between min and max - 1
-		public static function randomIntMinMax(max:int, min:int = 0):int
+		/**
+		 * Random int between min and max
+		 * 
+		 * @param max - maximum value in range
+		 * @param min - minimum value in range, default 0
+		 * @param inclusive - include 'max' in the range. If false return value is from min -> max - 1. If true return value is from min -> max
+		 * 
+		 * @return int - a value in the range
+		 * 
+		 * The inclusive param is due to probability managing. If we were to use Math.round the probability of min and max would be half that of 
+		 * all other values. If it were Math.ceil then min would not be included. If it were Math.floor then max would not be included. 
+		 * 
+		 * To resolve this we add one to the range length (max - min + 1) and use floor. This makes all values from min to max all inclussive. 
+		 * But there are scenarios where the exclussion of max is very useful, for instance with 0 based indices like that of an Array. Because 
+		 * 0 based indices are very common I set the inclussion of 'max' to false.
+		 */
+		public static function randomIntMinMax(max:int, min:int = 0, inclusive:Boolean=false):int
 		{
-			return Math.floor(Math.random() * (max - min)) + min;
+			return Math.floor(Math.random() * (max - min + int(inclusive))) + min;
 		}
 		
-		//returns a value between -1 and +1
+		/**
+		 * Random Number from -1 to +1
+		 * 
+		 * @param ...args - this is just a safe capture if this function is passed to an Array.sort function or something similar
+		 * 
+		 * @return Number - a value from -1 to +1 (non inclussive)
+		 * 
+		 * This function is a speedier version of randomMaxMin( 1, -1 ). It's useful as a percentage scalar over two directions. 
+		 * Think of this as Math.random() which return 0->0.9999, this will return -1->1... the principal as an interpolative is there.
+		 */
 		public static function randomN1P1(...args):Number
 		{
 			return Math.random() * 2 - 1;
 		}
 		
-		//returns either 0 or 1
+		/**
+		 * Random int 0 or 1
+		 * 
+		 * @param ...args - this is just a safe capture if this function is passed to an Array.sort function or something similar
+		 * 
+		 * @return int - either 0 or 1
+		 * 
+		 * This generates either 0 or 1 randomly. What else do you expect
+		 */
 		public static function randomPop(...args):int
 		{
 			return Math.round(Math.random());
 		}
 		
-		//kind of like randomPop, but returns the value as a Boolean
+		/**
+		 * Random Boolean
+		 * 
+		 * @param ...args - this is just a safe capture if this function is passed to an Array.sort function or something similar
+		 * 
+		 * @return Boolean - either true or false
+		 * 
+		 * This generates either true or false. It's very similar to randomPop(...), but instead it's returned as a Boolean for safe typing. 
+		 */
 		public static function randomBool(...args):Boolean
 		{
 			return Boolean( Math.round(Math.random()) );
 		}
+		
 		
 		//return either -1 or +1... good for "flipping" values randomly
 		public static function randomFlip(...args):int
@@ -55,7 +106,7 @@ package com.lordofduct.util
 		//returns -1, 0, or 1 randomly. This can be used for bizarre things like randomizing an array
 		public static function randomShift(...args):int
 		{
-			return randomIntMinMax( 2, -1 );
+			return randomIntMinMax( 1, -1, true );
 		}
 		
 		/**
