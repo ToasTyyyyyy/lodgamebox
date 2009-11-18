@@ -25,7 +25,7 @@ package com.lordofduct.display
 		{
 			_camera = camera;
 			_mask = new Shape();
-			//this.setInternalMask(_mask);
+			this.setInternalMask(_mask);
 			this.renderRect = (rect) ? rect : new Rectangle( 0, 0, 500, 500 );
 			this.setGameScreen( this );
 		}
