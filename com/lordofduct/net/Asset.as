@@ -67,6 +67,7 @@
 			this.checkVisibility();
 			
 			var obj:DisplayObject = this.content as DisplayObject;
+			
 			if(this.visible && this.visibleContainer && obj && addToContainer)
 			{
 				this.visibleContainer.addChild(obj);
@@ -120,7 +121,7 @@
 			_visible = (_worker) ? _worker.visibleType : false;
 			
 			if(_visible && !_cont) _cont = new Sprite();
-			else _cont = null;
+			else if(!_visible) _cont = null;
 		}
 		
 		private function updateWorker():void

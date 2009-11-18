@@ -5,6 +5,7 @@ package com.lordofduct.net.workers
 	import flash.display.DisplayObject;
 	import flash.events.*;
 	import flash.net.URLRequest;
+	import flash.utils.getDefinitionByName;
 
 	public class LocalWorker extends Worker
 	{
@@ -35,7 +36,19 @@ package com.lordofduct.net.workers
 		
 		override public function load( req:URLRequest=null, context:*=null ):void
 		{
-			//do nothing
+			var qualClassName:String = req.url;
+			
+			try
+			{
+				var clazz:Class = getDefinitionByName( qualClassName ) as Class;
+				var obj:Object = new clazz();
+				
+				this.relatedAsset.applyAssetData( obj, this.relatedAsset.fileType, this.relatedAsset.source );
+			} catch(err:Error) {
+				trace("Qualified Class Name { " + qualClassName + " } is not a known type.");
+			}
+			
+			this.onComplete( new Event( Event.COMPLETE ) );
 		}
 	}
 }

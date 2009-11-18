@@ -13,7 +13,6 @@
 package com.lordofduct.media
 {
 	import com.lordofduct.events.SFXEvent;
-	import com.lordofduct.util.LoDMath;
 
 	public class SFXPlaylist extends SFXGroup
 	{

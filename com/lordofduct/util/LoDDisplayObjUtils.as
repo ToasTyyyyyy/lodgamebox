@@ -307,5 +307,55 @@ package com.lordofduct.util
 			obj.width = w;
 			obj.height = h;
 		}
+		
+		public static function getResizeInsideMatrix( obj:DisplayObject, w:Number, h:Number ):Matrix
+		{
+			var old:Matrix = obj.transform.matrix;
+			obj.transform.matrix = new Matrix();
+			
+			var aspect:Number = obj.width / obj.height;
+			var tarAspect:Number = w / h;
+			
+			if (aspect == 0 || obj.height == 0) return new Matrix();
+			
+			if (tarAspect >= aspect)
+			{
+				w = h * aspect;
+			} else
+			{
+				h = w / aspect;
+			}
+			
+			var sx:Number = w / obj.width;
+			var sy:Number = h / obj.height;
+			obj.transform.matrix = old;
+			
+			return new Matrix( sx, 0, 0, sy );
+		}
+		
+		public static function getResizeAroundMatrix( obj:DisplayObject, w:Number, h:Number ):Matrix
+		{
+			var old:Matrix = obj.transform.matrix;
+			obj.transform.matrix = new Matrix();
+			
+			var aspect:Number = obj.width / obj.height;
+			var tarAspect:Number = w / h;
+			
+			if( aspect == 0 || obj.height == 0 ) return new Matrix();
+			
+			if( tarAspect <= aspect )
+			{
+				w = h * aspect;
+			} else
+			{
+				h = w / aspect;
+			}
+			
+			var sx:Number = w / obj.width;
+			var sy:Number = h / obj.height;
+			obj.transform.matrix = old;
+			
+			return new Matrix( sx, 0, 0, sy );
+		}
 	}
 }

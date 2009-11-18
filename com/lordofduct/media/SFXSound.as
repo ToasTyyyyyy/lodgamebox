@@ -180,7 +180,7 @@ package com.lordofduct.media
 		public function get id():String { return _id; }
 		public function set id(value:String):void { _id = value; }
 		public function get numChildren():int { return 1; }
-		public function get length():Number { return _sound.length; }
+		public function get length():Number { return (_sound) ? _sound.length : 0; }
 		public function get position():Number
 		{
 			if (_isPaused) return _pausePosition;

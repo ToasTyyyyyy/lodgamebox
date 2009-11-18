@@ -43,18 +43,19 @@ package com.lordofduct.net.workers
 		{
 			if(!this.loader) this.loader = new Loader();
 			
-			this.loader.loaderInfo.addEventListener(Event.OPEN, this.onOpen,false,0,true);
-			this.loader.loaderInfo.addEventListener(ProgressEvent.PROGRESS, this.onProgress,false,0,true);
-			this.loader.loaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, this.onHTTPStatus,false,0,true);
-			this.loader.loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onIOLoadError,false,0,true);
-			this.loader.loaderInfo.addEventListener(IOErrorEvent.DISK_ERROR, this.onIOLoadError,false,0,true);
-			this.loader.loaderInfo.addEventListener(IOErrorEvent.NETWORK_ERROR, this.onIOLoadError,false,0,true);
-			this.loader.loaderInfo.addEventListener(IOErrorEvent.VERIFY_ERROR, this.onIOLoadError,false,0,true);
-			this.loader.loaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError,false,0,true);
-			this.loader.loaderInfo.addEventListener(Event.COMPLETE, this.onComplete,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(Event.OPEN, this.onOpen,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, this.onProgress,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, this.onHTTPStatus,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onIOLoadError,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.DISK_ERROR, this.onIOLoadError,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.NETWORK_ERROR, this.onIOLoadError,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.VERIFY_ERROR, this.onIOLoadError,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError,false,0,true);
+			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.onComplete,false,0,true);
 			
 			if(req && req.url != this.relatedAsset.source) throw new Error("com.lordofduct.net::Worker - when loading an Worker and supplying a URLRequest, both sources must match");
 			else req = new URLRequest( this.relatedAsset.source );
+			
 			Loader(this.loader).load( req, context as LoaderContext );
 		}
 		
