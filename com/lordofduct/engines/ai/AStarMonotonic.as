@@ -11,12 +11,12 @@ package com.lordofduct.engines.ai
 		private var _reduced:Boolean = false;
 		
 		//accessible for static functions
-		protected var $open:Array = new Array();//open nodes that can be travelled onto
-		protected var $closed:Array = new Array();//nodes checked for travel
-		protected var $g_score:Dictionary = new Dictionary();//the distance and weight from start to current
-		protected var $h_score:Dictionary = new Dictionary();//the distance from current to goal
-		protected var $f_score:Dictionary = new Dictionary();//the sum of g and h
-		protected var $parent_list:Dictionary = new Dictionary();//a reference to the node that brings you to current
+		protected var $open:Array;//open nodes that can be travelled onto
+		protected var $closed:Array;//nodes checked for travel
+		protected var $g_score:Dictionary;//the distance and weight from start to current
+		protected var $h_score:Dictionary;//the distance from current to goal
+		protected var $f_score:Dictionary;//the sum of g and h
+		protected var $parent_list:Dictionary;//a reference to the node that brings you to current
 		
 		public function AStarMonotonic(pool:IAINodePool, startNode:IAiNode, goalNode:IAiNode, assmWght:Boolean=true )
 		{
@@ -111,6 +111,13 @@ package com.lordofduct.engines.ai
 		static public function reduce( clasp:AStarMonotonic ):Boolean
 		{
 			clasp.reduced = false;
+			clasp.$closed = new Array();
+			clasp.$open = new Array();
+			clasp.$f_score = new Dictionary();
+			clasp.$g_score = new Dictionary();
+			clasp.$h_score = new Dictionary();
+			clasp.$parent_list = new Dictionary();
+			
 			var pool:IAiNodePool = clasp.aiPool;
 			var start:IAiNode = clasp.start;
 			var goal:IAiNode = clasp.goal;
