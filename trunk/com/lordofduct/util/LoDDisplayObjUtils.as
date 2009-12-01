@@ -50,6 +50,9 @@ package com.lordofduct.util
 /**
  * Class Definition
  */
+		/**
+		 * TODO - rewrite to make more user friendly, at this point it really only serves stupid special cases
+		 */
 		public static function drawDisplayObjectAsIs( obj:DisplayObject, mat:Matrix=null, w:Number=NaN, h:Number=NaN ):Bitmap
 		{
 			if (!obj) return null;
@@ -71,19 +74,41 @@ package com.lordofduct.util
 			return new Bitmap( bmd );
 		}
 		
+		/**
+		 * Transform point for local space of one display object to another
+		 */
 		public static function localToLocal( pnt:Point, start:DisplayObject, end:DisplayObject ):Point
 		{
 			return end.globalToLocal( start.localToGlobal( pnt ) );
 		}
 		
 		/**
+		 * Find the center of a DisplayObject with in its local space
+		 */
+		public static function findCenterOf( obj:DisplayObject ):Point
+		{
+			var rect:Rectangle = obj.getRect(obj);
+			
+			var pnt:Point = new Point();
+			pnt.x = rect.left + ( rect.right - rect.left ) / 2;
+			pnt.y = rect.top + ( rect.bottom - rect.top ) / 2;
+			
+			return pnt;
+		}
+		
+		public static function find
+		
+		/**
 		 * This is a peculiar method. It locates the center of a DisplayObject with respect to its local 
 		 * space. But it takes into consideration any scaling, rotation, or skewing that may occur, it 
 		 * doesn't consider any translation!
 		 * 
+		 * @param obj:DisplayObject - the object to find the center of
+		 * @param ignoreTranslation:Boolean - should we ignore the (x,y) position of the object
+		 * 
 		 * Useful for locating the "center" of a DisplayObject who's (0,0) registration is not top-left aligned.
 		 */
-		public static function findTransformedCenterOf( obj:DisplayObject ):Point
+		public static function findTransformedCenterOf( obj:DisplayObject, ignoreTranslation:Boolean=true ):Point
 		{
 			var rect:Rectangle = obj.getRect( obj );
 			var pnt:Point = new Point();
@@ -98,12 +123,16 @@ package com.lordofduct.util
 		 * similar to findTransformedCenterOf. This method finds the position relative to a DisplayObject 
 		 * taking into consideration all transformation except for translation.
 		 * 
+		 * @param obj:DisplayObject - the object to find the center of
+		 * @param pnt:Point - the internal point
+		 * @param ignoreTranslation:Boolean - should we ignore the (x,y) position of the object
+		 * 
 		 * Useful for locating points relative to a DisplayObject's registration point.
 		 */
-		public static function findTransformedPointOf( obj:DisplayObject, pnt:Point ):Point
+		public static function findTransformedPointOf( obj:DisplayObject, pnt:Point, ignoreTranslation:Boolean=true ):Point
 		{
 			var mat:Matrix = obj.transform.matrix;
-			mat.tx = mat.ty = 0;
+			if(ignoreTranslation) mat.tx = mat.ty = 0;
 			return mat.transformPoint( pnt );
 		}
 		
@@ -253,6 +282,139 @@ package com.lordofduct.util
 		 * 
 		 * Use this when resizing images to fit in some width x height.
 		 */
+		public static function resizeDisplayObjectInsideRect( obj:DisplayObject, rect:Rectangle ):void
+		{
+			var w:Number = rect.width;
+			var h:Number = rect.height;
+			
+			obj.transform.matrix = new Matrix();
+			
+			var aspect:Number = obj.width / obj.height;
+			var tarAspect:Number = w / h;
+			
+			if (aspect == 0 || obj.height == 0) return new Matrix();
+			
+			if (tarAspect >= aspect)
+			{
+				w = h * aspect;
+			} else
+			{
+				h = w / aspect;
+			}
+			
+			var sx:Number = w / obj.width;
+			var sy:Number = h / obj.height;
+			var ix:Number = rect.x + (w - sx * obj.width) / 2;
+			var iy:Number = rect.y + (h - sy * obj.height) / 2;
+			obj.transform.matrix = new Matrix( sx, 0, 0, sy, ix, iy );
+		}
+		
+		/**
+		 * Resize a DisplayObject while conserving aspect ratio
+		 * 
+		 * This method solves the aspect ratio of the passed object and the target width and height. 
+		 * It then adjusts the passed width and height to meet the original aspect ratio and sets 
+		 * those values to the DisplayObject so it fits AROUND the supplied width and height.
+		 * 
+		 * Use this when resizing images to fit around some width x height.
+		 */
+		public static function resizeDisplayObjectAroundRect( obj:DisplayObject, rect:Rectangle ):void
+		{
+			var w:Number = rect.width;
+			var h:Number = rect.height;
+			
+			obj.transform.matrix = new Matrix();
+			
+			var aspect:Number = obj.width / obj.height;
+			var tarAspect:Number = w / h;
+			
+			if( aspect == 0 || obj.height == 0 ) return new Matrix();
+			
+			if( tarAspect <= aspect )
+			{
+				w = h * aspect;
+			} else
+			{
+				h = w / aspect;
+			}
+			
+			var sx:Number = w / obj.width;
+			var sy:Number = h / obj.height;
+			var ix:Number = rect.x + (w - sx * obj.width) / 2;
+			var iy:Number = rect.y + (h - sy * obj.height) / 2;
+			
+			obj.transform.matrix = new Matrix( sx, 0, 0, sy, ix, iy );
+		}
+		
+		
+		public static function getResizeInsideMatrix( obj:DisplayObject, rect:Rectangle ):Matrix
+		{
+			var w:Number = rect.width;
+			var h:Number = rect.height;
+			
+			var old:Matrix = obj.transform.matrix;
+			obj.transform.matrix = new Matrix();
+			
+			var aspect:Number = obj.width / obj.height;
+			var tarAspect:Number = w / h;
+			
+			if (aspect == 0 || obj.height == 0) return new Matrix();
+			
+			if (tarAspect >= aspect)
+			{
+				w = h * aspect;
+			} else
+			{
+				h = w / aspect;
+			}
+			
+			var sx:Number = w / obj.width;
+			var sy:Number = h / obj.height;
+			var ix:Number = rect.x + (w - sx * obj.width) / 2;
+			var iy:Number = rect.y + (h - sy * obj.height) / 2;
+			obj.transform.matrix = old;
+			
+			return new Matrix( sx, 0, 0, sy, ix, iy );
+		}
+		
+		public static function getResizeAroundMatrix( obj:DisplayObject, rect:Rectangle ):Matrix
+		{
+			var w:Number = rect.width;
+			var h:Number = rect.height;
+			
+			var old:Matrix = obj.transform.matrix;
+			obj.transform.matrix = new Matrix();
+			
+			var aspect:Number = obj.width / obj.height;
+			var tarAspect:Number = w / h;
+			
+			if( aspect == 0 || obj.height == 0 ) return new Matrix();
+			
+			if( tarAspect <= aspect )
+			{
+				w = h * aspect;
+			} else
+			{
+				h = w / aspect;
+			}
+			
+			var sx:Number = w / obj.width;
+			var sy:Number = h / obj.height;
+			var ix:Number = rect.x + (w - sx * obj.width) / 2;
+			var iy:Number = rect.y + (h - sy * obj.height) / 2;
+			
+			obj.transform.matrix = old;
+			
+			return new Matrix( sx, 0, 0, sy, ix, iy );
+		}
+		
+		
+		
+		
+		
+	/**
+	 * Depricated crap
+	 */
 		public static function resizeDisplayObjectInside( obj:DisplayObject, w:Number, h:Number ):void
 		{
 			obj.scaleX = obj.scaleY = 1;
@@ -276,15 +438,6 @@ package com.lordofduct.util
 			obj.height = h;
 		}
 		
-		/**
-		 * Resize a DisplayObject while conserving aspect ratio
-		 * 
-		 * This method solves the aspect ratio of the passed object and the target width and height. 
-		 * It then adjusts the passed width and height to meet the original aspect ratio and sets 
-		 * those values to the DisplayObject so it fits AROUND the supplied width and height.
-		 * 
-		 * Use this when resizing images to fit around some width x height.
-		 */
 		public static function resizeDisplayObjectAround( obj:DisplayObject, w:Number, h:Number ):void
 		{
 			obj.scaleX = obj.scaleY = 1;
@@ -306,56 +459,6 @@ package com.lordofduct.util
 			
 			obj.width = w;
 			obj.height = h;
-		}
-		
-		public static function getResizeInsideMatrix( obj:DisplayObject, w:Number, h:Number ):Matrix
-		{
-			var old:Matrix = obj.transform.matrix;
-			obj.transform.matrix = new Matrix();
-			
-			var aspect:Number = obj.width / obj.height;
-			var tarAspect:Number = w / h;
-			
-			if (aspect == 0 || obj.height == 0) return new Matrix();
-			
-			if (tarAspect >= aspect)
-			{
-				w = h * aspect;
-			} else
-			{
-				h = w / aspect;
-			}
-			
-			var sx:Number = w / obj.width;
-			var sy:Number = h / obj.height;
-			obj.transform.matrix = old;
-			
-			return new Matrix( sx, 0, 0, sy );
-		}
-		
-		public static function getResizeAroundMatrix( obj:DisplayObject, w:Number, h:Number ):Matrix
-		{
-			var old:Matrix = obj.transform.matrix;
-			obj.transform.matrix = new Matrix();
-			
-			var aspect:Number = obj.width / obj.height;
-			var tarAspect:Number = w / h;
-			
-			if( aspect == 0 || obj.height == 0 ) return new Matrix();
-			
-			if( tarAspect <= aspect )
-			{
-				w = h * aspect;
-			} else
-			{
-				h = w / aspect;
-			}
-			
-			var sx:Number = w / obj.width;
-			var sy:Number = h / obj.height;
-			obj.transform.matrix = old;
-			
-			return new Matrix( sx, 0, 0, sy );
 		}
 	}
 }
