@@ -177,7 +177,7 @@ package com.lordofduct.util
 				for (var i:int = 0; args && i < args.length; i++ )
 				{
 					var obj:Object = args[i];
-					child[obj.method].apply( null, obj.params );
+					child[obj.method].apply( child, obj.params );
 				}
 			}
 		}
@@ -221,7 +221,7 @@ package com.lordofduct.util
 		{
 			var arr:Array = dumpContainer( cont );
 			
-			arr.sort.apply( null, args );
+			arr.sort.apply( arr, args );
 			
 			fillContainer( cont, arr );
 		}
@@ -241,7 +241,7 @@ package com.lordofduct.util
 			
 			arr.sortOn( fieldName, options );
 			
-			while( arr.length ) cont.addChild( arr.shift() );
+			fillContainer( cont, arr );
 		}
 		
 		/**
