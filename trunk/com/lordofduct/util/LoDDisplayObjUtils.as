@@ -146,6 +146,8 @@ package com.lordofduct.util
 		 */
 		public static function getConcatenatedMatrixThroughList( child:DisplayObject, endParent:DisplayObjectContainer ):Matrix
 		{
+			Assertions.isTrue( endParent.contains( child ), "com.lordofduct.util::LoDDisplayObjUtils - getConcatenatedMatrixThroughList(...), endParent MUST be some parent container to the child supplied" );
+			
 			var m:Matrix = child.transform.matrix;
 			var par:DisplayObjectContainer = child.parent;
 			
@@ -153,7 +155,6 @@ package com.lordofduct.util
 			{
 				m.concat( par.transform.matrix );
 				par = par.parent;
-				Assertions.notNil( par, "com.lordofduct.util::LoDDisplayObjUtils - getConcatenatedMatrixThroughList(...), endParent MUST be some parent container to the child supplied" );
 			}
 			
 			return m;

@@ -32,25 +32,11 @@ package com.lordofduct.ui
 		function get bounds():Rectangle
 		
 		/**
-		 * boundaries of the PopWindow that can be clicked to drag
-		 * with resepect to the PopWindow itself
-		 */
-		function set grabBounds( value:Rectangle ):void
-		function get grabBounds():Rectangle
-		
-		/**
 		 * boundaries to keep the PopWindow within
 		 * with respect to the container
 		 */
 		function set restrictBounds( value:Rectangle ):void
 		function get restrictBounds():Rectangle
-		
-		/**
-		 * boundaries of the PopWindow that can be clicked to close it
-		 * with respect to the PopWindow itself
-		 */
-		function set closeBounds( value:Rectangle ):void
-		function get closeBounds():Rectangle
 		
 		/**
 		 * is the window draggable? If no dragBounds are present 
@@ -66,5 +52,16 @@ package com.lordofduct.ui
 		 * */
 		function set restricted( value:Boolean ):void
 		function get restricted():Boolean
+		
+		
+		/**
+		 * Ask the window if the local position (x,y) touches any grab area
+		 */
+		function testIfHitClose(x:Number, y:Number):Boolean
+		
+		/**
+		 * Ask the window if the local position (x,y) touches any grab area
+		 */
+		function testIfHitGrabArea(x:Number, y:Number):Boolean
 	}
 }
