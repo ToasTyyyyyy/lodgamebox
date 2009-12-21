@@ -247,12 +247,12 @@ package com.lordofduct.ui
 		{
 			var window:IPopWindow = e.currentTarget as IPopWindow;
 			
-			if (!window || !window.draggable || !window.grabBounds || _winToDrag[window] || !(window is InteractiveObject)) return;
+			if (!window || !window.draggable || _winToDrag[window] || !(window is InteractiveObject)) return;
 			
 			var ix:Number = DisplayObject(window).mouseX;
 			var iy:Number = DisplayObject(window).mouseY;
 			
-			if (!window.grabBounds.contains( ix, iy )) return;
+			if (!window.testIfHitGrabArea(ix,iy)) return;
 			
 			var drag:DragScenario = new DragScenario(window as InteractiveObject);
 			_winToDrag[window] = drag;
@@ -309,12 +309,12 @@ package com.lordofduct.ui
 		{
 			var window:IPopWindow = e.currentTarget as IPopWindow;
 			
-			if (!window || !window.closeBounds) return;
+			if (!window) return;
 			
 			var ix:Number = DisplayObject(window).mouseX;
 			var iy:Number = DisplayObject(window).mouseY;
 			
-			if (window.closeBounds.contains( ix, iy ))
+			if (window.testIfHitClose(ix,iy))
 			{
 				closeWindow( window as DisplayObject);
 			}

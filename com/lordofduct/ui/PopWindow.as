@@ -20,9 +20,9 @@ package com.lordofduct.ui
 	
 	public class PopWindow extends Sprite implements IPopWindow
 	{
+		private var _closeBounds:Rectangle;
 		private var _grabBounds:Rectangle;
 		private var _restrictBounds:Rectangle;
-		private var _closeBounds:Rectangle;
 		
 		private var _draggable:Boolean = false;
 		private var _restricted:Boolean = false;
@@ -31,12 +31,9 @@ package com.lordofduct.ui
 		{
 			super();
 		}
-		
-		public function get bounds():Rectangle
-		{
-			return this.getBounds(this);
-		}
-		
+/**
+ * Properties
+ */
 		public function set grabBounds( value:Rectangle ):void
 		{
 			_grabBounds = value;
@@ -46,15 +43,6 @@ package com.lordofduct.ui
 			return _grabBounds;
 		}
 		
-		public function set restrictBounds( value:Rectangle ):void
-		{
-			_restrictBounds = value;
-		}
-		public function get restrictBounds():Rectangle
-		{
-			return _restrictBounds;
-		}
-		
 		public function set closeBounds( value:Rectangle ):void
 		{
 			_closeBounds = value;
@@ -62,6 +50,23 @@ package com.lordofduct.ui
 		public function get closeBounds():Rectangle
 		{
 			return _closeBounds;
+		}
+		
+	/**
+	 * IPopWindow Interface properties
+	 */
+		public function get bounds():Rectangle
+		{
+			return this.getBounds(this);
+		}
+		
+		public function set restrictBounds( value:Rectangle ):void
+		{
+			_restrictBounds = value;
+		}
+		public function get restrictBounds():Rectangle
+		{
+			return _restrictBounds;
 		}
 		
 		public function set draggable(value:Boolean):void
@@ -83,6 +88,9 @@ package com.lordofduct.ui
 			return _restricted;
 		}
 		
+/**
+ * Methods
+ */
 		/**
 		 * This method dispatches the close event. This is unique to PopWindow and is 
 		 * not described by IPopWindow. It is a simple accessor to force the PopWindow 
@@ -91,6 +99,18 @@ package com.lordofduct.ui
 		public function yellCloseMe():void
 		{
 			this.dispatchEvent( new SelectionEvent( SelectionEvent.CLOSE, this ) );
+		}
+		
+	/**
+	 * IPopWindow Interface methods
+	 */
+		public function testIfHitClose(x:Number, y:Number):Boolean
+		{
+			return _closeBounds.contains(x,y);
+		}
+		public function testIfHitGrabArea(x:Number, y:Number):Boolean
+		{
+			return _grabBounds.contains(x,y);
 		}
 	}
 }
