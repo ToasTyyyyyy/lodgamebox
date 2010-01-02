@@ -587,6 +587,11 @@ package com.lordofduct.util
 		{
 			return replace(str," ","");
 		}
+		
+		static public function removeWhiteSpace(str:String):String
+		{
+			return str.replace(/\s/g, "");
+		}
 
 		/**
 		 * Remove tabs from a string.
