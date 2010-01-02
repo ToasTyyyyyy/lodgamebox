@@ -110,16 +110,6 @@ package com.lordofduct.util
 			return a > b - epsilon;
 		}
 		
-		public static function valueToTwip( value:Number ):int
-		{
-			return value * 20;
-		}
-		
-		public static function twipToValue( twip:int ):Number
-		{
-			return twip / 20;
-		}
-		
 		public static function average( ...args ):Number
 		{
 			var avg:Number = 0;
