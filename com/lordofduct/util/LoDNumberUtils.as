@@ -143,6 +143,8 @@ package com.lordofduct.util
 					case 25: return "z"; break;
 				}
 			}
+			
+			return null;
 		}
 		
 /**
