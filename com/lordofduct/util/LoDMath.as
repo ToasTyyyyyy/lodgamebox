@@ -255,12 +255,12 @@ package com.lordofduct.util
 		/**
 		 * interpolate across the shortest arc between two angles
 		 */
-		public static function interpolateAngles( a1:Number, a2:Number, weight:Number, radians:Boolean = true ):Number
+		public static function interpolateAngles( a1:Number, a2:Number, weight:Number, radians:Boolean = true, ease:Function=null ):Number
 		{
 			a1 = normalizeAngle( a1, radians );
 			a2 = normalizeAngleToAnother( a2, a1, radians );
 			
-			return interpolateFloat( a1, a2, weight );
+			return (ease is Function) ? ease(weight, a1, a2 - a1, 1) : interpolateFloat( a1, a2, weight );
 		}
 		
 		/**

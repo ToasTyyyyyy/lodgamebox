@@ -261,5 +261,70 @@ package com.lordofduct.util
 			mat.tx += dx;
 			mat.ty += dy;
 		}
+		
+		/**
+		 * Linearly interpolate between 2 Matrices.
+		 * 
+		 * @parm m1 - Start Matrix
+		 * @param m2 - End Matrix
+		 * @param weight - lerp value from 0->1
+		 * @param ease - if you want to use an easing function for interpolation, apply it here.
+		 * 
+		 * Caution, this is a 'linear interpolation'. A matrix which holds rotations may not look the way expected because 
+		 * rotations are not linear values. When lerping rotations you'll get a result that looks a bit like skewing and 
+		 * scaling during the lerp.
+		 * 
+		 * Use roterpMatrix method if you want to interpolate rotation.
+		 */
+		public static function lerpMatrix( m1:Matrix, m2:Matrix, weight:Number, ease:Function=null ):Matrix
+		{
+			var useEase:Boolean = ease is Function;
+			var a:Number = (useEase) ? ease( weight, m1.a, m2.a - m1.a, 1 ) : m1.a + (m2.a - m1.a) * weight;
+			var b:Number = (useEase) ? ease( weight, m1.b, m2.b - m1.b, 1 ) : m1.b + (m2.b - m1.b) * weight;
+			var c:Number = (useEase) ? ease( weight, m1.c, m2.c - m1.c, 1 ) : m1.c + (m2.c - m1.c) * weight;
+			var d:Number = (useEase) ? ease( weight, m1.d, m2.d - m1.d, 1 ) : m1.d + (m2.d - m1.d) * weight;
+			var tx:Number = (useEase) ? ease( weight, m1.tx, m2.tx - m1.tx, 1 ) : m1.tx + (m2.tx - m1.tx) * weight;
+			var ty:Number = (useEase) ? ease( weight, m1.ty, m2.ty - m1.ty, 1 ) : m1.ty + (m2.ty - m1.ty) * weight;
+			
+			return new Matrix(a,b,c,d,tx,ty);
+		}
+		
+		/**
+		 * rotationally interpolate between 2 Matrices.
+		 * 
+		 * @parm m1 - Start Matrix
+		 * @param m2 - End Matrix
+		 * @param weight - weight value from 0->1
+		 * @param ease - if you want to use an easing function for interpolation, apply it here.
+		 * 
+		 * This is like lerpMatrix, but that it considers the rotational properties of the Matrix. This is useful 
+		 * if you want the interpolation to effect rotation smoothly while retaining proper scale during it. This 
+		 * stops unnexpected scaling, skewing, and clipping with lerpMatrix.
+		 * 
+		 * Use lerpMatrix if you want to interpolate skew and scale.
+		 */
+		public static function roterpMatrix( m1:Matrix, m2:Matrix, weight:Number, ease:Function=null ):Matrix
+		{
+			var useEase:Boolean = ease is Function;
+			
+			var a1:Number = LoDMatrixTransformer.getRotation(m1);
+			var a2:Number = LoDMatrixTransformer.getRotation(m2);
+			var ang:Number = LoDMath.interpolateAngles(a1, a2, weight, true, ease);
+			
+			var sx1:Number = LoDMatrixTransformer.getScaleX(m1);
+			var sx2:Number = LoDMatrixTransformer.getScaleY(m2);
+			var sx:Number = (useEase) ? ease( weight, sx1, sx2 - sx1, 1 ) : sx1 + (sx2 - sx1) * weight;
+			
+			var sy1:Number = LoDMatrixTransformer.getScaleY(m1);
+			var sy2:Number = LoDMatrixTransformer.getScaleY(m2);
+			var sy:Number = (useEase) ? ease( weight, sy1, sy2 - sy1, 1 ) : sy1 + (sy2 - sy1) * weight;
+			
+			var m:Matrix = new Matrix(sx, 0, 0, sy);
+			LoDMatrixTransformer.setRotation( m, ang );
+			m.tx = (useEase) ? ease( weight, m1.tx, m2.tx - m1.tx, 1 ) : m1.tx + (m2.tx - m1.tx) * weight;
+			m.ty = (useEase) ? ease( weight, m1.ty, m2.ty - m1.ty, 1 ) : m1.ty + (m2.ty - m1.ty) * weight;
+			
+			return m;
+		}
 	}
 }
