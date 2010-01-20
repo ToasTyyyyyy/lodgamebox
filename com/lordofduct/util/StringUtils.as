@@ -408,6 +408,11 @@ package com.lordofduct.util
 			return search.replace(new RegExp(rem,flags),'');
 		}
 		
+		/**
+		 * Censor a word from a string
+		 * 
+		 * ADDED BY LOD
+		 */
 		static public function censor(search:String, pattern:String, caseSensitive:Boolean=true):String
 		{
 			if(!search) return null;
@@ -418,6 +423,11 @@ package com.lordofduct.util
 			return search.replace(new RegExp(rem,flags),cens);
 		}
 		
+		/**
+		 * Censor multiple words
+		 * 
+		 * ADDED BY LOD
+		 */
 		static public function censorMultiple(search:String, words:Array, caseSensitive:Boolean=true):String
 		{
 			for each(var word:String in words)
