@@ -95,11 +95,13 @@ package com.lordofduct.util
 		 * 
 		 * @param mat: a matrix to get the scaleX of
 		 * 
+		 * @param respect - if true scale is with respect to the local space
+		 * 
 		 * @return: the scaleX of m
 		 */
-		public static function getScaleX(mat:Matrix):Number
+		public static function getScaleX(mat:Matrix, respect:Boolean=true):Number
 		{
-			return Math.sqrt(mat.a*mat.a + mat.b*mat.b);
+			return (respect) ? Math.sqrt(mat.a*mat.a + mat.b*mat.b) : Math.sqrt(mat.a*mat.a + mat.c*mat.c);
 		}
 		
 		/**
@@ -108,23 +110,32 @@ package com.lordofduct.util
 		 * @param mat: a matrix to set the scaleX of
 		 * 
 		 * @param scaleX: the new scaleX
+		 * 
+		 * @param respect - if true scale is with respect to the local space
 		 */
-		public static function setScaleX(mat:Matrix, scaleX:Number):void
+		public static function setScaleX(mat:Matrix, scaleX:Number, respect:Boolean=true):void
 		{
-			var scx:Number = getScaleX(mat);
+			var scx:Number = getScaleX(mat,respect);
 			
 			if (scx)
 			{
 				var ratio:Number = scaleX / scx;
+				
 				mat.a *= ratio;
-				mat.b *= ratio;
+				if(respect)
+					mat.b *= ratio;
+				else 
+					mat.c *= ratio;
 			}
 			else
 			{
 				//if tmp was 0, set scaleX from skewY
 				var sky:Number = getSkewY(mat);
 				mat.a = Math.cos(sky) * scaleX;
-				mat.b = Math.sin(sky) * scaleX;
+				if(respect)
+					mat.b = Math.sin(sky) * scaleX;
+				else
+					mat.c = Math.sin(sky) * scaleX;
 			}
 		}
 		
@@ -133,35 +144,48 @@ package com.lordofduct.util
 		 * 
 		 * @param mat: a matrix to get the scaleY of
 		 * 
+		 * @param respect - if true scale is with respect to the local space
+		 * 
 		 * @return the scaleY of m
 		 */
-	   	public static function getScaleY(mat:Matrix):Number
+	   	public static function getScaleY(mat:Matrix, respect:Boolean=true):Number
 		{
-			return Math.sqrt(mat.c*mat.c + mat.d*mat.d);
+			return (respect) ? Math.sqrt(mat.c*mat.c + mat.d*mat.d) : Math.sqrt(mat.d*mat.d + mat.b*mat.b);
 		}
 		
 		/**
 		 * Set the Y scale of a matrix
 		 * 
-		 * @param mat: a matrix to set the scaleX of
+		 * @param mat: a matrix to set the scaleY of
 		 * 
 		 * @param scaleY: the new scaleY
+		 * 
+		 * @param respect - if true scale is with respect to the local space
 		 */
-		public static function setScaleY(mat:Matrix, scaleY:Number):void
+		public static function setScaleY(mat:Matrix, scaleY:Number, respect:Boolean=true):void
 		{
-			var scy:Number = getScaleY(mat);
+			var scy:Number = getScaleY(mat,respect);
 			
 			if (scy)
 			{
 				var ratio:Number = scaleY / scy;
-				mat.c *= ratio;
+				
+				if(respect)
+					mat.c *= ratio;
+				else
+					mat.b *= ratio;
+				
 				mat.d *= ratio;
 			}
 			else
 			{
 				//if tmp was 0, set scaleY from skewX
 				var skx:Number = getSkewX(mat);
-				mat.c = -Math.sin(skx) * scaleY;
+				if(respect)
+					mat.c = -Math.sin(skx) * scaleY;
+				else
+					mat.b = -Math.sin(skx) * scaleY;
+				
 				mat.d =  Math.cos(skx) * scaleY;
 			}
 		}
@@ -251,6 +275,108 @@ package com.lordofduct.util
 			mat.rotate(angle);
 			mat.tx += x;
 			mat.ty += y;
+		}
+		
+		/**
+		 * Scale a matrix TO a value around a given internal point
+		 * 
+		 * @param mat - matrix to scale
+		 * @param x - x point
+		 * @param y - y point
+		 * @param sx - x scale to set
+		 * @param sy - y scale to set
+		 * @param respect - if true scale is with respect to the local space
+		 */
+		public static function scaleToAroundInternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
+		{
+			var intPnt:Point = new Point(x,y);
+			var extPnt:Point = mat.transformPoint( intPnt );
+			
+			setScaleX(mat,sx,respect);
+			setScaleY(mat,sy,respect);
+			
+			matchInternalPointWithExternal( mat, intPnt, extPnt );
+		}
+		
+		/**
+		 * Scale a matrix TO a value around a given external point
+		 * 
+		 * @param mat - matrix to scale
+		 * @param x - x point
+		 * @param y - y point
+		 * @param sx - x scale to set
+		 * @param sy - y scale to set
+		 * @param respect - if true scale is with respect to the local space
+		 */
+		public static function scaleToAroundExternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
+		{
+			var m2:Matrix = mat.clone();
+			m2.invert();
+			var extPnt:Point = new Point(x,y);
+			var intPnt:Point = m2.transformPoint( extPnt );
+			
+			setScaleX(mat,sx,respect);
+			setScaleY(mat,sy,respect);
+			
+			matchInternalPointWithExternal( mat, intPnt, extPnt );
+		}
+		
+		/**
+		 * Scale a matrix around a given internal point
+		 * 
+		 * @param mat - matrix to scale
+		 * @param x - x point
+		 * @param y - y point
+		 * @param sx - x scale to set
+		 * @param sy - y scale to set
+		 * @param respect - if true scale is with respect to the local space
+		 */
+		public static function scaleByAroundInternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
+		{
+			var intPnt:Point = new Point(x,y);
+			var extPnt:Point = mat.transformPoint( intPnt );
+			
+			if(respect)
+			{
+				mat.a *= sx;
+				mat.b *= sx;
+				mat.c *= sy;
+				mat.d *= sy;
+			} else {
+				mat.scale(sx,sy);
+			}
+			
+			matchInternalPointWithExternal( mat, intPnt, extPnt );
+		}
+		
+		/**
+		 * Scale a matrix around a given external point
+		 * 
+		 * @param mat - matrix to scale
+		 * @param x - x point
+		 * @param y - y point
+		 * @param sx - x scale to set
+		 * @param sy - y scale to set
+		 * @param respect - if true scale is with respect to the local space
+		 */
+		public static function scaleByAroundExternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
+		{
+			var m2:Matrix = mat.clone();
+			m2.invert();
+			var extPnt:Point = new Point(x,y);
+			var intPnt:Point = m2.transformPoint( extPnt );
+			
+			if(respect)
+			{
+				mat.a *= sx;
+				mat.b *= sx;
+				mat.c *= sy;
+				mat.d *= sy;
+			} else {
+				mat.scale(sx,sy);
+			}
+			
+			matchInternalPointWithExternal( mat, intPnt, extPnt );
 		}
 		
 	    public static function matchInternalPointWithExternal(mat:Matrix, interPnt:Point, extPnt:Point):void
