@@ -407,6 +407,26 @@ package com.lordofduct.util
 			var flags:String=(!caseSensitive) ? 'ig' : 'g';
 			return search.replace(new RegExp(rem,flags),'');
 		}
+		
+		static public function censor(search:String, pattern:String, caseSensitive:Boolean=true):String
+		{
+			if(!search) return null;
+			
+			var rem:String=escapePattern(pattern);
+			var flags:String=(!caseSensitive) ? 'ig' : 'g';
+			var cens:String = padRight("", "*", pattern.length);
+			return search.replace(new RegExp(rem,flags),cens);
+		}
+		
+		static public function censorMultiple(search:String, words:Array, caseSensitive:Boolean=true):String
+		{
+			for each(var word:String in words)
+			{
+				search = censor(search,word,caseSensitive);
+			}
+			
+			return search;
+		}
 
 		/**
 		 * Returns the string in reverse order.
