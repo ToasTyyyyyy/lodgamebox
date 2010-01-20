@@ -96,8 +96,6 @@ package com.lordofduct.util
 			return pnt;
 		}
 		
-		public static function find
-		
 		/**
 		 * This is a peculiar method. It locates the center of a DisplayObject with respect to its local 
 		 * space. But it takes into consideration any scaling, rotation, or skewing that may occur, it 
