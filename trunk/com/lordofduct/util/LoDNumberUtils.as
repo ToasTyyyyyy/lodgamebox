@@ -147,6 +147,16 @@ package com.lordofduct.util
 			return null;
 		}
 		
+		public static function digitShiftLeft( value:Number, base:int=10 ):Number
+		{
+			return value * base;
+		}
+		
+		public static function digitShiftRight( value:Number, base:int=10 ):Number
+		{
+			return value / base;
+		}
+		
 /**
  * Bit Helpers
  */

@@ -224,6 +224,53 @@ package com.lordofduct.util
 			return arr;
 		}
 		
+		public static function breakApartContainer( cont:DisplayObjectContainer, removeCont:Boolean=false, use3d:Boolean=false ):void
+		{
+			if (!cont || !cont.parent) {
+				return;
+			}
+			if(!cont.numChildren > 0)
+			{
+				if(removeCont) cont.parent.removeChild(cont);
+				
+				return;
+			}
+			    
+			var pi:int=cont.parent.getChildIndex(cont);
+			
+			//if we are using 3d AND 3d is available...
+			if(use3d && cont.transform.hasOwnProperty("matrix3D") && cont.hasOwnProperty("getRelativeMatrix3D"))
+			{
+				while(cont.numChildren)
+				{
+					var child3d:DisplayObject = cont.getChildAt(cont.numChildren - 1);
+					//implicitly refer to the functions so there aren't compile errors in CS3 or the such
+					var mat = child3d.transform["getRelativeMatrix3D"](cont);
+					child3d.transform["matrix3D"] = mat;
+					cont.removeChild(child3d);
+					cont.parent.addChildAt(child3d,pi+1);
+				}
+			} else {     
+				var pm:Matrix=cont.transform.matrix;
+				   
+				while (cont.numChildren)
+				{        
+					var child:DisplayObject=cont.removeChildAt(cont.numChildren - 1);
+					  
+					var m:Matrix=child.transform.matrix;
+					m.concat(pm);
+					child.transform.matrix=m;
+					    
+					cont.parent.addChildAt(child,pi+1);//we add the children just above the cont
+					
+				}
+			}
+			
+			if(removeCont){
+				cont.parent.removeChild(cont);
+			}
+		}
+		
 		/**
 		 * Add a list of DisplayObjects from an Array to a DisplayObjectContainer.
 		 * 
