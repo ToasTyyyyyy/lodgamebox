@@ -225,6 +225,8 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * [[IMPLICIT 3D]]
+		 * 
 		 * Removes the children of some container and places them in the parent in their relative positions.
 		 * 
 		 * @param cont - the container to remove children from
@@ -258,7 +260,7 @@ package com.lordofduct.util
 				{
 					var child3d:DisplayObject = cont.getChildAt(cont.numChildren - 1);
 					//implicitly refer to the functions so there aren't compile errors in CS3 or the such
-					var mat = child3d.transform["getRelativeMatrix3D"](cont);
+					var mat = child3d.transform["getRelativeMatrix3D"](cont.parent);
 					child3d.transform["matrix3D"] = mat;
 					cont.removeChild(child3d);
 					cont.parent.addChildAt(child3d,pi+1);
@@ -351,7 +353,7 @@ package com.lordofduct.util
 			var aspect:Number = obj.width / obj.height;
 			var tarAspect:Number = w / h;
 			
-			if (aspect == 0 || obj.height == 0) return new Matrix();
+			if (aspect == 0 || obj.height == 0) return;
 			
 			if (tarAspect >= aspect)
 			{
@@ -387,7 +389,7 @@ package com.lordofduct.util
 			var aspect:Number = obj.width / obj.height;
 			var tarAspect:Number = w / h;
 			
-			if( aspect == 0 || obj.height == 0 ) return new Matrix();
+			if( aspect == 0 || obj.height == 0 ) return;
 			
 			if( tarAspect <= aspect )
 			{
