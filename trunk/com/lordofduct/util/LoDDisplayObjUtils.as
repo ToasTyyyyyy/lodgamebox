@@ -254,7 +254,7 @@ package com.lordofduct.util
 			var pi:int=cont.parent.getChildIndex(cont);
 			
 			//if we are using 3d AND 3d is available...
-			if(use3d && cont.transform.hasOwnProperty("matrix3D") && cont.transform.hasOwnProperty("getRelativeMatrix3D"))
+			if( (use3d && cont.transform.hasOwnProperty("matrix3D") && cont.transform.hasOwnProperty("getRelativeMatrix3D")) )
 			{
 				while(cont.numChildren)
 				{
