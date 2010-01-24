@@ -37,6 +37,7 @@ package com.lordofduct.util
 			}
 			
 			var pi:int=cont.parent.getChildIndex(cont);
+			if(cont.transform.matrix3D) force3D = true;
 			
 			//if we are using 3d AND 3d is available...
 			while(cont.numChildren)

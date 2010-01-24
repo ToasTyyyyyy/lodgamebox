@@ -225,6 +225,44 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * Removes the children of some container and places them in the parent in their relative positions.
+		 * 
+		 * @param cont - the container to remove children from
+		 * @param removeCont - should the container be removed afterward
+		 */
+		public static function breakApartContainer( cont:DisplayObjectContainer, removeCont:Boolean=false ):void
+		{
+			if (!cont || !cont.parent) {
+				return;
+			}
+			if(!cont.numChildren > 0)
+			{
+				if(removeCont) cont.parent.removeChild(cont);
+				
+				return;
+			}
+			
+			var pi:int=cont.parent.getChildIndex(cont);
+			var pm:Matrix=cont.transform.matrix;
+			
+			while(cont.numChildren)
+			{
+				var child:DisplayObject = cont.getChildAt(cont.numChildren - 1);
+				
+				var m:Matrix=child.transform.matrix;
+				m.concat(pm);
+				child.transform.matrix=m;
+				
+				cont.removeChild(child);
+				cont.parent.addChildAt(child,pi+1);
+			}
+			
+			if(removeCont){
+				cont.parent.removeChild(cont);
+			}
+		}
+		
+		/**
 		 * Add a list of DisplayObjects from an Array to a DisplayObjectContainer.
 		 * 
 		 * First item in array is at the bottom of the displayList, the last is at the top.
