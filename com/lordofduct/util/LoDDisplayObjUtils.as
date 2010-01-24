@@ -225,68 +225,6 @@ package com.lordofduct.util
 		}
 		
 		/**
-		 * [[IMPLICIT 3D]]
-		 * 
-		 * Removes the children of some container and places them in the parent in their relative positions.
-		 * 
-		 * @param cont - the container to remove children from
-		 * @param removeCont - should the container be removed afterward
-		 * @param use3d - should we consider using 3d (fp10 and as3.4 required)
-		 * 
-		 * NOTE: using 3d is only available if you are targeting fp10. This means you need flash CS4 or later, OR Flex 3.4.
-		 * 
-		 * Because the class needs to remain backwards compatabile with CS3/Flex3 whith out 3d, the 3d mods are performed 
-		 * implicitly with strings. This means there is a slight performance hit for it. You can modify the code yourselves 
-		 * to get better performance... but it is probably negligable.
-		 */
-		public static function breakApartContainer( cont:DisplayObjectContainer, removeCont:Boolean=false, use3d:Boolean=false ):void
-		{
-			if (!cont || !cont.parent) {
-				return;
-			}
-			if(!cont.numChildren > 0)
-			{
-				if(removeCont) cont.parent.removeChild(cont);
-				
-				return;
-			}
-			    
-			var pi:int=cont.parent.getChildIndex(cont);
-			
-			//if we are using 3d AND 3d is available...
-			if( (use3d && cont.transform.hasOwnProperty("matrix3D") && cont.transform.hasOwnProperty("getRelativeMatrix3D")) )
-			{
-				while(cont.numChildren)
-				{
-					var child3d:DisplayObject = cont.getChildAt(cont.numChildren - 1);
-					//implicitly refer to the functions so there aren't compile errors in CS3 or the such
-					var mat = child3d.transform["getRelativeMatrix3D"](cont.parent);
-					child3d.transform["matrix3D"] = mat;
-					cont.removeChild(child3d);
-					cont.parent.addChildAt(child3d,pi+1);
-				}
-			} else {     
-				var pm:Matrix=cont.transform.matrix;
-				   
-				while (cont.numChildren)
-				{        
-					var child:DisplayObject=cont.removeChildAt(cont.numChildren - 1);
-					  
-					var m:Matrix=child.transform.matrix;
-					m.concat(pm);
-					child.transform.matrix=m;
-					    
-					cont.parent.addChildAt(child,pi+1);//we add the children just above the cont
-					
-				}
-			}
-			
-			if(removeCont){
-				cont.parent.removeChild(cont);
-			}
-		}
-		
-		/**
 		 * Add a list of DisplayObjects from an Array to a DisplayObjectContainer.
 		 * 
 		 * First item in array is at the bottom of the displayList, the last is at the top.
