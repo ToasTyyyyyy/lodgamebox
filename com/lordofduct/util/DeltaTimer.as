@@ -42,7 +42,7 @@ package com.lordofduct.util
 		private var _count:int = 0;
 		private var _repeatCount:int = 0;
 		
-		private var _reinitPoint:int = 0;
+		private var _reinitPoint:Number = 0;
 		private var _isPaused:Boolean = true;
 		
 		public function get time():Number { return _time / 1000; }
@@ -89,6 +89,8 @@ package com.lordofduct.util
 				Assertions.isNotTrue((_repeatCount && _count >= _repeatCount), "com.lordofduct.util::DeltaTimer - timer can not resume when repeatCount is satisfied.", Error ); 
 				_isPaused = false;
 				_reinitPoint = getTimer() - _time;
+				//accurate method
+				//_reinitPoint = getAccurateTimer() - _time;
 			}
 		}
 		
@@ -102,6 +104,8 @@ package com.lordofduct.util
 			_dt = 0;
 			_count = 0;
 			_reinitPoint = getTimer();
+			//accurate method
+			//_reinitPoint = getAccurateTimer();
 		}
 		
 		/**
@@ -110,6 +114,8 @@ package com.lordofduct.util
 		public function deltaSinceLastTick():int
 		{
 			return getTimer() - _time - _reinitPoint;
+			//accurate method
+			//return getAccurateTimer() - _time - _reinitPoint;
 		}
 		
 		/**
@@ -136,6 +142,12 @@ package com.lordofduct.util
 		{
 			_isPaused = true;
 			this.dispatchEvent( new TimerEvent( TimerEvent.TIMER_COMPLETE ) );
+		}
+		
+		static public function getAccurateTimer():Number
+		{
+			var dt:Date = new Date();
+			return dt.milliseconds;
 		}
 	}
 }
