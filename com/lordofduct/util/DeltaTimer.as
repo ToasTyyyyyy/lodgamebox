@@ -146,8 +146,7 @@ package com.lordofduct.util
 		
 		static public function getAccurateTimer():Number
 		{
-			var dt:Date = new Date();
-			return dt.milliseconds;
+			return (new Date()).time;
 		}
 	}
 }
