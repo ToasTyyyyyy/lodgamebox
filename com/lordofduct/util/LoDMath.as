@@ -74,8 +74,10 @@ package com.lordofduct.util
 		public static const ON:Boolean  = true;
 		public static const OFF:Boolean = false;
 		
-		public static const SHORT_EPSILON:Number   = 0.1;
-		public static const EPSILON:Number         = 0.0001;
+		public static const SHORT_EPSILON:Number   = 0.1;//round integer epsilon
+		public static const PERC_EPSILON:Number    = 0.001;//percentage epsilon
+		public static const EPSILON:Number         = 0.0001;//single float average epsilon
+		public static const LONG_EPSILON:Number    = 0.00000001;//arbitrary 8 digit epsilon
 		public static const MACHINE_EPSILON:Number = computeMachineEpsilon();
 		
 		public static function computeMachineEpsilon():Number
