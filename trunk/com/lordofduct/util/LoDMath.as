@@ -60,7 +60,8 @@ package com.lordofduct.util
 		public static const B_16:Number = 65536;//2^16
 		public static const B_32:Number = 4294967296;//2^32
 		public static const B_48:Number = 281474976710656;//2^48
-		public static const B_64:Number = 18446744073709551616;//2^64
+		public static const B_53:Number = 9007199254740992;//2^53 !!NOTE!! largest accurate double floating point whole value
+		public static const B_64:Number = 18446744073709551616;//2^64 !!NOTE!! Not accurate see B_53
 		
 		public static const ONE_THIRD:Number  = 0.333333333333333333333333333333333; // 1.0/3.0;
 		public static const TWO_THIRDS:Number = 0.666666666666666666666666666666666; // 2.0/3.0;
@@ -308,6 +309,29 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * Returns the distance between any two objects that have x and y properties. If these properties 
+		 * do not exist NaN is returned.
+		 */
+		static public function distanceBetween( obj1:*, obj2:* ):Number
+		{
+			try
+			{
+				var ix:Number = obj1.x - obj2.x;
+				var iy:Number = obj1.y - obj2.y;
+				
+				return Math.sqrt( ix * ix + iy * iy );
+			} catch(err:Error)
+			{
+				return NaN;
+			}
+			
+			return NaN;
+		}
+		
+/**
+ * Advanced Math
+ */
+		/**
 		 * Check if a value is prime.
 		 * 
 		 * @param val - uint to check for primality
@@ -363,6 +387,35 @@ package com.lordofduct.util
 			return true;
 		}
 		
+		static public function isDoublePrime( val:Number ):Boolean
+		{
+			//if value is out side of accurate range of a double, then throw error
+			if(val > 9007199254740992) throw new Error("com.lordofduct.utils::LoDMath - can not accurately predict primality of value greater then 2^53 : 9007199254740992.");
+			if(val > B_53) throw new Error("com.lordofduct.utils::LoDMath - can not accurately predict primality of value greater then 2^53 : " + LoDMath.B_53.toString() + ".");
+			
+			//if value is rational, not prime by definition
+			if(val % 1) return false;
+			
+			//if value is less then 2, not prime by defintion
+			if(val < 2) return false;
+			
+			//if value is even and not 2, not prime by defintion
+			if(!(val % 2) && val != 2) return false;
+			
+			//now check if prime
+			for(var i:int = 3; i <= val / i; i += 2)
+			{
+				if(!(val % i)) return false;
+			}
+			
+			return true;
+		}
+		
+		static public function isRelativelyPrime( m:int, n:int ):Boolean
+		{
+			return GCD(m,n) == 1;
+		}
+		
 		/**
 		 * Returns all factors of a value as positive integers. Negative integers are excluded as the sign is assumed to be relative.
 		 * 
@@ -394,31 +447,58 @@ package com.lordofduct.util
 		}
 		
 		/**
-		 * Returns the distance between any two objects that have x and y properties. If these properties 
-		 * do not exist NaN is returned.
+		 * Greatest Common Denominator using Euclid's algorithm
 		 */
-		static public function distanceBetween( obj1:*, obj2:* ):Number
+		static public function GCD( m:int, n:int ):int
 		{
-			try
+			var r:int;
+			
+			//make sure positive, GCD is always positive
+			m = Math.abs(m);
+			n = Math.abs(n);
+			
+			//m must be >= n
+			if (m < n)
 			{
-				var ix:Number = obj1.x - obj2.x;
-				var iy:Number = obj1.y - obj2.y;
-				
-				return Math.sqrt( ix * ix + iy * iy );
-			} catch(err:Error)
-			{
-				return NaN;
+				r = m;
+				m = n;
+				n = hld;
 			}
 			
-			return NaN;
+			//now start loop
+			while(true)
+			{
+				r = m % n;
+				if(!r) return n;
+				m = n;
+				n = r;
+			}
+			
+			return 1;
 		}
 		
-/**
- * Advanced Math
- */
-		static public function factorial( value:int ):int
+		/**
+		 * Lowest Common Multiple
+		 */
+		static public function LCM( m:int, n:int ):int
 		{
-			if(value < 1) return 0;
+			return (m * n)/ GCD(m, n);
+		}
+		
+		/**
+		 * Factorial - N!
+		 * 
+		 * simple product series
+		 * 
+		 * by definition:
+		 * 0! == 1
+		 * 
+		 * this requires uint because the integral for solving negative factorials is 
+		 * arbitrarily complex for AS3
+		 */
+		static public function factorial( value:uint ):int
+		{
+			if(value == 0) return 1;
 			
 			var res:int = value;
 			
@@ -430,27 +510,60 @@ package com.lordofduct.util
 			return res;
 		}
 		
+		/**
+		 * gamma function
+		 * 
+		 * defined: gamma(N) == (N - 1)!
+		 */
 		static public function gammaFunction( value:int ):int
 		{
 			return factorial( value - 1 );
 		}
 		
+		/**
+		 * falling factorial
+		 * 
+		 * defined: (N)! / (N - x)!
+		 * 
+		 * written subscript: (N)x OR (base)exp
+		 */
 		static public function fallingFactorial( base:int, exp:int ):int
 		{
 			return factorial(base) / factorial(base - exp);
 		}
 		
+		/**
+		 * rising factorial
+		 * 
+		 * defined: (N + x - 1)! / (N - 1)!
+		 * 
+		 * written superscript N^(x) OR base^(exp)
+		 */
 		static public function risingFactorial( base:int, exp:int ):int
 		{
 			//expanded from gammaFunction for speed
 			return factorial( base + exp - 1 ) / factorial( base - 1 );
 		}
 		
+		/**
+		 * binomial coefficient
+		 * 
+		 * defined: N! / (k!(N-k)!)
+		 * reduced: N! / (N-k)! == (N)k (fallingfactorial)
+		 * reduced: (N)k / k!
+		 */
 		static public function binCoef( n:int, k:int ):int
 		{
 			return fallingFactorial( n, k ) / factorial(k);
 		}
 		
+		/**
+		 * rising binomial coefficient
+		 * 
+		 * as one can notice in the analysis of binCoef(...) that 
+		 * binCoef is the (N)k divided by k!. Similarly rising binCoef 
+		 * is merely N^(k) / k! 
+		 */
 		static public function risingBinCoef( n:int, k:int ):int
 		{
 			return risingFactorial( n, k ) / factorial(k);
