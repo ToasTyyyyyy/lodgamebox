@@ -58,6 +58,7 @@ package com.lordofduct.util
 		public static const RAD_TO_DEG:Number = 57.295779513082325225835265587527; // 180.0 / PI;
 		
 		public static const B_16:Number = 65536;//2^16
+		public static const B_31:Number = 2147483648;//2^31
 		public static const B_32:Number = 4294967296;//2^32
 		public static const B_48:Number = 281474976710656;//2^48
 		public static const B_53:Number = 9007199254740992;//2^53 !!NOTE!! largest accurate double floating point whole value
@@ -334,7 +335,7 @@ package com.lordofduct.util
 		/**
 		 * Check if a value is prime.
 		 * 
-		 * @param val - uint to check for primality
+		 * @param val - int to check for primality
 		 * 
 		 * In this method to increase speed we first check if the value is <= 1, because values <= 1 are not prime by definition. 
 		 * Then we check if the value is even but not equal to 2. If so the value is most certainly not prime. 
@@ -387,10 +388,20 @@ package com.lordofduct.util
 			return true;
 		}
 		
+		/**
+		 * Similar to isPrime, but instead uses the Number object (double floating point value)
+		 * 
+		 * ONLY use if you MUST check very large values for primality (2147483647 < value < 9007199254740992).
+		 * 
+		 * This algorithm is less accurate and slower then the integer method for a few reasons:
+		 * 
+		 * a) we must test accuracy range
+		 * b) we must test if a whole value
+		 * c) values in the range greater than 2147483647 will loop a LOT of times
+		 */
 		static public function isDoublePrime( val:Number ):Boolean
 		{
 			//if value is out side of accurate range of a double, then throw error
-			if(val > 9007199254740992) throw new Error("com.lordofduct.utils::LoDMath - can not accurately predict primality of value greater then 2^53 : 9007199254740992.");
 			if(val > B_53) throw new Error("com.lordofduct.utils::LoDMath - can not accurately predict primality of value greater then 2^53 : " + LoDMath.B_53.toString() + ".");
 			
 			//if value is rational, not prime by definition
