@@ -411,6 +411,13 @@ package com.lordofduct.util
 			return true;
 		}
 		
+		/**
+		 * Relative Primality
+		 * 
+		 * By definition two integers are considered relatively prime if their 
+		 * 'greatest common divisor' is 1. So thusly we simply just check if 
+		 * the GCD of m and n is 1.
+		 */
 		static public function isRelativelyPrime( m:int, n:int ):Boolean
 		{
 			return GCD(m,n) == 1;
@@ -443,6 +450,39 @@ package com.lordofduct.util
 			}
 			
 			arr.sort( Array.NUMERIC );
+			return arr;
+		}
+		
+		/**
+		 * Common Factors
+		 * 
+		 * Returns all the common factors of two integers. All factors are treated positive as the sign is assumed to be relative.
+		 */
+		static public function commonFactorsOf( m:int, n:int ):Array
+		{
+			var i:int;
+			m = Math.abs(m);
+			n = Math.abs(n);
+			
+			//make sure m < n... we only search up to m, because anything > m would not factor into m.
+			if(m > n)
+			{
+				i = m;
+				m = n;
+				n = i;
+			}
+			
+			var arr:Array = new Array();
+			
+			//because a factors compliment is guaranteed to factor both m and n, we can not reduce cycles by finding the mid factor
+			for( i = 1; i <= m; i++ )
+			{
+				if(!(m % i) && !(n % i))
+				{
+					arr.push(i);
+				}
+			}
+			
 			return arr;
 		}
 		
