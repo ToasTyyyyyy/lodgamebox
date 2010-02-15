@@ -172,6 +172,37 @@ package com.lordofduct.util
 			m.invert();
 			return m;
 		}
+		
+		
+		/**
+		 * Removes a child from a container, even if it's a grandchild of it.
+		 * 
+		 * @param cont - the container to remove the child from
+		 * @param child - the child to be removed
+		 * @param retrieveFocus - if the child or a child of the child had focus, set it to 'cont'
+		 * 
+		 * Return - returns true if the child was a child and the remove was successful, else returns false
+		 */
+		public static function removeChildFrom( cont:DisplayObjectContainer, child:DisplayObject, retrieveFocus:Boolean=false ):Boolean
+		{
+			if(cont.contains(child))
+			{
+				child.parent.removeChild(child);
+				
+				if(retrieveFocus && cont.stage && cont.stage.focus)
+				{
+					if(cont.stage.focus == child 
+						|| (child is DisplayObjectContainer && DisplayObjectContainer(child).contains(cont.stage.focus) )
+					{
+						cont.stage.focus = cont;
+					}
+				}
+				
+				return true;
+			}
+			
+			return false;
+		}
 /**
  * Container Organizing methods
  */
