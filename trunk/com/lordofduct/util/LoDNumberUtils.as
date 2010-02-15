@@ -8,6 +8,12 @@ package com.lordofduct.util
 		
 		/**
 		 * similar to Number.toString(2), but in this case we will also show the fractional values
+		 * 
+		 * @param value - the value to string out
+		 * @param short - should we string out as a short fraciton or a long
+		 * 
+		 * if short - only 16 bits of fractional significance is displayed: 0.1 == 0.0001100110011001
+		 * if not short - get 52 bits of fractional significance displayed: 0.1 == 0.0001100110011001100110011001100110011001100110011001
 		 */
 		public static function toBinaryString( value:Number, short:Boolean=true ):String
 		{
