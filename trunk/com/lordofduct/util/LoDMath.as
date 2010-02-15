@@ -224,11 +224,23 @@ package com.lordofduct.util
 		 * note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed 
 		 * because we are rounding 100011.1011011011011011 which rounds up.
 		 */
-		public static function roundTo( value:Number, place:int, base:uint=2 ):Number
+		public static function roundTo( value:Number, place:int, base:uint=10 ):Number
 		{
 			var p:Number = Math.pow(base, -place);
 			
 			return Math.round(value * p) / p;
+		}
+		
+		public static function floorTo( value:Number, place:int, base:uint=10 ):Number
+		{
+			var p:Number = Math.pow(base, -place);
+			return Math.floor(value * p) / p;
+		}
+		
+		public static function ceilTo( value:Number, place:int, base:uint=10 ):Number
+		{
+			var p:Number = Math.pow(base,-place);
+			return Math.ceil(value*p) / p;
 		}
 
 		/**
