@@ -207,15 +207,19 @@ package com.lordofduct.util
          */
         public static function roundTo( value:Number, decimalPlace:int ):Number
         {
-        	var base:Number = Math.pow( 10, -decimalPlace );
+        	var p:Number = Math.pow( 10, -decimalPlace );
         	
-        	return Math.round(value * base) / base;
+        	return Math.round(value * p) / p;
         }
         
         /**
-         * Similar to roundTo, but instead of rounding to ten's place, it rounds to the 2's place.
+         * Similar to roundTo, but instead of rounding to ten's place, it rounds to some base's place.
          * 
-         * binaryPlace is represented by the power applied to 2 to get that place
+         * 'place' is represented by the power applied to 'base' to get that place
+         * 
+         * @param value - the value to round
+         * @param place - the place to round to
+         * @param base - the base to round in... default is 2 for binary
          * 
          * e.g.
          * 
@@ -234,11 +238,11 @@ package com.lordofduct.util
          * note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed 
          * because we are rounding 100011.1011011011011011 which rounds up.
          */
-        public static function roundToBinary( value:Number, binaryPlace:int ):Number
+        public static function roundToBase( value:Number, place:int, base:uint=2 ):Number
         {
-        	var base:Number = Math.pow(2, -binaryPlace);
+        	var p:Number = Math.pow(base, -place);
         	
-        	return Math.round(value * base) / base;
+        	return Math.round(value * p) / p;
         }
 
 		/**
