@@ -168,7 +168,9 @@ package com.lordofduct.util
 		}
 		
 		
-		//arithmetic version of wrap... need to decide which is more efficient
+		/**
+		 * arithmetic version of wrap... need to decide which is more efficient
+		 */
 		static public function arithWrap( value:Number, max:Number, min:Number=0 ):Number
         {
         	max -= min;
