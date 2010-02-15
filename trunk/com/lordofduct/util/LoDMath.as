@@ -189,13 +189,17 @@ package com.lordofduct.util
 		}
 		
 		/**
-		 * round to some decimal place
+		 * roundTo some place comparative to a 'base', default is 10 for decimal place
 		 * 
-		 * decimal place is represented by the power applied to 10 to get that place
+		 * 'place' is represented by the power applied to 'base' to get that place
+		 * 
+		 * @param value - the value to round
+		 * @param place - the place to round to
+		 * @param base - the base to round in... default is 10 for decimal
 		 * 
 		 * e.g.
 		 * 
-		 * 2000/7 == 285.71428571428571428571428571429
+		 * 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
 		 * 
 		 * roundTo(2000/7,3) == 0
 		 * roundTo(2000/7,2) == 300
@@ -206,41 +210,21 @@ package com.lordofduct.util
 		 * roundTo(2000/7,-3) == 285.714
 		 * roundTo(2000/7,-4) == 285.7143
 		 * roundTo(2000/7,-5) == 285.71429
-		 */
-		public static function roundTo( value:Number, decimalPlace:int ):Number
-		{
-			var p:Number = Math.pow( 10, -decimalPlace );
-			
-			return Math.round(value * p) / p;
-		}
-		
-		/**
-		 * Similar to roundTo, but instead of rounding to ten's place, it rounds to some base's place.
 		 * 
-		 * 'place' is represented by the power applied to 'base' to get that place
-		 * 
-		 * @param value - the value to round
-		 * @param place - the place to round to
-		 * @param base - the base to round in... default is 2 for binary
-		 * 
-		 * e.g.
-		 * 
-		 * 2000/7 ~= 285.714285714 ~= (bin)100011101.1011011011011011
-		 * 
-		 * roundToBinary(2000/7,3)  == 288       -- 100100000
-		 * roundToBinary(2000/7,2)  == 284       -- 100011100
-		 * roundToBinary(2000/7,1)  == 286       -- 100011110
-		 * roundToBinary(2000/7,0)  == 286       -- 100011110
-		 * roundToBinary(2000/7,-1) == 285.5     -- 100011101.1
-		 * roundToBinary(2000/7,-2) == 285.75    -- 100011101.11
-		 * roundToBinary(2000/7,-3) == 285.75    -- 100011101.11
-		 * roundToBinary(2000/7,-4) == 285.6875  -- 100011101.1011
-		 * roundToBinary(2000/7,-5) == 285.71875 -- 100011101.10111
+		 * roundTo(2000/7,3,2)  == 288       -- 100100000
+		 * roundTo(2000/7,2,2)  == 284       -- 100011100
+		 * roundTo(2000/7,1,2)  == 286       -- 100011110
+		 * roundTo(2000/7,0,2)  == 286       -- 100011110
+		 * roundTo(2000/7,-1,2) == 285.5     -- 100011101.1
+		 * roundTo(2000/7,-2,2) == 285.75    -- 100011101.11
+		 * roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
+		 * roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
+		 * roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
 		 * 
 		 * note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed 
 		 * because we are rounding 100011.1011011011011011 which rounds up.
 		 */
-		public static function roundToBase( value:Number, place:int, base:uint=2 ):Number
+		public static function roundTo( value:Number, place:int, base:uint=2 ):Number
 		{
 			var p:Number = Math.pow(base, -place);
 			
