@@ -6,11 +6,42 @@ package com.lordofduct.util
 		{
 		}
 		
-		public static function toLength( value:uint, length:int ):String
+		/**
+		 * similar to Number.toString(2), but in this case we will also show the fractional values
+		 */
+		public static function toBinaryString( value:Number, short:Boolean=true ):String
 		{
-			var str:String = value.toString();
+			var whole:Number = Math.floor(value);
+			var fract:Number = value % 1;
+			
+			var str:String = "";
+			var i:int = 0;
+			var imax:int = (short) ? 16 : 52;
+			
+			while(fract % 1 && i < imax)
+			{
+				fract *= 2;
+				if(Math.floor(fract)) str += "1";
+				else str += "0";
+				fract %= 1;
+				i++;
+			}
+			
+			if(str.length) str = whole.toString(2) + "." + str;
+			else str = whole.toString(2);
+			
+			return str;
+			
+		}
+		
+		public static function toLength( value:int, length:int ):String
+		{
+			var sign:String = (value < 0) ? "-" : "";
+			var str:String = Math.abs(value).toString();
 			
 			while(str.length < length) str = "0" + str;
+			
+			str = sign + str;
 			
 			return str;
 		}
@@ -271,6 +302,8 @@ package com.lordofduct.util
 			{
 				rtn = (rtn << 1) | ((value >>> i) & 1);
 			}
+			
+			return rtn;
 		}
 		
 		public static function unsignedRotateBits( value:int ):int
@@ -284,6 +317,8 @@ package com.lordofduct.util
 				//first shift rtn left 1 bit, then OR on the bit in position i
 				rtn = (rtn << 1) | ((value >>> i) & 1);
 			}
+			
+			return rtn;
 		}
 		
 		public static function rotateBytes( value:uint ):uint
@@ -291,7 +326,7 @@ package com.lordofduct.util
 			return ((value & 0xFF) << 24) | (((value >> 8) & 0xFF) << 16) | (((value >> 16) & 0xFF) << 8) | (value >>> 24);
 		}
 		
-		public static swapBits( value:int, pos1:int, pos2:int ):int
+		public static function swapBits( value:int, pos1:int, pos2:int ):int
 		{
 			//zero index the positions
 			pos1--;
