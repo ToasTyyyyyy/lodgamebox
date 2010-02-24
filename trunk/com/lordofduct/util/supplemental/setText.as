@@ -5,6 +5,8 @@
  * 
  * 
  * set the text in a textfield
+ * 
+ * DEPRICATED
  */
 package com.lordofduct.util.supplemental
 {
