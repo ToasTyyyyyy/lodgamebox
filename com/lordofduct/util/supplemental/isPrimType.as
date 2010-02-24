@@ -5,6 +5,8 @@
  * 
  * 
  * Is the object passed a prim type?
+ * 
+ * DEPRICATED
  */
 package com.lordofduct.util.supplemental
 {
