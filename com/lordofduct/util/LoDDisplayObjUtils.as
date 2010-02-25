@@ -192,7 +192,7 @@ package com.lordofduct.util
 				if(retrieveFocus && cont.stage && cont.stage.focus)
 				{
 					if(cont.stage.focus == child 
-						|| (child is DisplayObjectContainer && DisplayObjectContainer(child).contains(cont.stage.focus) )
+						|| (child is DisplayObjectContainer && DisplayObjectContainer(child).contains(cont.stage.focus) ) )
 					{
 						cont.stage.focus = cont;
 					}
@@ -372,8 +372,11 @@ package com.lordofduct.util
 			
 			var sx:Number = w / obj.width;
 			var sy:Number = h / obj.height;
-			var ix:Number = rect.x + (w - sx * obj.width) / 2;
-			var iy:Number = rect.y + (h - sy * obj.height) / 2;
+			
+			var ro:Rectangle = obj.getBounds(obj);
+			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
+			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
+			trace(ix,iy);
 			obj.transform.matrix = new Matrix( sx, 0, 0, sy, ix, iy );
 		}
 		
@@ -408,8 +411,10 @@ package com.lordofduct.util
 			
 			var sx:Number = w / obj.width;
 			var sy:Number = h / obj.height;
-			var ix:Number = rect.x + (w - sx * obj.width) / 2;
-			var iy:Number = rect.y + (h - sy * obj.height) / 2;
+			
+			var ro:Rectangle = obj.getBounds(obj);
+			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
+			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
 			
 			obj.transform.matrix = new Matrix( sx, 0, 0, sy, ix, iy );
 		}
@@ -438,8 +443,10 @@ package com.lordofduct.util
 			
 			var sx:Number = w / obj.width;
 			var sy:Number = h / obj.height;
-			var ix:Number = rect.x + (w - sx * obj.width) / 2;
-			var iy:Number = rect.y + (h - sy * obj.height) / 2;
+			
+			var ro:Rectangle = obj.getBounds(obj);
+			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
+			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
 			obj.transform.matrix = old;
 			
 			return new Matrix( sx, 0, 0, sy, ix, iy );
@@ -468,9 +475,10 @@ package com.lordofduct.util
 			
 			var sx:Number = w / obj.width;
 			var sy:Number = h / obj.height;
-			var ix:Number = rect.x + (w - sx * obj.width) / 2;
-			var iy:Number = rect.y + (h - sy * obj.height) / 2;
 			
+			var ro:Rectangle = obj.getBounds(obj);
+			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
+			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
 			obj.transform.matrix = old;
 			
 			return new Matrix( sx, 0, 0, sy, ix, iy );
