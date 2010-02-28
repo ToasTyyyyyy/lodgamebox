@@ -13,13 +13,11 @@ package com.lordofduct.net
 		private var _completed:Array;
 		//for keeping order
 		private var _assetToIndex:Dictionary;
-		private var _keepOrder:Boolean;
 		
 		public function AssetParcel( idx:String, keepOrder:Boolean=true )
 		{
 			_id = idx;
-			_keepOrder = keepOrder;
-			if(_keepOrder) _assetToIndex = new Dictionary();
+			if(keepOrder ) _assetToIndex = new Dictionary();
 			
 			super();
 			
@@ -29,7 +27,7 @@ package com.lordofduct.net
 		}
 		
 		public function get id():String { return _id; }
-		public function get loadsInOrder():Boolean { return _keepOrder; }
+		public function get loadsInOrder():Boolean { return _assetToIndex != null; }
 		
 		public function addResourceToCue( idx:String, srcString:String, forceFileType:String=null ):void
 		{
@@ -48,7 +46,7 @@ package com.lordofduct.net
 				
 				asset.addEventListener( Event.COMPLETE, onAssetLoaded, false, 0, true );
 				_loading.push(asset);
-				if( _keepOrder )
+				if( this.loadsInOrder )
 				{
 					_assetToIndex[asset] = i;
 					i++;
@@ -62,22 +60,28 @@ package com.lordofduct.net
 			return _completed.slice();
 		}
 		
+		public function dumpAll():void
+		{
+			_completed.length = 0;
+			
+			dumpCued();
+			dumpLoading();
+		}
+		
 		public function dumpCued():void
 		{
 			_cued.length = 0;
 		}
 		
-		public function dumpAll():void
+		public function dumpLoading():void
 		{
-			_completed.length = 0;
-			
 			while( _loading.length )
 			{
 				var asset:Asset = _loading.pop() as Asset;
 				if(!asset) continue;
 				
 				asset.removeEventListener( Event.COMPLETE, onAssetLoaded );
-				delete _assetToIndex[asset];
+				if(this.loadsInOrder) delete _assetToIndex[asset];
 				//asset.close()
 			}
 		}
@@ -98,7 +102,7 @@ package com.lordofduct.net
 			if(index >= 0) _loading.splice(index,1);
 			
 			//store the asset
-			if(_keepOrder && _assetToIndex[asset] != undefined)
+			if(this.loadsInOrder && _assetToIndex[asset] != undefined)
 			{
 				index = _assetToIndex[asset];
 				_completed[index] = asset;
