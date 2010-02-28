@@ -2,6 +2,7 @@ package com.lordofduct.net
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.utils.Dictionary;
 
 	public class AssetParcel extends EventDispatcher
 	{
@@ -10,10 +11,15 @@ package com.lordofduct.net
 		private var _cued:Array;
 		private var _loading:Array;
 		private var _completed:Array;
+		//for keeping order
+		private var _assetToIndex:Dictionary;
+		private var _keepOrder:Boolean;
 		
-		public function AssetParcel( idx:String )
+		public function AssetParcel( idx:String, keepOrder:Boolean=true )
 		{
 			_id = idx;
+			_keepOrder = keepOrder;
+			if(_keepOrder) _assetToIndex = new Dictionary();
 			
 			super();
 			
@@ -23,6 +29,7 @@ package com.lordofduct.net
 		}
 		
 		public function get id():String { return _id; }
+		public function get loadsInOrder():Boolean { return _keepOrder; }
 		
 		public function addResourceToCue( idx:String, srcString:String, forceFileType:String=null ):void
 		{
@@ -32,6 +39,8 @@ package com.lordofduct.net
 		
 		public function loadCue():void
 		{
+			var i:int = _loading.length + _completed.length;
+			
 			while(_cued.length)
 			{
 				var asset:Asset = _cued.pop() as Asset;
@@ -39,6 +48,11 @@ package com.lordofduct.net
 				
 				asset.addEventListener( Event.COMPLETE, onAssetLoaded, false, 0, true );
 				_loading.push(asset);
+				if( _keepOrder )
+				{
+					_assetToIndex[asset] = i;
+					i++;
+				}
 				asset.load();
 			}
 		}
@@ -53,19 +67,17 @@ package com.lordofduct.net
 			_cued.length = 0;
 		}
 		
-		public function dumpCompleted():void
+		public function dumpAll():void
 		{
 			_completed.length = 0;
-		}
-		
-		public function dumpLoading():void
-		{
+			
 			while( _loading.length )
 			{
 				var asset:Asset = _loading.pop() as Asset;
 				if(!asset) continue;
 				
 				asset.removeEventListener( Event.COMPLETE, onAssetLoaded );
+				delete _assetToIndex[asset];
 				//asset.close()
 			}
 		}
@@ -81,11 +93,20 @@ package com.lordofduct.net
 			
 			//clean the asset
 			asset.removeEventListener( Event.COMPLETE, onAssetLoaded );
-			var index:int = _loading.indexOf( asset );
-			if(index >= 0) _loading.splice(index, 1);
 			
-			//push asset into completed
-			_completed.push(asset);
+			var index:int = _loading.indexOf(asset);
+			if(index >= 0) _loading.splice(index,1);
+			
+			//store the asset
+			if(_keepOrder && _assetToIndex[asset] != undefined)
+			{
+				index = _assetToIndex[asset];
+				_completed[index] = asset;
+				delete _assetToIndex[asset];
+			} else {
+				_completed.push(asset);
+			}
+			
 			
 			//finally if the loading cue is empty, we're done
 			if(!_loading.length)
