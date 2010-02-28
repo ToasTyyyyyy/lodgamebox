@@ -13,6 +13,7 @@ package com.lordofduct.net
 		private var _completed:Array;
 		//for keeping order
 		private var _assetToIndex:Dictionary;
+		private var _tlen:int = 0;
 		
 		public function AssetParcel( idx:String, keepOrder:Boolean=true )
 		{
@@ -37,8 +38,6 @@ package com.lordofduct.net
 		
 		public function loadCue():void
 		{
-			var i:int = _loading.length + _completed.length;
-			
 			while(_cued.length)
 			{
 				var asset:Asset = _cued.pop() as Asset;
@@ -48,8 +47,8 @@ package com.lordofduct.net
 				_loading.push(asset);
 				if( this.loadsInOrder )
 				{
-					_assetToIndex[asset] = i;
-					i++;
+					_assetToIndex[asset] = _tlen;
+					_tlen++;
 				}
 				asset.load();
 			}
@@ -66,6 +65,8 @@ package com.lordofduct.net
 			
 			dumpCued();
 			dumpLoading();
+			
+			_tlen = 0;
 		}
 		
 		public function dumpCued():void
@@ -84,6 +85,18 @@ package com.lordofduct.net
 				if(this.loadsInOrder) delete _assetToIndex[asset];
 				//asset.close()
 			}
+			
+			//clean any possible nulls from completed
+			for( var i:int = 0; i < _completed.length; i++)
+			{
+				if(_completed[i] == null)
+				{
+					_completed.splice(i,1);
+					i--;
+				}
+			}
+			
+			_tlen = _completed.length;
 		}
 		
 	/**
