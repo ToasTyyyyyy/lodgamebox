@@ -376,7 +376,6 @@ package com.lordofduct.util
 			var ro:Rectangle = obj.getBounds(obj);
 			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
 			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
-			trace(ix,iy);
 			obj.transform.matrix = new Matrix( sx, 0, 0, sy, ix, iy );
 		}
 		

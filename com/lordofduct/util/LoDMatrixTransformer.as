@@ -257,6 +257,50 @@ package com.lordofduct.util
 			setRotation(mat, rotation * LoDMath.DEG_TO_RAD);
 		}
 		
+		/**
+		 * rotate a matrix TO a value around a given internal point
+		 * 
+		 * @param mat - the Matrix to rotate
+		 * @param x - the x position of the point
+		 * @param y - the y position of the point
+		 * @param angle - the angle in radians to rotate TO
+		 */
+		public static function rotateToAroundInternalPoint(mat:Matrix, x:Number, y:Number, angle:Number):void
+		{
+			var point:Point = new Point(x, y);
+			point = mat.transformPoint(point);
+			mat.tx -= point.x;
+			mat.ty -= point.y;
+			setRotation(mat,angle);
+			mat.tx += point.x;
+			mat.ty += point.y;
+		}
+		
+		/**
+		 * rotate a matrix TO a value around a given external point
+		 * 
+		 * @param mat - the Matrix to rotate
+		 * @param x - the x position of the point
+		 * @param y - the y position of the point
+		 * @param angle - the angle in radians to rotate TO
+		 */
+		public static function rotateToAroundExternalPoint(mat:Matrix, x:Number, y:Number, angle:Number):void
+		{
+			mat.tx -= x;
+			mat.ty -= y;
+			setRotation(mat,angle);
+			mat.tx += x;
+			mat.ty += y;
+		}
+		
+		/**
+		 * rotate a matrix TO a value around a given internal point
+		 * 
+		 * @param mat - the Matrix to rotate
+		 * @param x - the x position of the point
+		 * @param y - the y position of the point
+		 * @param angle - the angle in radians to rotate BY
+		 */
 		public static function rotateAroundInternalPoint(mat:Matrix, x:Number, y:Number, angle:Number):void
 		{
 			var point:Point = new Point(x, y);
@@ -268,6 +312,14 @@ package com.lordofduct.util
 			mat.ty += point.y;
 		}
 		
+		/**
+		 * rotate a matrix TO a value around a given external point
+		 * 
+		 * @param mat - the Matrix to rotate
+		 * @param x - the x position of the point
+		 * @param y - the y position of the point
+		 * @param angle - the angle in radians to rotate BY
+		 */
 		public static function rotateAroundExternalPoint(mat:Matrix, x:Number, y:Number, angle:Number):void
 		{
 			mat.tx -= x;
@@ -331,7 +383,7 @@ package com.lordofduct.util
 		 * @param sy - y scale to set
 		 * @param respect - if true scale is with respect to the local space
 		 */
-		public static function scaleByAroundInternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
+		public static function scaleAroundInternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
 		{
 			var intPnt:Point = new Point(x,y);
 			var extPnt:Point = mat.transformPoint( intPnt );
@@ -359,7 +411,7 @@ package com.lordofduct.util
 		 * @param sy - y scale to set
 		 * @param respect - if true scale is with respect to the local space
 		 */
-		public static function scaleByAroundExternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
+		public static function scaleAroundExternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
 		{
 			var m2:Matrix = mat.clone();
 			m2.invert();
