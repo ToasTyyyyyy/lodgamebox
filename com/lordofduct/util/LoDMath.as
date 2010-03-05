@@ -604,7 +604,7 @@ package com.lordofduct.util
 		 * this requires uint because the integral for solving negative factorials is 
 		 * arbitrarily complex for AS3
 		 */
-		static public function factorial( value:uint ):int
+		static public function factorial( value:uint ):Number
 		{
 			if(value == 0) return 1;
 			
@@ -623,7 +623,7 @@ package com.lordofduct.util
 		 * 
 		 * defined: gamma(N) == (N - 1)!
 		 */
-		static public function gammaFunction( value:int ):int
+		static public function gammaFunction( value:uint ):Number
 		{
 			return factorial( value - 1 );
 		}
@@ -635,7 +635,7 @@ package com.lordofduct.util
 		 * 
 		 * written subscript: (N)x OR (base)exp
 		 */
-		static public function fallingFactorial( base:int, exp:int ):int
+		static public function fallingFactorial( base:uint, exp:uint ):Number
 		{
 			return factorial(base) / factorial(base - exp);
 		}
@@ -647,7 +647,7 @@ package com.lordofduct.util
 		 * 
 		 * written superscript N^(x) OR base^(exp)
 		 */
-		static public function risingFactorial( base:int, exp:int ):int
+		static public function risingFactorial( base:uint, exp:uint ):Number
 		{
 			//expanded from gammaFunction for speed
 			return factorial( base + exp - 1 ) / factorial( base - 1 );
@@ -660,7 +660,7 @@ package com.lordofduct.util
 		 * reduced: N! / (N-k)! == (N)k (fallingfactorial)
 		 * reduced: (N)k / k!
 		 */
-		static public function binCoef( n:int, k:int ):int
+		static public function binCoef( n:uint, k:uint ):Number
 		{
 			return fallingFactorial( n, k ) / factorial(k);
 		}
@@ -672,7 +672,7 @@ package com.lordofduct.util
 		 * binCoef is the (N)k divided by k!. Similarly rising binCoef 
 		 * is merely N^(k) / k! 
 		 */
-		static public function risingBinCoef( n:int, k:int ):int
+		static public function risingBinCoef( n:uint, k:uint ):Number
 		{
 			return risingFactorial( n, k ) / factorial(k);
 		}

@@ -318,7 +318,7 @@ package com.lordofduct.util
 			
 			arr.sort.apply( arr, args );
 			
-			fillContainer( cont, arr );
+			while(arr.length) cont.addChild(arr.shift());
 		}
 		
 		/**
@@ -336,7 +336,7 @@ package com.lordofduct.util
 			
 			arr.sortOn( fieldName, options );
 			
-			fillContainer( cont, arr );
+			while(arr.length) cont.addChild(arr.shift());
 		}
 		
 		/**
