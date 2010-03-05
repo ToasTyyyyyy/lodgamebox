@@ -263,9 +263,12 @@ package com.lordofduct.util
 		public static function setRotation(mat:Matrix, rotation:Number):void
 		{
 			var or:Number = getRotation(mat);
-			var oskx:Number = getSkewX(mat);
+			mat.rotate(rotation - or);
+			
+			//hrmm, sloppy but respects skew... issues with it though
+			/* var oskx:Number = getSkewX(mat);
 			setSkewX(mat, oskx + rotation-or);
-			setSkewY(mat, rotation);
+			setSkewY(mat, rotation); */
 		}
 		
 		public static function getRotationDegrees(mat:Matrix):Number
