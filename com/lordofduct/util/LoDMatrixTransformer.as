@@ -38,6 +38,27 @@
  * 
  * ex. getRotation( mat:Matrix ):Number returns in radians
  * getRotationDegrees( mat:Matrix ):Number returns in degrees
+ * 
+ * NOTE - when dealing with scale very often do you get to select if 'respect' is given to the local space.
+ * 
+ * What this means is the scale set relative to the matrix, or relative to the world.
+ * 
+ * If you break apart a matrix as two axis vectors and a position you get:
+ * 
+ * x axis - <a,b>
+ * y axis - <c,d>
+ * position (tx,ty)
+ * 
+ * if respect is true then the scale is done on the axis:
+ * 
+ * scaling x == scale * <a,b>
+ * 
+ * if respect is false the the scale is done to the x values:
+ * 
+ * scaling x no respect == scale * <a,c>
+ * 
+ * what results is when given respect the matrix will scale in the direction it is rotated. When not given the matrix 
+ * is scaled explicitly in the parents rotated direction.
  */
 package com.lordofduct.util
 {
