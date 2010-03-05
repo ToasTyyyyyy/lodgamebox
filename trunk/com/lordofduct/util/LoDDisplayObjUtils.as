@@ -266,7 +266,7 @@ package com.lordofduct.util
 			if (!cont || !cont.parent) {
 				return;
 			}
-			if(!cont.numChildren > 0)
+			if(!(cont.numChildren > 0))
 			{
 				if(removeCont) cont.parent.removeChild(cont);
 				
@@ -298,13 +298,11 @@ package com.lordofduct.util
 		 * 
 		 * First item in array is at the bottom of the displayList, the last is at the top.
 		 * 
-		 * Array is disposed of in the process, so if you would like to preserve array, clone it.
-		 * 
 		 * If object is not a DisplayObject a implicit coercion error is reported by DisplayObjectContainer.
 		 */
 		public static function fillContainer( cont:DisplayObjectContainer, arr:Array ):void
 		{
-			while( arr.length ) cont.addChild( arr.shift() );
+			for (var i:int = 0; i < arr.length; i++) cont.addChild(arr[i]);
 		}
 		
 		/**
