@@ -10,11 +10,20 @@ package com.lordofduct.util
 	import flash.display.DisplayObjectContainer;
 	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
+	import flash.system.Capabilities;
 	
 	public class LoD3DUtils
 	{
 		public function LoD3DUtils()
 		{
+		}
+		
+		public static function isFlash3DCapable():Boolean
+		{
+			var arr:Array = Capabilities.version.split(" ");
+			arr = arr[1].split(",");
+			var v:int = parseInt(arr[0]);
+			return v >= 10;
 		}
 		
 		/**
