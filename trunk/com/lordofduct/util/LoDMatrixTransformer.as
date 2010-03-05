@@ -395,14 +395,15 @@ package com.lordofduct.util
 		}
 		
 		/**
-		 * Scale a matrix around a given internal point
+		 * Scale a matrix around a given internal point 
 		 * 
-		 * @param mat - matrix to scale
-		 * @param x - x point
-		 * @param y - y point
-		 * @param sx - x scale to set
-		 * @param sy - y scale to set
-		 * @param respect - if true scale is with respect to the local space
+		 * @param mat - matrix to scale 
+		 * @param x - x point 
+		 * @param y - y point 
+		 * @param sx - x scale to set 
+		 * @param sy - y scale to set 
+		 * @param respect - if true scale is with respect to the local space 
+		 * 
 		 */
 		public static function scaleAroundInternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
 		{
@@ -430,7 +431,8 @@ package com.lordofduct.util
 		 * @param y - y point
 		 * @param sx - x scale to set
 		 * @param sy - y scale to set
-		 * @param respect - if true scale is with respect to the local space
+		 * @param respect - if true scale is with respect to the local space 
+		 * 
 		 */
 		public static function scaleAroundExternalPoint(mat:Matrix, x:Number, y:Number, sx:Number, sy:Number, respect:Boolean = true):void
 		{
@@ -452,7 +454,7 @@ package com.lordofduct.util
 			matchInternalPointWithExternal( mat, intPnt, extPnt );
 		}
 		
-	    public static function matchInternalPointWithExternal(mat:Matrix, interPnt:Point, extPnt:Point):void
+		public static function matchInternalPointWithExternal(mat:Matrix, interPnt:Point, extPnt:Point):void
 		{
 			var pntT:Point = mat.transformPoint(interPnt);
 			var dx:Number = extPnt.x - pntT.x;
