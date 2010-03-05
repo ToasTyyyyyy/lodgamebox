@@ -85,7 +85,7 @@ package com.lordofduct.util
 		public static function createRotationMatrixDegrees( angle:Number ):Matrix
 		{
 			var mat:Matrix = new Matrix();
-			mat.rotate( angle * LoDMath.DEG_TO_RAD );
+			mat.rotate( angle * 0.017453292519943294444 );
 			return mat;
 		}
 		
@@ -237,22 +237,22 @@ package com.lordofduct.util
 		
 		public static function getSkewXDegrees(mat:Matrix):Number
 		{
-			return Math.atan2(-mat.c, mat.d) * LoDMath.DEG_TO_RAD;
+			return Math.atan2(-mat.c, mat.d) * 0.017453292519943294444;
 		}
 		
 	   	public static function setSkewXDegrees(mat:Matrix, skewX:Number):void
 		{
-			setSkewX(mat, skewX * LoDMath.DEG_TO_RAD);
+			setSkewX(mat, skewX * 0.017453292519943294444);
 		}
 		
 		public static function getSkewYDegrees(mat:Matrix):Number
 		{
-			return Math.atan2(mat.b, mat.a) * LoDMath.DEG_TO_RAD;
+			return Math.atan2(mat.b, mat.a) * 0.017453292519943294444;
 		}
 		
 		public static function setSkewYDegrees(mat:Matrix, skewY:Number):void
 		{
-			setSkewY(mat, skewY * LoDMath.DEG_TO_RAD);
+			setSkewY(mat, skewY * 0.017453292519943294444);
 		}
 		
 	   	public static function getRotation(mat:Matrix):Number
@@ -273,12 +273,12 @@ package com.lordofduct.util
 		
 		public static function getRotationDegrees(mat:Matrix):Number
 		{
-			return getRotation(mat) * LoDMath.DEG_TO_RAD;
+			return getRotation(mat) * 0.017453292519943294444;
 		}
 		
 		public static function setRotationDegrees(mat:Matrix, rotation:Number):void
 		{
-			setRotation(mat, rotation * LoDMath.DEG_TO_RAD);
+			setRotation(mat, rotation * 0.017453292519943294444);
 		}
 		
 		/**
