@@ -292,7 +292,7 @@ package com.lordofduct.util
 			point = mat.transformPoint(point);
 			mat.tx -= point.x;
 			mat.ty -= point.y;
-			setRotation(mat,angle);
+			mat.rotate( angle - getRotation(mat) );
 			mat.tx += point.x;
 			mat.ty += point.y;
 		}
@@ -309,7 +309,7 @@ package com.lordofduct.util
 		{
 			mat.tx -= x;
 			mat.ty -= y;
-			setRotation(mat,angle);
+			mat.rotate( angle - getRotation(mat) );
 			mat.tx += x;
 			mat.ty += y;
 		}
