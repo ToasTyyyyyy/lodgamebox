@@ -266,7 +266,7 @@ package com.lordofduct.util
 			if (!cont || !cont.parent) {
 				return;
 			}
-			if(!(cont.numChildren > 0))
+			if(!cont.numChildren > 0)
 			{
 				if(removeCont) cont.parent.removeChild(cont);
 				
@@ -298,11 +298,13 @@ package com.lordofduct.util
 		 * 
 		 * First item in array is at the bottom of the displayList, the last is at the top.
 		 * 
+		 * Array is disposed of in the process, so if you would like to preserve array, clone it.
+		 * 
 		 * If object is not a DisplayObject a implicit coercion error is reported by DisplayObjectContainer.
 		 */
 		public static function fillContainer( cont:DisplayObjectContainer, arr:Array ):void
 		{
-			for (var i:int = 0; i < arr.length; i++) cont.addChild(arr[i]);
+			while( arr.length ) cont.addChild( arr.shift() );
 		}
 		
 		/**
@@ -318,7 +320,7 @@ package com.lordofduct.util
 			
 			arr.sort.apply( arr, args );
 			
-			while(arr.length) cont.addChild(arr.shift());
+			fillContainer( cont, arr );
 		}
 		
 		/**
@@ -336,7 +338,7 @@ package com.lordofduct.util
 			
 			arr.sortOn( fieldName, options );
 			
-			while(arr.length) cont.addChild(arr.shift());
+			fillContainer( cont, arr );
 		}
 		
 		/**
@@ -353,12 +355,11 @@ package com.lordofduct.util
 			var w:Number = rect.width;
 			var h:Number = rect.height;
 			
-			obj.transform.matrix = new Matrix();
-			
-			var aspect:Number = obj.width / obj.height;
+			var ro:Rectangle = obj.getBounds(obj);
+			var aspect:Number = ro.width / ro.height;
 			var tarAspect:Number = w / h;
 			
-			if (aspect == 0 || obj.height == 0) return;
+			if (aspect == 0 || ro.height == 0) return;
 			
 			if (tarAspect >= aspect)
 			{
@@ -368,10 +369,9 @@ package com.lordofduct.util
 				h = w / aspect;
 			}
 			
-			var sx:Number = w / obj.width;
-			var sy:Number = h / obj.height;
+			var sx:Number = w / ro.width;
+			var sy:Number = h / ro.height;
 			
-			var ro:Rectangle = obj.getBounds(obj);
 			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
 			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
 			obj.transform.matrix = new Matrix( sx, 0, 0, sy, ix, iy );
@@ -391,12 +391,11 @@ package com.lordofduct.util
 			var w:Number = rect.width;
 			var h:Number = rect.height;
 			
-			obj.transform.matrix = new Matrix();
-			
-			var aspect:Number = obj.width / obj.height;
+			var ro:Rectangle = obj.getBounds(obj);
+			var aspect:Number = ro.width / ro.height;
 			var tarAspect:Number = w / h;
 			
-			if( aspect == 0 || obj.height == 0 ) return;
+			if( aspect == 0 || ro.height == 0 ) return;
 			
 			if( tarAspect <= aspect )
 			{
@@ -406,10 +405,9 @@ package com.lordofduct.util
 				h = w / aspect;
 			}
 			
-			var sx:Number = w / obj.width;
-			var sy:Number = h / obj.height;
+			var sx:Number = w / ro.width;
+			var sy:Number = h / ro.height;
 			
-			var ro:Rectangle = obj.getBounds(obj);
 			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
 			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
 			
@@ -422,13 +420,14 @@ package com.lordofduct.util
 			var w:Number = rect.width;
 			var h:Number = rect.height;
 			
-			var old:Matrix = obj.transform.matrix;
-			obj.transform.matrix = new Matrix();
-			
-			var aspect:Number = obj.width / obj.height;
+			var ro:Rectangle = obj.getBounds(obj);
+			var aspect:Number = ro.width / ro.height;
 			var tarAspect:Number = w / h;
 			
-			if (aspect == 0 || obj.height == 0) return new Matrix();
+			if (aspect == 0 || ro.height == 0)
+			{
+				return new Matrix();
+			}
 			
 			if (tarAspect >= aspect)
 			{
@@ -438,13 +437,11 @@ package com.lordofduct.util
 				h = w / aspect;
 			}
 			
-			var sx:Number = w / obj.width;
-			var sy:Number = h / obj.height;
+			var sx:Number = w / ro.width;
+			var sy:Number = h / ro.height;
 			
-			var ro:Rectangle = obj.getBounds(obj);
 			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
 			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
-			obj.transform.matrix = old;
 			
 			return new Matrix( sx, 0, 0, sy, ix, iy );
 		}
@@ -454,13 +451,14 @@ package com.lordofduct.util
 			var w:Number = rect.width;
 			var h:Number = rect.height;
 			
-			var old:Matrix = obj.transform.matrix;
-			obj.transform.matrix = new Matrix();
-			
-			var aspect:Number = obj.width / obj.height;
+			var ro:Rectangle = obj.getBounds(obj);
+			var aspect:Number = ro.width / ro.height;
 			var tarAspect:Number = w / h;
 			
-			if( aspect == 0 || obj.height == 0 ) return new Matrix();
+			if (aspect == 0 || ro.height == 0)
+			{
+				return new Matrix();
+			}
 			
 			if( tarAspect <= aspect )
 			{
@@ -470,13 +468,11 @@ package com.lordofduct.util
 				h = w / aspect;
 			}
 			
-			var sx:Number = w / obj.width;
-			var sy:Number = h / obj.height;
+			var sx:Number = w / ro.width;
+			var sy:Number = h / ro.height;
 			
-			var ro:Rectangle = obj.getBounds(obj);
 			var ix:Number = rect.x + ((rect.width - sx * ro.width) / 2) - (sx * ro.x);
 			var iy:Number = rect.y + ((rect.height - sy * ro.height) / 2) - (sy * ro.y);
-			obj.transform.matrix = old;
 			
 			return new Matrix( sx, 0, 0, sy, ix, iy );
 		}
