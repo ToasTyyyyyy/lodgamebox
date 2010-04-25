@@ -2,6 +2,9 @@ package com.lordofduct.util
 {
 	import flash.events.IEventDispatcher;
 	import flash.external.ExternalInterface;
+	import flash.text.TextField;
+	import flash.utils.getTimer;
+	//import flash.utils.getTimer;
 	
 	public class LoDUtils
 	{
@@ -65,6 +68,34 @@ package com.lordofduct.util
 			
 			if (align) field.autoSize = align;
 			field.condenseWhite = false;
+		}
+		
+		/**
+		 * Returns the index of the first object with a property <-> value pair passed
+		 * 
+		 * @param arr:Array - the array to poll
+		 * @param prop:String - the property of the object's in the array to check
+		 * @param value:* - the value to compare against
+		 * @param strict:Boolean - if to use strict equals ===, vs normal equals ==
+		 * 
+		 * @return int - the index of the object, -1 if no object was found meeting the polling options
+		 */
+		public static function indexOfOn( arr:Array, prop:String, value:*, strict:Boolean=false ):int
+		{
+		    var obj:Object;
+		
+		    for(var i:int = 0; i < arr.length; i++)
+		    {
+		        obj = arr[i] as Object;
+		
+		        if(obj && obj.hasOwnProperty(prop))
+		        {
+		            if(!strict && obj[prop] == value) return i;
+		            else if (strict && obj[prop] === value) return i;
+		        }
+		    }
+		
+		    return -1;//nothing was found
 		}
 	}
 }

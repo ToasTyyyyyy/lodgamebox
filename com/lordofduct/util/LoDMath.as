@@ -189,6 +189,54 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * Snap a value to nearest grid slice, using rounding.
+		 * 
+		 * example if you have an interval gap of 5 and a position of 12... you will snap to 10. Where as 14 will snap to 15
+		 * 
+		 * @param input - the value to snap
+		 * @param gap - the interval gap of the grid
+		 * @param start - optional starting offset for gap
+		 */
+		public static function snapTo(input:Number, gap:Number, start:Number=0 ):Number
+		{
+			input -= start;
+			input = gap * Math.round(input / gap);
+			return start + input;
+		}
+		
+		/**
+		 * Snap a value to nearest grid slice, using floor.
+		 * 
+		 * example if you have an interval gap of 5 and a position of 12... you will snap to 10. As will 14 snap to 10... but 16 will snap to 15
+		 * 
+		 * @param input - the value to snap
+		 * @param gap - the interval gap of the grid
+		 * @param start - optional starting offset for gap
+		 */
+		public static function snapToFloor(input:Number, gap:Number, start:Number=0 ):Number
+		{
+			input -= start;
+			input = gap * Math.floor(input / gap);
+			return start + input;
+		}
+		
+		/**
+		 * Snap a value to nearest grid slice, using ceil.
+		 * 
+		 * example if you have an interval gap of 5 and a position of 12... you will snap to 15. As will 14 will snap to 15... but 16 will snap to 20
+		 * 
+		 * @param input - the value to snap
+		 * @param gap - the interval gap of the grid
+		 * @param start - optional starting offset for gap
+		 */
+		public static function snapToCeil(input:Number, gap:Number, start:Number=0):Number
+		{
+			input -= start;
+			input = gap * Math.ceil(input / gap);
+			return start + input;
+		}
+		
+		/**
 		 * roundTo some place comparative to a 'base', default is 10 for decimal place
 		 * 
 		 * 'place' is represented by the power applied to 'base' to get that place
