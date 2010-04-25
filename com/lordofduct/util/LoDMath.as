@@ -199,6 +199,8 @@ package com.lordofduct.util
 		 */
 		public static function snapTo(input:Number, gap:Number, start:Number=0 ):Number
 		{
+			if(gap == 0) return input;
+			
 			input -= start;
 			input = gap * Math.round(input / gap);
 			return start + input;
@@ -215,6 +217,8 @@ package com.lordofduct.util
 		 */
 		public static function snapToFloor(input:Number, gap:Number, start:Number=0 ):Number
 		{
+			if(gap == 0) return input;
+			
 			input -= start;
 			input = gap * Math.floor(input / gap);
 			return start + input;
@@ -231,6 +235,8 @@ package com.lordofduct.util
 		 */
 		public static function snapToCeil(input:Number, gap:Number, start:Number=0):Number
 		{
+			if(gap == 0) return input;
+			
 			input -= start;
 			input = gap * Math.ceil(input / gap);
 			return start + input;
