@@ -31,6 +31,9 @@
  */
 package com.lordofduct.util
 {
+	import flash.utils.describeType;
+	import flash.utils.getQualifiedClassName;
+	
 	public class Assertions
 	{
 		public function Assertions()
@@ -328,10 +331,46 @@ package com.lordofduct.util
 			return !regx.test(str);
 		}
 		
+		/**
+		 * Tests if a class implements or extends a given class or interface. This isn't the speediest method, so don't 
+		 * use it a whole lot... but it certainly serves a purpose.
+		 */
 		public static function classImplements(clazz:Class, implementor:Class, message:String=null, exceptionType:Class=null):Boolean
 		{
-			//TODO
+			if(clazz == implementor) return true;
+			
+			var xml:XML = describeType(clazz);
+			var qim:String = getQualifiedClassName( implementor );
+			
+			if(xml..extendsClass.(@type == qim).length() > 0 || xml..implementsInterface.(@type == qim).length() > 0)
+			{
+				return true;
+			} else if (message)  {
+				throwError(message,exceptionType);
+			}
+			
 			return false;
+		}
+		
+		public static function hasMember( obj:Object, member:String, message:String=null, exceptionType:Class=null ):Boolean
+		{
+			var bool:Boolean = obj.hasOwnProperty(member);
+			if(!bool && message) throwError(message,exceptionType);
+			return bool;
+		}
+		
+		public static function hasProperty( obj:Object, prop:String, message:String=null, exceptionType:Class=null):Boolean
+		{
+			var bool:Boolean = obj.hasOwnProperty(prop) && !(obj[prop] is Function);
+			if(!bool && message) throwError(message,exceptionType);
+			return bool;
+		}
+		
+		public static function hasFunction( obj:Object, functName:String, message:String=null, exceptionType:Class=null):Boolean
+		{
+			var bool:Boolean = obj.hasOwnProperty(functName) && obj[functName] is Function;
+			if(!bool && message) throwError(message,exceptionType);
+			return bool;
 		}
 	}
 }
