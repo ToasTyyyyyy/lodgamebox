@@ -45,7 +45,7 @@ package com.lordofduct.util
 			var l:Number = midin - min;
 			var gap:Number = l + h;
 			gap *= Math.random();
-			if( gap > l ) gap += (midax - midin);
+			if( gap >= l ) gap += (midax - midin);
 			
 			return gap + min;
 		}
