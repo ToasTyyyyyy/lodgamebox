@@ -25,6 +25,32 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * Random Number between min and max. This time though we consider the 'last' value generated in the range. It then makes sure not 
+		 * to return a value near the 'last' value considering some padding.
+		 * 
+		 * ex:
+		 * If the last value received was 6 in a range of 0 to 20. And we don't want any values within 2 units of 6 (from 4 to 8)... this will 
+		 * return ONLY values from 0->4 OR 8->20... with equal probability as well.
+		 * 
+		 * in code:
+		 * var newValue:Number = LoDRandom.randomNextMinMax(6, 2, 20, 0);
+		 */
+		public static function randomNextMinMax(last:Number, pad:Number, max:Number, min:Number = 0):Number
+		{
+			if (max < min) pad = -pad;
+			
+			var midax:Number =Math.max( min, Math.min( max, last + pad ) );
+			var midin:Number = Math.max( min, Math.min( max, last - pad ) );
+			var h:Number = max - midax;
+			var l:Number = midin - min;
+			var gap:Number = l + h;
+			gap *= Math.random();
+			if( gap > l ) gap += (midax - midin);
+			
+			return gap + min;
+		}
+		
+		/**
 		 * Random int between min and max
 		 * 
 		 * @param max - maximum value in range
