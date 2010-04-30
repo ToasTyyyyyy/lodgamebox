@@ -1,5 +1,7 @@
 package com.lordofduct.util
 {
+	import flash.geom.Point;
+	
 	public class LoDRandom
 	{
 		public function LoDRandom()
@@ -133,6 +135,15 @@ package com.lordofduct.util
 		public static function randomShift(...args):int
 		{
 			return randomIntMinMax( 1, -1, true );
+		}
+		
+		public static function randomRotatedPoint(rad:Number, ...args):Point
+		{
+			var pnt:Point = new Point();
+			var a:Number = randomAngle();
+			pnt.x = rad * Math.cos(a);
+			pnt.y = rad * Math.sin(a);
+			return pnt;
 		}
 		
 		/**
