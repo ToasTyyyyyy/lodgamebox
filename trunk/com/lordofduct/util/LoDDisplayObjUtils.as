@@ -203,6 +203,48 @@ package com.lordofduct.util
 			
 			return false;
 		}
+		
+/**
+ * Transform DisplayObject
+ */
+ 		/**
+ 		 * Sets the rotation of a DisplayObject, rotating around its center.
+ 		 * 
+ 		 * @param obj: The DisplayObject to rotate
+ 		 * @param angle: The new angle
+ 		 * @param radians: If the angle value is radians or not, default true
+ 		 */
+		public static function setRotationAroundCenter( obj:DisplayObject, angle:Number, radians:Boolean=true ):void
+		{
+			if (!radians) angle *= Math.PI / 180;
+			
+			var point:Point = findCenterOf(obj);
+			var mat:Matrix = obj.transform.matrix;
+			LoDMatrixTransformer.rotateToAroundInternalPoint(mat, point.x, point.y, angle);
+			obj.transform.matrix = mat;
+		}
+		
+		/**
+		 * Set's the scale of a DisplayObject around its center.
+		 * 
+		 * @param obj: the DisplayObject to set scale of
+		 * @param sx: The scaleX, if NaN the scaleX remains unchanged
+		 * @param sy: The scaleY, if NaN the scaleY remains unchanged
+		 */
+		public static function setScaleAroundCenter( obj:DisplayObject, sx:Number=NaN, sy:Number=NaN ):void
+		{
+			var mat:Matrix = obj.transform.matrix;
+			var intPnt:Point = findCenterOf(obj);
+			var extPnt:Point = mat.transformPoint( intPnt );
+			
+			If (!isNaN(sx)) LoDMatrixTransformer.setScaleX(mat,sx,respect);
+			If (!isNaN(sy)) LoDMatrixTransformer.setScaleY(mat,sy,respect);
+			
+			LoDMatrixTransformer.matchInternalPointWithExternal( mat, intPnt, extPnt );
+			
+			obj.transform.matrix = mat;
+		}
+		
 /**
  * Container Organizing methods
  */
