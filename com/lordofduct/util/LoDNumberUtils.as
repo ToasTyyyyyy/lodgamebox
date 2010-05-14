@@ -230,6 +230,171 @@ package com.lordofduct.util
 			return value & 0xFF;
 		}
 		
+		public static function extractHue( color:uint ):Number
+		{
+			var r:Number = extractRed(color) / 0xFF;
+			var g:Number = extractGreen(color) / 0xFF;
+			var b:Number = extractBlue(color) / 0xFF;
+			
+			var rgb:Array;
+			var sum:Number = 0;
+			var mult:Number = 1;
+			
+			if (r >= g && r >= b)
+			{	
+				if ( g >= b )
+				{
+					rgb = [r,g,b];
+					sum = 0;
+					mult = 1;
+				} else {
+					rgb = [r,b,g];
+					sum = 6;
+					mult = -1;
+				}
+			} else if ( g > r && g >= b )
+			{
+				if (r >= b)
+				{
+					rgb = [g,r,b];
+					sum = 2;
+					mult = -1;
+				} else {
+					rgb = [g,b,r];
+					sum = 2;
+					mult = 1;
+				}
+			} else
+			{
+				if (g > r)
+				{
+					rgb = [b,g,r];
+					sum = 4;
+					mult = -1;
+				} else {
+					rgb = [b,r,g];
+					sum = 4;
+					mult = 1;
+				}
+			}
+			
+			var fract:Number = (rgb[1] - rgb[2]) / (rgb[0] - rgb[2]);
+			return 60 * ( sum + mult * fract );
+		}
+		
+		public static function extractLuma( color:uint ):Number
+		{
+			var r:Number = extractRed(color) / 0xFF;
+			var g:Number = extractGreen(color) / 0xFF;
+			var b:Number = extractBlue(color) / 0xFF;
+			
+			return 0.299 * r + 0.587 * g + 0.114 * b;
+		}
+		
+		public static function extractValue( color:uint ):Number
+		{
+			var r:Number = extractRed(color) / 0xFF;
+			var g:Number = extractGreen(color) / 0xFF;
+			var b:Number = extractBlue(color) / 0xFF;
+			
+			return Math.max(r,g,b);
+		}
+		
+		/**
+		 * Convert HSV to RGB (hue, saturation, value)
+		 * 
+		 * Hue is from 0 -> 360
+		 * sat is from 0 -> 1
+		 * value is from 0 -> 1
+		 */
+		public static function HSVtoRGB( hue:Number, sat:Number:Number, value:Number ):uint
+		{
+			hue = LoDMath.wrap(hue, 360);
+			sat = LoDMath.clamp(sat, 1);
+			value = LoDMath.clamp(value, 1);
+			
+			var chroma:Number = value * sat;
+			var hPrime:Number = hue / 60;
+			var x:Number = chroma * (1 - Math.abs(hPrime % 2 - 1));
+			
+			var hindex:int = (Math.floor(hPrime) + 1) % 6;
+			var ci:int = Math.floor(hindex / 2);
+			var xi:int = 2 - (hindex % 3);
+			var cxa:Array = [0,0,0];
+			cxa[ci] = chroma;
+			cxa[xi] = x;
+			
+			var m:Number = value - chroma;
+			var r:uint = (cxa[0] + m) * 0xFF;
+			var g:uint = (cxa[1] + m) * 0xFF;
+			var b:uint = (cxa[2] + m) * 0xFF;
+			
+			return (r << 16) + (g << 8) + b;
+		}
+		
+		/**
+		 * Convert HSL to RGB (hue, saturation, luminance)
+		 * 
+		 * Hue is from 0 -> 360
+		 * sat is from 0 -> 1
+		 * luma is from 0 -> 1
+		 */
+		public static function HSLtoRGB( hue:Number, sat:Number, luma:Number ):uint
+		{
+			hue = LoDMath.wrap(hue, 360);
+			sat = LoDMath.clamp(sat, 1);
+			luma = LoDMath.clamp(luma, 1);
+			
+			var chroma:Number = (lum <= 0.5) ? 2 * luma * sat : (2 - 2 * luma) * sat;
+			var hPrime:Number = hue / 60;
+			var x:Number = chroma * (1 - Math.abs(hPrime % 2 - 1));
+			
+			var hindex:int = (Math.floor(hPrime) + 1) % 6;
+			var ci:int = Math.floor(hindex / 2);
+			var xi:int = 2 - (hindex % 3);
+			var cxa:Array = [0,0,0];
+			cxa[ci] = chroma;
+			cxa[xi] = x;
+			
+			var m:Number = luma - 0.5 * chroma;
+			var r:uint = (cxa[0] + m) * 0xFF;
+			var g:uint = (cxa[1] + m) * 0xFF;
+			var b:uint = (cxa[2] + m) * 0xFF;
+			
+			return (r << 16) + (g << 8) + b;
+		}
+		
+		/**
+		 * convert from HLC to RGB (hue, luminance, chrominance)
+		 * 
+		 * Hue is from 0 -> 360
+		 * luma is from 0 -> 1
+		 * chroma is from 0 -> 1
+		 */
+		public static function HLCtoRGB( hue:Number, luma:Number, chroma:Number):uint
+		{
+			hue = LoDMath.wrap(hue, 360);
+			luma = LoDMath.clamp(luma, 1);
+			chroma = LoDMath.clamp(chroma, 1);
+			
+			var hPrime:Number = hue / 60;
+			var x:Number = chroma * (1 - Math.abs(hPrime % 2 - 1));
+			
+			var hindex:int = (Math.floor(hPrime) + 1) % 6;
+			var ci:int = Math.floor(hindex / 2);
+			var xi:int = 2 - (hindex % 3);
+			var cxa:Array = [0,0,0];
+			cxa[ci] = chroma;
+			cxa[xi] = x;
+			
+			var m:Number = luma - (0.299 * xca[0] + 0.587 * xca[1] + 0.114 * xca[2]);
+			var r:uint = (cxa[0] + m) * 0xFF;
+			var g:uint = (cxa[1] + m) * 0xFF;
+			var b:uint = (cxa[2] + m) * 0xFF;
+			
+			return (r << 16) + (g << 8) + b;
+		}
+		
 	/**
 	 * Masking
 	 */
