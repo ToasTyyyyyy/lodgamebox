@@ -3,7 +3,6 @@ package com.lordofduct.util
 	import flash.events.IEventDispatcher;
 	import flash.external.ExternalInterface;
 	import flash.text.TextField;
-	import flash.utils.getTimer;
 	//import flash.utils.getTimer;
 	
 	public class LoDUtils
