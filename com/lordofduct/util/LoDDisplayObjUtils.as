@@ -106,7 +106,7 @@ package com.lordofduct.util
 		 * 
 		 * Useful for locating the "center" of a DisplayObject who's (0,0) registration is not top-left aligned.
 		 */
-		public static function findTransformedCenterOf( obj:DisplayObject, ignoreTranslation:Boolean=true ):Point
+		public static function findTransformedCenterOf( obj:DisplayObject, ignoreTranslation:Boolean=false ):Point
 		{
 			var rect:Rectangle = obj.getRect( obj );
 			var pnt:Point = new Point();
@@ -114,7 +114,28 @@ package com.lordofduct.util
 			pnt.x = rect.left + ( rect.right - rect.left ) / 2;
 			pnt.y = rect.top + ( rect.bottom - rect.top ) / 2;
 			
-			return findTransformedPointOf( obj, pnt );
+			return findTransformedPointOf( obj, pnt, ignoreTranslation );
+		}
+		
+		/**
+		 * Find the TopLeft of a DisplayObject within its local space
+		 */
+		public static function findTopLeftOf( obj:DisplayObject ):Point
+		{
+			return obj.getRect(obj).topLeft;
+		}
+		
+		/**
+		 * Finds the TopLeft of a DisplayObject in its local space and then transforms it by its matrix representing that very point in 
+		 * its parents local space. You can also elect to ignore the translation of said transformation... this can be useful if you want 
+		 * to locate the point relative to the DisplayObjects x,y properties.
+		 */
+		public static function findTransformedTopLeftOf(obj:DisplayObject, ignoreTranslation:Boolean=false):Point
+		{
+			var rect:Rectangle = obj.getRect(obj);
+			var pnt:Point = rect.topLeft;
+			
+			return findTransformedPointOf(obj,pnt,ignoreTranslation);
 		}
 		
 		/**
@@ -127,7 +148,7 @@ package com.lordofduct.util
 		 * 
 		 * Useful for locating points relative to a DisplayObject's registration point.
 		 */
-		public static function findTransformedPointOf( obj:DisplayObject, pnt:Point, ignoreTranslation:Boolean=true ):Point
+		public static function findTransformedPointOf( obj:DisplayObject, pnt:Point, ignoreTranslation:Boolean=false ):Point
 		{
 			var mat:Matrix = obj.transform.matrix;
 			if(ignoreTranslation) mat.tx = mat.ty = 0;
