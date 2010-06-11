@@ -18,9 +18,6 @@ package com.lordofduct.util
 			var split:Array = str.split(".");
 			str = split[0];
 			
-			//drop out now if we are < 1000
-			if (split[0].length < 4) return str;
-			
 			//insert comma every 3 digits
 			for (var i:int = 3; i < str.length; i += 4)
 			{
