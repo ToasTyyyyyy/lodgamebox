@@ -10,11 +10,12 @@ package com.lordofduct.util
 		 * comma delimit a decimal value in US standard: #,###,###.####
 		 * 
 		 * value:Number - value to delimit
-		 * toFixed:int - if value is >= 0 then value's fractional spaces is limited to that... like Number.toFixed(...)
+		 * toFixed:int - if toFixed is >= 0 then value's fractional spaces is limited to that... like Number.toFixed(...)
 		 */
 		public static function commaDelimitDecimal( value:Number, toFixed:int = -1 ):String
 		{
-			var str:String = (toFixed >= 0) ? value.toFixed(toFixed) : value.toString();
+			//we ignore sign and append a - at the end if negative
+			var str:String = (toFixed >= 0) ? Math.abs(value).toFixed(toFixed) : Math.abs(value).toString();
 			var split:Array = str.split(".");
 			str = split[0];
 			
@@ -27,7 +28,7 @@ package com.lordofduct.util
 			split[0] = str;
 			
 			//return combined
-			return split.join('.');
+			return (value < 0 ? "-" : "") + split.join(".");
 		}
 		
 		/**
