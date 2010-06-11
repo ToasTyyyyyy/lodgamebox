@@ -7,6 +7,33 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * comma delimit a decimal value in US standard: #,###,###.####
+		 * 
+		 * value:Number - value to delimit
+		 * toFixed:int - if value is >= 0 then value's fractional spaces is limited to that... like Number.toFixed(...)
+		 */
+		public static function commaDelimitDecimal( value:Number, toFixed:int = -1 ):String
+		{
+			var str:String = (toFixed >= 0) ? value.toFixed(toFixed) : value.toString();
+			var split:Array = str.split(".");
+			str = split[0];
+			
+			//drop out now if we are < 1000
+			if (split[0].length < 4) return str;
+			
+			//insert comma every 3 digits
+			for (var i:int = 3; i < str.length; i += 4)
+			{
+				str = str.substr(0, str.length - i) + "," + str.substr(str.length - i);
+			}
+			
+			split[0] = str;
+			
+			//return combined
+			return split.join('.');
+		}
+		
+		/**
 		 * similar to Number.toString(2), but in this case we will also show the fractional values
 		 * 
 		 * @param value - the value to string out
@@ -307,7 +334,7 @@ package com.lordofduct.util
 		 * sat is from 0 -> 1
 		 * value is from 0 -> 1
 		 */
-		public static function HSVtoRGB( hue:Number, sat:Number:Number, value:Number ):uint
+		public static function HSVtoRGB( hue:Number, sat:Number, value:Number ):uint
 		{
 			hue = LoDMath.wrap(hue, 360);
 			sat = LoDMath.clamp(sat, 1);
@@ -345,7 +372,7 @@ package com.lordofduct.util
 			sat = LoDMath.clamp(sat, 1);
 			luma = LoDMath.clamp(luma, 1);
 			
-			var chroma:Number = (lum <= 0.5) ? 2 * luma * sat : (2 - 2 * luma) * sat;
+			var chroma:Number = (luma <= 0.5) ? 2 * luma * sat : (2 - 2 * luma) * sat;
 			var hPrime:Number = hue / 60;
 			var x:Number = chroma * (1 - Math.abs(hPrime % 2 - 1));
 			
@@ -387,7 +414,7 @@ package com.lordofduct.util
 			cxa[ci] = chroma;
 			cxa[xi] = x;
 			
-			var m:Number = luma - (0.299 * xca[0] + 0.587 * xca[1] + 0.114 * xca[2]);
+			var m:Number = luma - (0.299 * cxa[0] + 0.587 * cxa[1] + 0.114 * cxa[2]);
 			var r:uint = (cxa[0] + m) * 0xFF;
 			var g:uint = (cxa[1] + m) * 0xFF;
 			var b:uint = (cxa[2] + m) * 0xFF;

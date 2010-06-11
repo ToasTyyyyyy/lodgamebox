@@ -748,7 +748,7 @@ package com.lordofduct.util
 				if(i % 3 == 0 && i > 0) outString="," + outString;
 				outString=tmp.substr(l - (i + 1),1) + outString;
 			}
-			return outString;		
+			return outString;
 		}
 
 		/**
