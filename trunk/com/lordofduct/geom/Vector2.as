@@ -34,9 +34,6 @@ package com.lordofduct.geom
 	import com.lordofduct.util.IEqualable;
 	import com.lordofduct.util.LoDMath;
 	
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	
 	public class Vector2 extends Point2D implements IEqualable
 	{
 		private var _dirty:Boolean = true;
@@ -88,7 +85,13 @@ package com.lordofduct.geom
 		public function set length( len:Number ):void
 		{
 			var l:Number = this.length;
-			if(!l) return;
+			if(!l)
+			{
+				this.setTo(0,0);
+				_length = 0;
+				_dirty = false;
+				return;
+			}
 			
 			this.x /= l / len;
 			this.y /= l / len;
@@ -101,6 +104,12 @@ package com.lordofduct.geom
 		
 		override public function set x(x:Number):void { super.x = x; _dirty = true; }
 		override public function set y(y:Number):void { super.y = y; _dirty = true; }
+		
+		override public function setTo( i:Number=0, j:Number=0 ):void
+		{
+			super.setTo(i,j);
+			_dirty = true;
+		}
 		
 /**
  *VECTOR ARITHMETIC
@@ -462,7 +471,14 @@ package com.lordofduct.geom
 		static public function setProjectedLengthOver( v1:Vector2, v2:Vector2 ):Vector2
 		{
 			var result:Vector2 = Vector2.normalize(v1);
-			result.length = v1.length * v2.lengthSquared / (v1.x * v2.x + v1.y * v2.y);
+			var div:Number = (v1.x * v2.x + v1.y * v2.y);
+			
+			if (div != 0)
+			{
+				result.length = v1.length * v2.lengthSquared / div;
+			} else {
+				result.length = 0;
+			}
 			return result;
 		}
 		
