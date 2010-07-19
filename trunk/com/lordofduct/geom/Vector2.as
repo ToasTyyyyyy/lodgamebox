@@ -85,7 +85,7 @@ package com.lordofduct.geom
 		public function set length( len:Number ):void
 		{
 			var l:Number = this.length;
-			if(!l)
+			if(!l || !len)
 			{
 				this.setTo(0,0);
 				_length = 0;
