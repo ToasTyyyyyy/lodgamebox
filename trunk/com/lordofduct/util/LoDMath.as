@@ -368,6 +368,36 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * normalize independent and dependent and then set dependent to an angle relative to 'after/clockwise' independent
+		 * 
+		 * for instance dep=-170 and ind=170, then 190 will be reutrned as alternative to -170
+		 */
+		public static function normalizeAngleAfterAnother( dep:Number, ind:Number, radians:Boolean=true):Number
+		{
+			dep = normalizeAngle(dep);
+			ind = normalizeAngle(ind);
+			
+			if (ind < dep) dep += (radians) ? 2PI : 360;
+			
+			return dep;
+		}
+		
+		/**
+		 * normalizes indendent and dependent and then sets dependent to an angle relative to 'before/counterclockwise' independent
+		 * 
+		 * for instance dep = 190 and ind = 170, then -170 will be returned as an alternative to 190
+		 */
+		public static function normalizeAngleBeforeAnother( dep:Number, ind:Number, radians:Boolean=true ):Number
+		{
+			dep = normalizeAngle(dep);
+			ind = normalizeAngle(ind);
+			
+			if (ind < dep) dep -= (radians) ? 2PI : 360;
+			
+			return dep;
+		}
+		
+		/**
 		 * interpolate across the shortest arc between two angles
 		 */
 		public static function interpolateAngles( a1:Number, a2:Number, weight:Number, radians:Boolean = true, ease:Function=null ):Number
