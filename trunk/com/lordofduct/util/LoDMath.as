@@ -374,12 +374,9 @@ package com.lordofduct.util
 		 */
 		public static function normalizeAngleAfterAnother( dep:Number, ind:Number, radians:Boolean=true):Number
 		{
-			dep = normalizeAngle(dep);
-			ind = normalizeAngle(ind);
+			dep = normalizeAngle(dep - ind, radians);
 			
-			if (ind < dep) dep += (radians) ? 2PI : 360;
-			
-			return dep;
+			return ind + dep;
 		}
 		
 		/**
@@ -389,12 +386,9 @@ package com.lordofduct.util
 		 */
 		public static function normalizeAngleBeforeAnother( dep:Number, ind:Number, radians:Boolean=true ):Number
 		{
-			dep = normalizeAngle(dep);
-			ind = normalizeAngle(ind);
+			dep = normalizeAngle(ind - dep, radians);
 			
-			if (ind < dep) dep -= (radians) ? 2PI : 360;
-			
-			return dep;
+			return ind - dep;
 		}
 		
 		/**
