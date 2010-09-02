@@ -11,12 +11,12 @@ package com.lordofduct.engines.ai
 		private var _reduced:Boolean = false;
 		
 		//accessible for static functions
-		protected var $open:Array;//open nodes that can be travelled onto
-		protected var $closed:Array;//nodes checked for travel
-		protected var $g_score:Dictionary;//the distance and weight from start to current
-		protected var $h_score:Dictionary;//the distance from current to goal
-		protected var $f_score:Dictionary;//the sum of g and h
-		protected var $parent_list:Dictionary;//a reference to the node that brings you to current
+		private var $open:Array;//open nodes that can be travelled onto
+		private var $closed:Array;//nodes checked for travel
+		private var $g_score:Dictionary;//the distance and weight from start to current
+		private var $h_score:Dictionary;//the distance from current to goal
+		private var $f_score:Dictionary;//the sum of g and h
+		private var $parent_list:Dictionary;//a reference to the node that brings you to current
 		
 		public function AStarMonotonic(pool:IAINodePool, startNode:IAiNode, goalNode:IAiNode, assmWght:Boolean=true )
 		{
@@ -26,8 +26,6 @@ package com.lordofduct.engines.ai
 			_start = startNode;
 			_goal = goalNode;
 			_assumeWeight = assmWght;
-			
-			this.reduce();
 		}
 		
 /**
