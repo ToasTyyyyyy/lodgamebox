@@ -81,19 +81,19 @@ package com.lordofduct.engines.ai
 	/**
 	 * Protected Static Accessible Interface
 	 */
-		protected function sortOpenList():void
+		private function sortOpenList():void
 		{
 			this.$open.sort(sortHelper);
 		}
 		
-		protected function pullSmallestOpenF():IAiNode
+		private function pullSmallestOpenF():IAiNode
 		{
 			this.$open.sort(sortHelper);
 			
 			return this.$open.shift();
 		}
 		
-		protected function sortHelper( a:IAiNode, b:IAiNode ):int
+		private function sortHelper( a:IAiNode, b:IAiNode ):int
 		{
 			var af:Number = this.$f_score[a];
 			var bf:Number = this.$f_score[b];
