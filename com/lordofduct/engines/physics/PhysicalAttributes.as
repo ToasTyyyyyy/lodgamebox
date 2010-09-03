@@ -40,6 +40,25 @@ package com.lordofduct.engines.physics
 	 */
 		public function get view():DisplayObject { return _view; }
 		public function set view(value:DisplayObject):void { _view = value; }
+		
+	/**
+	 * ITransformable Interface
+	 */
+		public function get x():Number { return _trans.x; }
+		public function set x(value:Number):void { _trans.x = value; }
+		
+		public function get y():Number { return _trans.y; }
+		public function set y(value:Number):void { _trans.y = value; }
+		
+		public function get rotation():Number { return _trans.rotation * 180 / Math.PI; }
+		public function set rotation( value:Number ):void { _trans.rotation = value * Math.PI / 180; }
+		
+		public function get scaleX():Number { return _trans.scaleX; }
+		public function set scaleX(value:Number):void { _trans.scaleX = value; }
+		
+		public function get scaleY():Number { return _trans.scaleY; }
+		public function set scaleY(value:Number):void { _trans.scaleY = value; }
+		
 	/**
 	 * IPhysicalAttrib Interface
 	 */
