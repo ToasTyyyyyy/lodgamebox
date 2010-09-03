@@ -3,12 +3,10 @@ package com.lordofduct.engines.physics
 	import com.lordofduct.engines.physics.collisionMesh.ICollisionMesh;
 	import com.lordofduct.geom.LdTransform;
 	import com.lordofduct.geom.Vector2;
+	import com.lordofduct.util.ITransformable;
 	import com.lordofduct.util.IVisibleObject;
 	
-	import flash.events.IEventDispatcher;
-	import flash.geom.Rectangle;
-	
-	public interface IPhysicalAttrib extends IEventDispatcher, IVisibleObject
+	public interface IPhysicalAttrib extends IEventDispatcher, IVisibleObject, ITransformable
 	{
 		function get physicalTransform():LdTransform
 		function set physicalTransform(value:LdTransform):void
