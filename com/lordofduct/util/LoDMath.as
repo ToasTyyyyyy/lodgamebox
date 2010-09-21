@@ -243,6 +243,25 @@ package com.lordofduct.util
 		}
 		
 		/**
+		 * Snaps a value to the nearest value in an array.
+		 */
+		public static function snapToInArray(input:Number, arr:Array, sort:Boolean = true):Number
+		{
+			if (sort) arr.sort(Array.NUMERIC);
+			if (input < arr[0]) return arr[0];
+			
+			var i:int = 1;
+			
+			while (arr[i] < input)
+				i++;
+			
+			var low:Number = arr[i - 1];
+			var high:Number = (i < arr.length) ? arr[i] : Number.POSITIVE_INFINITY;
+			
+			return ((high - input) <= (input - low)) ? high : low;
+		}
+		
+		/**
 		 * roundTo some place comparative to a 'base', default is 10 for decimal place
 		 * 
 		 * 'place' is represented by the power applied to 'base' to get that place
