@@ -34,7 +34,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 /**
  * STATIC INTERFACE
  */
-		public function testBodyBody( body1:IPhysicalAttrib, body2:IPhysicalAttrib ):*
+		public static function testBodyBody( body1:IPhysicalAttrib, body2:IPhysicalAttrib ):*
 		{
 			if(!body1 || !body2) return null;
 			
@@ -54,7 +54,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 		 * If the either CollisionMesh supplied does not meet the requirements of SAT collision, for which they do 
 		 * not contain any IGeometricShape data, then an OBB of that CollisionMesh will be constructed and used instead. 
 		 */
-		public function testAbstractMesh( mesh1:ICollisionMesh, mesh2:ICollisionMesh, mat1:Matrix=null, mat2:Matrix=null ):CollisionResult
+		public static function testAbstractMesh( mesh1:ICollisionMesh, mesh2:ICollisionMesh, mat1:Matrix=null, mat2:Matrix=null ):CollisionResult
 		{	
 			if(!mesh1 || !mesh2) return null;
 			
@@ -111,7 +111,7 @@ package com.lordofduct.engines.physics.collisionDetectors
 			return new CollisionResult(penAxis, normal, dep);
 		}
 		
-		private function removeParallelAxes(arr:Array):void
+		private static function removeParallelAxes(arr:Array):void
 		{
 			var axis1:Vector2, axis2:Vector2, i:int, bool:Boolean;
 			
