@@ -69,7 +69,14 @@ package com.lordofduct.geom
 	 */
 		public function equals( obj:* ):Boolean
 		{
-			return (obj.x == this.x && obj.y == this.y);
+			try
+			{
+				return (obj.x == this.x && obj.y == this.y);
+			} catch(err:Error) {
+				return false;
+			}
+			
+			return false;
 		}
 		static public function equals( p1:*, p2:* ):Boolean
 		{
