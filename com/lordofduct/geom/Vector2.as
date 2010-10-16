@@ -31,10 +31,9 @@
  */
 package com.lordofduct.geom
 {
-	import com.lordofduct.util.IEqualable;
 	import com.lordofduct.util.LoDMath;
 	
-	public class Vector2 extends Point2D implements IEqualable
+	public class Vector2 extends Point2D
 	{
 		private var _dirty:Boolean = true;
 		private var _length:Number;
@@ -512,8 +511,12 @@ package com.lordofduct.geom
 	 */
 		static public function copy(obj:*):Vector2
 		{
-			if(obj is Point2D || obj is Point) return new Vector2(obj.x, obj.y);
-			else return Vector2.NAN;
+			try
+			{
+				return new Vector2(obj.x, obj.y);
+			} catch(err:Error) {
+				return Vector2.NAN
+			}
 		}
 		
 		/**
