@@ -32,10 +32,11 @@
 package com.lordofduct.geom
 {
 	import com.lordofduct.util.IClonable;
+	import com.lordofduct.util.IEqualable;
 	
 	import flash.geom.Point;
 	
-	public class Point2D implements IClonable
+	public class Point2D implements IClonable, IEqualable
 	{
 		private var _x:Number;
 		private var _y:Number;
@@ -87,13 +88,23 @@ package com.lordofduct.geom
 	 */
 		public function copy( obj:* ):void
 		{
-			if(obj is Point2D || obj is Point) this.setTo(obj.x, obj.y);
+			try
+			{
+				this.setTo(obj.x, obj.y);
+			} catch(err:Error)
+			{
+				throw new Error("com.lordofduct.Point2D::copy - can not copy an object with no 'x' and 'y' properties.");
+			}
 		}
 		
 		static public function copy( obj:* ):Point2D
 		{
-			if(obj is Point2D || obj is Point) return new Point2D(obj.x, obj.y);
-			else return null;
+			try
+			{
+				return new Point2D(obj.x, obj.y);
+			} catch(err:Error) {
+				return new Point2D(NaN, NaN);
+			}
 		}
 		
 		public function clone():*
