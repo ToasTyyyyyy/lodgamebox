@@ -121,7 +121,9 @@ package com.lordofduct.geom
 		 */
 		public function negate():void
 		{
-			this.setTo(-this.x, -this.y)
+			super.x = -this.x;
+			super.y = -this.y;
+			//length doesn't change, so set keep clean
 		}
 		static public function negate( v:* ):Vector2
 		{
@@ -251,23 +253,15 @@ package com.lordofduct.geom
 		
 		static public function distance(v1:*, v2:*):Number
 		{
-			//depricated, memory costly
-			/* var v:Vector2 = Vector2.subtract(v1, v2);
-			return v.length; */
-			
 			var dx:Number = v2.x - v1.x;
-			var dy:Number = v2.y = v1.y;
+			var dy:Number = v2.y - v1.y;
 			return Math.sqrt( dx * dx + dy * dy );
 		}
 		
 		static public function distanceSquared(v1:*, v2:*):Number
 		{
-			//depricated, memory costly
-			/* var v:Vector2 = Vector2.subtract(v1, v2);
-			return v.lengthSquared; */
-			
 			var dx:Number = v2.x - v1.x;
-			var dy:Number = v2.y = v1.y;
+			var dy:Number = v2.y - v1.y;
 			return dx * dx + dy * dy;
 		}
 		
@@ -278,7 +272,10 @@ package com.lordofduct.geom
 		
 		public function perp():void
 		{
-			this.setTo( -this.y, this.x );
+			var ry:number = this.x;
+			super.x = -this.y;
+			super.y = ry;
+			//length doesn't change, so set keep clean
 		}
 		
 		static public function perp(v:*):Vector2
