@@ -92,8 +92,8 @@ package com.lordofduct.geom
 				return;
 			}
 			
-			this.x /= l / len;
-			this.y /= l / len;
+			super.x /= l / len;
+			super.y /= l / len;
 			
 			_length = Math.abs(len);
 			_dirty = false;
@@ -121,8 +121,7 @@ package com.lordofduct.geom
 		 */
 		public function negate():void
 		{
-			this.x = -this.x;
-			this.y = -this.y;
+			this.setTo(-this.x, -this.y)
 		}
 		static public function negate( v:* ):Vector2
 		{
@@ -137,8 +136,8 @@ package com.lordofduct.geom
 			var l:Number = this.length;
 			if(!l) return;
 			
-			this.x /= l;
-			this.y /= l;
+			super.x /= l;
+			super.y /= l;
 			_length = 1;
 			_dirty = false;
 		}
@@ -166,10 +165,7 @@ package com.lordofduct.geom
 		 */
 		public function add( v:* ):void
 		{
-			this.x += v.x;
-			this.y += v.y;
-			//TODO - depricated dirty set
-			_dirty = true;
+			this.setTo(this.x + v.x, this.y + v.y);
 		}
 		static public function add( v1:*, v2:* ):Vector2
 		{
@@ -182,11 +178,7 @@ package com.lordofduct.geom
 		 */
 		public function subtract( v:* ):void
 		{
-			this.x -= v.x;
-			this.y -= v.y;
-			
-			//TODO - depricated dirty set
-			_dirty = true;
+			this.setTo(this.x - v.x, this.y - v.y)
 		}
 		static public function subtract( v1:*, v2:*):Vector2
 		{
@@ -198,10 +190,7 @@ package com.lordofduct.geom
 		 */
 		public function multiply( f:Number ):void
 		{
-			this.x *= f;
-			this.y *= f;
-			//TODO - depricated dirty set
-			_dirty = true;
+			this.setTo(this.x * f, this.y * f);
 		}
 		static public function multiply( v:*, f:Number):Vector2
 		{
@@ -213,10 +202,7 @@ package com.lordofduct.geom
 		 */
 		public function divide( d:Number ):void
 		{
-			this.x /= d;
-			this.y /= d;
-			//TODO - depricated dirty set
-			_dirty = true;
+			this.setTo(this.x / d, this.y / d);
 		}
 		static public function divide( v:*, d:Number):Vector2
 		{
@@ -232,8 +218,7 @@ package com.lordofduct.geom
 			var ix:Number = (v.x - this.x) * weight + this.x;
 			var iy:Number = (v.y - this.y) * weight + this.y;
 			
-			this.x = ix;
-			this.y = iy;
+			this.setTo(ix, iy);
 		}
 		
 		static public function lerp(v1:*, v2:*, weight:Number):Vector2
@@ -364,11 +349,7 @@ package com.lordofduct.geom
 		public function reflect( normal:* ):void
 		{
 			var dp:Number = 2 * this.dot(normal);
-			this.x -= normal.x * dp;
-			this.y -= normal.y * dp;
-			
-			//TODO - depricated dirty set
-			_dirty = true;
+			this.setTo( this.x - normal.x * dp, this.y - normal.y * dp);
 		}
 		static public function reflect(v:*, normal:* ):Vector2
 		{
@@ -385,8 +366,9 @@ package com.lordofduct.geom
 			var ca:Number = Math.cos(angle);
 			var sa:Number = Math.sin(angle);
 			var rx:Number = this.x * ca - this.y * sa;
-			this.y = this.x * sa + this.y * ca;
-			this.x = rx;
+			super.y = this.x * sa + this.y * ca;
+			super.x = rx;
+			//length doesn't change, so set keep clean
 		}
 		static public function rotateBy( v:*, angle:Number ):Vector2
 		{
@@ -403,8 +385,9 @@ package com.lordofduct.geom
 		public function rotateByCosSin( ca:Number, sa:Number ):void
 		{
 			var rx:Number = this.x * ca - this.y * sa;
-			this.y = this.x * sa + this.y * ca;
-			this.x = rx;
+			super.y = this.x * sa + this.y * ca;
+			super.x = rx;
+			//length doesn't change, so set keep clean
 		}
 		static public function rotateByCosSin( v:*, ca:Number, sa:Number ):Vector2
 		{
@@ -417,8 +400,9 @@ package com.lordofduct.geom
 		public function rotateTo( angle:Number ):void
 		{
 			var l:Number = this.length;
-			this.x = Math.cos(angle) * l;
-			this.y = Math.sin(angle) * l;
+			super.x = Math.cos(angle) * l;
+			super.y = Math.sin(angle) * l;
+			//length doesn't change, so set keep clean
 		}
 		static public function rotateTo( v:*, angle:Number):Vector2
 		{
