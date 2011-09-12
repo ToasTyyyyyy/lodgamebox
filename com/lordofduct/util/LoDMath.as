@@ -151,6 +151,16 @@ package com.lordofduct.util
 			else return 0;
 		}
 		
+		public static function truncate(n:Number):Number
+		{
+			return (n > 0) ? Math.floor(n) : Math.ceil(n);
+		}
+		
+		public static function shear(n:Number):Number
+		{
+			return n % 1;
+		}
+		
 		/**
 		 * wrap a value around a range, similar to modulus with a floating minimum
 		 */
@@ -772,6 +782,41 @@ package com.lordofduct.util
 		static public function risingBinCoef( n:uint, k:uint ):Number
 		{
 			return risingFactorial( n, k ) / factorial(k);
+		}
+		
+		static public function toFractionString(value:Number):String
+		{
+			var sign:int = LoDMath.sign(value);
+			value = Math.abs(value);
+			var whole:Number = LoDMath.truncate(value);
+			var dec:Number = LoDMath.shear(value);
+			
+			var sres:String = "";
+			if(dec > 0)
+			{
+				var sval:String = dec.toString().split(".")[1];
+				if (sval.length > 9 ) sval = sval.substr(0,9);
+				var pow:int = sval.length;
+				
+				var num:int = parseInt(sval);
+				var den:int = Math.pow(10,pow);
+				var gcd:int = LoDMath.GCD(num,den);
+				num /= gcd;
+				den /= gcd;
+				sres = num.toString() + "/" + den.toString();
+			}
+			
+			if(whole > 0)
+			{
+				sres = whole.toString() + " " + sres;
+			}
+			
+			if(sign < 0)
+			{
+				sres = "-" + sres;
+			}
+			
+			return sres;
 		}
 	}
 }
