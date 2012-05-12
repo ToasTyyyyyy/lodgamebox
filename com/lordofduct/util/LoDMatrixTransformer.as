@@ -318,7 +318,7 @@ package com.lordofduct.util
 		}
 		
 		/**
-		 * rotate a matrix TO a value around a given internal point
+		 * rotate a matrix BY a value around a given internal point
 		 * 
 		 * @param mat - the Matrix to rotate
 		 * @param x - the x position of the point
@@ -337,7 +337,7 @@ package com.lordofduct.util
 		}
 		
 		/**
-		 * rotate a matrix TO a value around a given external point
+		 * rotate a matrix BY a value around a given external point
 		 * 
 		 * @param mat - the Matrix to rotate
 		 * @param x - the x position of the point
