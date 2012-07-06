@@ -129,6 +129,7 @@ package com.lordofduct.util
 			return (value <= maxmimum);
 		}
 		
+		/*
 		public static function between( value:Number, low:Number=Number.MIN_VALUE, high:Number=Number.MAX_VALUE, message:String=null, exceptionType:Class=null):Boolean
 		{
 			if(message) if(value <= low || value >= high) throwError( message, exceptionType );
@@ -140,6 +141,7 @@ package com.lordofduct.util
 			if(message) if(value < low || value > high) throwError( message, exceptionType );
 			return (value >= low && value <= high);
 		}
+		*/
 		
 		/**
 		 * Assert that a value is equal to another value.

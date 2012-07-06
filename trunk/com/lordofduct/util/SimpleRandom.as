@@ -18,6 +18,10 @@ package com.lordofduct.util
 		private var _incr:int;
 		private var _seed:int;
 		
+		/*
+		 * seed should stary reasonably low, best to use values from 1->999 
+		 * full int range is included merely to give you freedom
+		 */
 		public function SimpleRandom( seed:int=-1, increment:int=0 )
 		{
 			_mode = int.MAX_VALUE;
@@ -37,6 +41,14 @@ package com.lordofduct.util
 		{
 			_seed = (_mult * _seed + _incr) % _mode;
 			return _seed;
+		}
+		
+		public function nextInRange(max:int, min:int = 0):int
+		{
+			var val:int = this.next();
+			if (max < min) return min;
+			
+			return ((val - min) % (max - min)) + min;
 		}
 		
 		public function nextBytes( bar:ByteArray ):void
