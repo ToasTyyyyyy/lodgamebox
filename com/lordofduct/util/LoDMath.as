@@ -114,6 +114,16 @@ package com.lordofduct.util
 			return a > b - epsilon;
 		}
 		
+		public static function fuzzyCeil(val:Number, epsilon:Number = 0.0001):Number
+		{
+			return Math.ceil(val - epsilon);
+		}
+		
+		public static function fuzzyFloor(val:Number, epsilon:Number = 0.0001):Number
+		{
+			return Math.floor(val + epsilon);
+		}
+		
 		public static function average( ...args ):Number
 		{
 			var avg:Number = 0;
