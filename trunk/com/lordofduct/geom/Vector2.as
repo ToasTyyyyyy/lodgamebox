@@ -236,7 +236,7 @@ package com.lordofduct.geom
 			//var a1:Number = this.angle();
 			//var a2:Number = Vector2.angle(v);
 			//var chng:Number = LoDMath.nearestAngleBetween( a1, a2 );
-			var chng:Number = angleBetween(this, v);
+			var chng:Number = angleToward(this, v);
 			chng *= weight;
 			
 			this.rotateBy(chng);
@@ -247,7 +247,7 @@ package com.lordofduct.geom
 			//var a1:Number = Vector2.angle(v1);
 			//var a2:Number = Vector2.angle(v2);
 			//var chng:Number = LoDMath.nearestAngleBetween( a1, a2 );
-			var chng:Number = angleBetween(v1, v2);
+			var chng:Number = angleToward(v1, v2);
 			chng *= weight;
 			
 			return Vector2.rotateBy(v1, chng);
@@ -340,6 +340,16 @@ package com.lordofduct.geom
 		static public function angleBetween( v1:*, v2:* ):Number
 		{
 			return Math.acos( Vector2.dot(v1, v2) / (v1.length * v2.length));
+		}
+		
+		public function angleToward( v:* ):Number
+		{
+			return Math.atan2( v.y - this.y, v.x - this.x);
+		}
+		
+		public static function angleToward( v1:*, v2:*):Number
+		{
+			return Math.atan2(v2.y - v1.y, v2.x - v1.x);
 		}
 		
 		/**
