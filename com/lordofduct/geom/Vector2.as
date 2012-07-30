@@ -233,9 +233,10 @@ package com.lordofduct.geom
 		
 		public function lerpRotation(v:*, weight:Number):void
 		{
-			var a1:Number = this.angle();
-			var a2:Number = Vector2.angle(v);
-			var chng:Number = LoDMath.nearestAngleBetween( a1, a2 );
+			//var a1:Number = this.angle();
+			//var a2:Number = Vector2.angle(v);
+			//var chng:Number = LoDMath.nearestAngleBetween( a1, a2 );
+			var chng:Number = angleBetween(this, v);
 			chng *= weight;
 			
 			this.rotateBy(chng);
@@ -243,9 +244,10 @@ package com.lordofduct.geom
 		
 		static public function lerpRotation(v1:*, v2:*, weight:Number):Vector2
 		{
-			var a1:Number = Vector2.angle(v1);
-			var a2:Number = Vector2.angle(v2);
-			var chng:Number = LoDMath.nearestAngleBetween( a1, a2 );
+			//var a1:Number = Vector2.angle(v1);
+			//var a2:Number = Vector2.angle(v2);
+			//var chng:Number = LoDMath.nearestAngleBetween( a1, a2 );
+			var chng:Number = angleBetween(v1, v2);
 			chng *= weight;
 			
 			return Vector2.rotateBy(v1, chng);
